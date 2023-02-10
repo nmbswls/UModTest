@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Tab;
 
 namespace FirstBepinPlugin.Patch
 {
@@ -38,6 +39,29 @@ namespace FirstBepinPlugin.Patch
                 {
                     __instance.InventoryLayout.GridDataList.RemoveAt(i);
                 }
+            }
+        }
+    }
+
+
+    /// <summary>
+    /// 背包扩展 隐藏道具
+    /// </summary>
+    [HarmonyPatch(typeof(TabBag), "FiddlerItem")]
+    public class TabBagPatcher_FiddlerItem
+    {
+        public static void Postfix(TabBag __instance, BaseItem baseItem, ref bool __result)
+        {
+            if(__result == false)
+            {
+                return;
+            }
+
+            var itemJsonData = _ItemJsonData.DataDict[baseItem.Id];
+            if(itemJsonData != null && itemJsonData.ItemFlag.Contains(-99))
+            {
+                PluginMain.Main.LogError("TabBag FiddlerItem false.");
+                __result = false;
             }
         }
     }
