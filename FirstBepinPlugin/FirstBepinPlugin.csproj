@@ -122,9 +122,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MonoScripts\SecretsDetailPanel.cs" />
+    <Compile Include="Patch\BagPatcher.cs" />
     <Compile Include="Patch\FightPatcher.cs" />
     <Compile Include="Patch\ItemPatcher.cs" />
     <Compile Include="Patch\JsonConfigPatcher.cs" />
+    <Compile Include="Patch\LianDanPatcher.cs" />
     <Compile Include="Patch\LianQiPatcher.cs" />
     <Compile Include="Patch\CreateAvatarPatcher.cs" />
     <Compile Include="Patch\NpcPatcher.cs" />

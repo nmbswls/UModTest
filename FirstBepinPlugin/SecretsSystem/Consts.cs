@@ -18,6 +18,8 @@ namespace FirstBepinPlugin
         public const LingQiType YinLingQiType = (LingQiType)9;
 
 
+        public const int ItemId_MineLu = 99790;
+
         // 战斗buff
 
         public const int BuffId_YinTili = 9971000;

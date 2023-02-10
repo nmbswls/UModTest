@@ -3,6 +3,7 @@ using FirstBepinPlugin.MonoScripts;
 using Fungus;
 using GUIPackage;
 using KBEngine;
+using PaiMai;
 using Steamworks;
 using System;
 using System.Collections.Generic;
@@ -111,6 +112,14 @@ namespace FirstBepinPlugin
             PluginMain.Main.LogInfo("Fake add needed skills");
             player.addHasSkillList(99710);
             player.addHasSkillList(99711);
+
+            if(!player.hasItem(99790))
+            {
+                int id = 99790;
+                int count = 1;
+
+                player.addItem(id, count, null, false);
+            }
         }
 
 

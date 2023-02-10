@@ -271,7 +271,7 @@ namespace FirstBepinPlugin.Patch
 
                         if (jsonData.instance.EquipSeidJsonData[seid] == null)
                         {
-                            jsonData.instance.EquipSeidJsonData[seid] = jsondataEquipSeid;
+                            jsonData.instance.EquipSeidJsonData[seid] = jsondataEquipSeid;  
                         }
                         else
                         {
@@ -285,6 +285,51 @@ namespace FirstBepinPlugin.Patch
             catch (Exception e)
             {
                 PluginMain.Main.LogError($"jsonConfig initEquipSeid Fail : {e.Message}");
+            }
+        }
+    }
+
+    /// <summary>
+    /// 配置读取扩展 追加seid扩展数据
+    /// </summary>
+    [HarmonyPatch(typeof(jsonData), "initItemsSeid")]
+    public class jsonDataPatcher_initItemsSeid
+    {
+        public static void Postfix(jsonData __instance)
+        {
+            try
+            {
+                // 初始化 ItemsJsonSeid
+                DirectoryInfo d = new DirectoryInfo(PluginMain.Main.Path + "/PatchConfig/ItemsSeidJsonData/");
+                if (d.Exists)
+                {
+                    foreach (var fInfo in d.GetFiles("*"))
+                    {
+                        if (fInfo.Extension != ".json")
+                        {
+                            continue;
+                        }
+                        int.TryParse(fInfo.Name.Substring(0, fInfo.Name.Length - ".json".Length), out var seid);
+
+                        var jsonItemsSeid = File.ReadAllText(fInfo.FullName);
+                        var jsondataItemsSeid = new JSONObject(jsonItemsSeid);
+
+                        if (jsonData.instance.ItemsSeidJsonData[seid] == null)
+                        {
+                            jsonData.instance.ItemsSeidJsonData[seid] = jsondataItemsSeid;
+                        }
+                        else
+                        {
+                            jsonData.instance.ItemsSeidJsonData[seid].Merge(jsondataItemsSeid);
+                        }
+
+                    }
+                }
+
+            }
+            catch (Exception e)
+            {
+                PluginMain.Main.LogError($"jsonConfig initItemsSeid Fail : {e.Message}");
             }
         }
     }
