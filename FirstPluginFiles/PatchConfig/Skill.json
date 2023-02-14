@@ -27,7 +27,7 @@
 			1
 		],
 		"skill_CastType":[
-			9
+			5
 		],
 		"skill_Cast":[
 			2
@@ -69,7 +69,7 @@
 			1
 		],
 		"skill_CastType":[
-			9
+			5
 		],
 		"skill_Cast":[
 			2
@@ -111,7 +111,7 @@
 			1
 		],
 		"skill_CastType":[
-			9
+			5
 		],
 		"skill_Cast":[
 			2
@@ -153,7 +153,7 @@
 			1
 		],
 		"skill_CastType":[
-			9
+			5
 		],
 		"skill_Cast":[
 			2
@@ -195,7 +195,7 @@
 			1
 		],
 		"skill_CastType":[
-			9
+			5
 		],
 		"skill_Cast":[
 			2
@@ -215,26 +215,26 @@
 		"Skill_Lv":1,
 		"skillEffect":"312",
 		"Skill_Type":3,
-		"name":"脱离Hzhan",
+		"name":"进入Hzhan",
 		"qingjiaotype":7,
 		"seid":[
-			596
+			599
 		],
 		"Affix":[],
 		"Affix2":[
 		],
-		"descr":"脱离Hzhan",
-		"TuJiandescr":"脱离Hzhan",
+		"descr":"进入Hzhan",
+		"TuJiandescr":"进入Hzhan",
 		"AttackType":[
 			5
 		],
 		"script":"SkillAttack",
 		"HP":0,
 		"speed":0,
-		"icon":0,
+		"icon":112221,
 		"Skill_DisplayType":0,
 		"skill_SameCastNum":[
-			1
+			2,2,2
 		],
 		"skill_CastType":[
 		],
@@ -255,26 +255,26 @@
 		"Skill_Lv":2,
 		"skillEffect":"312",
 		"Skill_Type":3,
-		"name":"脱离Hzhan",
+		"name":"进入Hzhan",
 		"qingjiaotype":7,
 		"seid":[
-			596
+			599
 		],
 		"Affix":[],
 		"Affix2":[
 		],
-		"descr":"脱离Hzhan",
-		"TuJiandescr":"脱离Hzhan",
+		"descr":"进入Hzhan",
+		"TuJiandescr":"进入Hzhan",
 		"AttackType":[
 			5
 		],
 		"script":"SkillAttack",
 		"HP":0,
 		"speed":0,
-		"icon":0,
+		"icon":112221,
 		"Skill_DisplayType":0,
 		"skill_SameCastNum":[
-			1
+			2,2,2
 		],
 		"skill_CastType":[
 		],
@@ -295,26 +295,26 @@
 		"Skill_Lv":3,
 		"skillEffect":"312",
 		"Skill_Type":3,
-		"name":"脱离Hzhan",
+		"name":"进入Hzhan",
 		"qingjiaotype":7,
 		"seid":[
-			596
+			599
 		],
 		"Affix":[],
 		"Affix2":[
 		],
-		"descr":"脱离Hzhan",
-		"TuJiandescr":"脱离Hzhan",
+		"descr":"进入Hzhan",
+		"TuJiandescr":"进入Hzhan",
 		"AttackType":[
 			5
 		],
 		"script":"SkillAttack",
 		"HP":0,
 		"speed":0,
-		"icon":0,
+		"icon":112221,
 		"Skill_DisplayType":0,
 		"skill_SameCastNum":[
-			1
+			2,2,2
 		],
 		"skill_CastType":[
 		],
@@ -335,26 +335,26 @@
 		"Skill_Lv":4,
 		"skillEffect":"312",
 		"Skill_Type":3,
-		"name":"脱离Hzhan",
+		"name":"进入Hzhan",
 		"qingjiaotype":7,
 		"seid":[
-			596
+			599
 		],
 		"Affix":[],
 		"Affix2":[
 		],
-		"descr":"脱离Hzhan",
-		"TuJiandescr":"脱离Hzhan",
+		"descr":"进入Hzhan",
+		"TuJiandescr":"进入Hzhan",
 		"AttackType":[
 			5
 		],
 		"script":"SkillAttack",
 		"HP":0,
 		"speed":0,
-		"icon":0,
+		"icon":112221,
 		"Skill_DisplayType":0,
 		"skill_SameCastNum":[
-			1
+			2,2,2
 		],
 		"skill_CastType":[
 		],
@@ -375,26 +375,26 @@
 		"Skill_Lv":5,
 		"skillEffect":"312",
 		"Skill_Type":3,
-		"name":"脱离Hzhan",
+		"name":"进入Hzhan",
 		"qingjiaotype":7,
 		"seid":[
-			596
+			599
 		],
 		"Affix":[],
 		"Affix2":[
 		],
-		"descr":"脱离Hzhan",
-		"TuJiandescr":"脱离Hzhan",
+		"descr":"进入Hzhan",
+		"TuJiandescr":"进入Hzhan",
 		"AttackType":[
 			5
 		],
 		"script":"SkillAttack",
 		"HP":0,
 		"speed":0,
-		"icon":0,
+		"icon":112221,
 		"Skill_DisplayType":0,
 		"skill_SameCastNum":[
-			1
+			2,2,2
 		],
 		"skill_CastType":[
 		],
@@ -437,7 +437,7 @@
 			1
 		],
 		"skill_CastType":[
-			9
+			5
 		],
 		"skill_Cast":[
 			2
@@ -457,14 +457,15 @@
 		"Skill_Lv":1,
 		"skillEffect":"312",
 		"Skill_Type":3,
-		"name":"Test普通攻击2",
+		"name":"振衣诀",
 		"qingjiaotype":7,
 		"seid":[
+			550
 		],
 		"Affix":[],
 		"Affix2":[
 		],
-		"descr":"Test普通攻击2",
+		"descr":"哎呀，全都被掀起来了",
 		"TuJiandescr":"Test普通攻击2",
 		"AttackType":[
 			5
@@ -475,11 +476,13 @@
 		"icon":0,
 		"Skill_DisplayType":0,
 		"skill_SameCastNum":[
-			1
+			
 		],
 		"skill_CastType":[
+			5,
 		],
 		"skill_Cast":[
+			2,
 		],
 		"Skill_LV":1,
 		"typePinJie":2,

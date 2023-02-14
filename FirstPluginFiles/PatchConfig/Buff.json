@@ -151,6 +151,46 @@
 		"isHide":0,
 		"ShowOnlyOne":0
 	},
+	"9971004":{
+		"buffid":9971004,
+		"BuffIcon":0,
+		"skillEffect":"fx_Summoner_o",
+		"name":"衣装",
+		"Affix":[
+			
+		],
+		"bufftype":3,
+		"seid":[],
+		"descr":"衣装",
+		"trigger":5,
+		"removeTrigger":7,
+		"script":"Buff",
+		"looptime":1,
+		"totaltime":1,
+		"BuffType":0,
+		"isHide":0,
+		"ShowOnlyOne":0
+	},
+	"9971005":{
+		"buffid":9971005,
+		"BuffIcon":0,
+		"skillEffect":"fx_Summoner_o",
+		"name":"基础淫灵根",
+		"Affix":[
+			
+		],
+		"bufftype":3,
+		"seid":[64],
+		"descr":"基础淫灵根",
+		"trigger":5,
+		"removeTrigger":7,
+		"script":"Buff",
+		"looptime":1,
+		"totaltime":1,
+		"BuffType":0,
+		"isHide":0,
+		"ShowOnlyOne":0
+	},
 	"9971009":{
 		"buffid":9971009,
 		"BuffIcon":0,
