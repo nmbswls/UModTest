@@ -123,6 +123,7 @@
   <ItemGroup>
     <Compile Include="MonoScripts\SecretsDetailPanel.cs" />
     <Compile Include="Patch\BagPatcher.cs" />
+    <Compile Include="Patch\FightPatcherOld.cs" />
     <Compile Include="Patch\FightPatcher.cs" />
     <Compile Include="Patch\ItemPatcher.cs" />
     <Compile Include="Patch\JsonConfigPatcher.cs" />
@@ -139,6 +140,7 @@
     <Compile Include="SecretsSystem\Configs.cs" />
     <Compile Include="SecretsSystem\Consts.cs" />
     <Compile Include="SecretsSystem\FightEx.cs" />
+    <Compile Include="SecretsSystem\HModeFightManager.cs" />
     <Compile Include="SecretsSystem\SecretsSystem.cs" />
   </ItemGroup>
   <ItemGroup />

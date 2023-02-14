@@ -110,7 +110,6 @@ namespace FirstBepinPlugin
             var player = Tools.instance.getPlayer();
 
             PluginMain.Main.LogInfo("Fake add needed skills");
-            player.addHasSkillList(99710);
             player.addHasSkillList(99711);
 
             if(!player.hasItem(99790))
@@ -200,187 +199,20 @@ namespace FirstBepinPlugin
 
         #region 战斗相关
 
-        public class HFightCtx
+        private HModeFightManager m_fightManager = new HModeFightManager();
+        public static HModeFightManager FightManager
         {
-            public bool m_isInHMode;
-            public string m_hState = "";
-
-            public Dictionary<int, GUIPackage.Skill> m_stateSkillCache = new Dictionary<int, GUIPackage.Skill>();
-            public List<int> m_nonHSkillCache = new List<int>();
+            get { return Instance.m_fightManager; }
         }
-
-
-        public HFightCtx m_ctx;
-        /// <summary>
-        /// 切换技能
-        /// </summary>
-        /// <param name="oldState"></param>
-        /// <param name="newState"></param>
-        public void FightOnSwitchState(KBEngine.Avatar player, string oldState, string newState)
-        {
-            //if(m_stateSkillCache.TryGetValue(newState, out var skillList))
-            //{
-
-            //}
-        }
-
-
-        /// <summary>
-        /// 检查是否能进入HMode
-        /// </summary>
-        /// <returns></returns>
-        public bool CheckFightEnterHMode(KBEngine.Avatar avatar)
-        {
-            PluginMain.Main.LogInfo("CheckFightEnterHMode");
-            var player = Tools.instance.getPlayer();
-            int buffNum = avatar.buffmag.GetBuffSum(Consts.BuffId_YinYuWang);
-
-            if (buffNum <= 20)
-            {
-                PluginMain.Main.LogInfo("层数不足 不进入Hzhan");
-                return false;
-            }
-
-            int rate10000 = (buffNum - 20) * 80;
-            if (rate10000 >= 10000)
-            {
-                return true;
-            }
-            int randVal = UnityEngine.Random.Range(0, 10000);
-            if (randVal < rate10000)
-            {
-                return true;
-            }
-            else
-            {
-                return true;
-            }
-        }
-
-        public void FightHInit(KBEngine.Avatar player)
-        {
-            m_ctx = new HFightCtx();
-
-            player.spell.addBuff(Consts.BuffId_YinTili, 100);
-            player.spell.addBuff(Consts.BuffId_YinJingli, 100);
-
-            player.spell.addBuff(Consts.BuffId_YinYuWang, 10);
-
-            player.OtherAvatar.spell.addBuff(9971009, 1);
-        }
-
-        public void FightEnterHMode()
-        {
-            PluginMain.Main.LogInfo("try enter h mode.");
-
-            if(m_ctx == null || m_ctx.m_isInHMode)
-            {
-                return;
-            }
-            var player = Tools.instance.getPlayer();
-            m_ctx.m_isInHMode = true;
-
-            m_ctx.m_hState = "";
-
-            var skillList = new List<int>();
-            // skil list
-            switch(m_ctx.m_hState)
-            {
-                case "": // 原始形态
-                    {
-                        skillList.Add(997201);
-                        skillList.Add(997211);
-                        skillList.Add(997221);
-                    }
-                    break;
-                case "WuLi":
-                    {
-                        skillList.Add(997231);
-                        skillList.Add(997241);
-                        skillList.Add(997251);
-                    }
-                    break;
-                case "GaoChao":
-                    {
-                        skillList.Add(997261);
-                        skillList.Add(997271);
-                        skillList.Add(997281);
-                    }
-                    break;
-            }
-
-            // 清空技能
-            player.FightClearSkill(0, 10);
-
-            // 赋予技能
-            foreach (var skillId in skillList)
-            {
-                var skillItem = player.skill.Find(delegate(GUIPackage.Skill s){ return s.skill_ID == skillId; });
-                if(skillItem == null)
-                {
-                    skillItem = new GUIPackage.Skill(skillId, 0, 10);
-                }
-                player.skill.Add(skillItem);
-                int num = 0;
-                foreach (UIFightSkillItem fightSkill in UIFightPanel.Inst.FightSkills)
-                {
-                    if (num >= 0 && num < 10 && !fightSkill.HasSkill)
-                    {
-                        fightSkill.SetSkill(skillItem);
-                        break;
-                    }
-                    num++;
-                }
-            }
-        }
-
-
-        public void FightExitHMode()
-        {
-            PluginMain.Main.LogInfo("try exit h mode.");
-
-            if (m_ctx == null || !m_ctx.m_isInHMode)
-            {
-                return;
-            }
-
-            var player = Tools.instance.getPlayer();
-            m_ctx.m_isInHMode = false;
-
-            // 清空技能
-            player.FightClearSkill(0, 10);
-
-            foreach(var oldSkillId in m_ctx.m_nonHSkillCache)
-            {
-                var skillItem = player.skill.Find(delegate (GUIPackage.Skill s) { return s.skill_ID == oldSkillId; });
-                
-                // 一定在列表中
-                if(skillItem == null)
-                {
-                    continue;
-                }
-                int num = 0;
-                foreach (UIFightSkillItem fightSkill in UIFightPanel.Inst.FightSkills)
-                {
-                    if (num >= 0 && num < 10 && !fightSkill.HasSkill)
-                    {
-                        fightSkill.SetSkill(skillItem);
-                        break;
-                    }
-                    num++;
-                }
-            }
-        }
-
 
         #endregion
 
 
-            /// <summary>
-            /// 
-            /// </summary>
-            /// <param name="id"></param>
-            /// <returns></returns>
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public Sprite SecretsLunDaoSpriteGet(int id)
         {
             string spritePath = "";

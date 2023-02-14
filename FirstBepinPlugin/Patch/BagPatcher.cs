@@ -65,6 +65,10 @@ namespace FirstBepinPlugin.Patch
                 PluginMain.Main.LogError("TabBag FiddlerItem false.");
                 __result = false;
             }
+            if(__instance.EquipType == EquipType.丹炉)
+            {
+                __result = true;
+            }
         }
     }
 
