@@ -41,174 +41,7 @@
 		"canUseDistMax":30,
 		"CD":10000
 	},
-	"997102":{
-		"id":997102,
-		"Skill_ID":99710,
-		"Skill_Lv":2,
-		"skillEffect":"312",
-		"Skill_Type":3,
-		"name":"加魅惑",
-		"qingjiaotype":7,
-		"seid":[
-			4
-		],
-		"Affix":[],
-		"Affix2":[
-		],
-		"descr":"敌方获得【魅惑】*10",
-		"TuJiandescr":"敌方获得#c449491【魅惑】#n*4",
-		"AttackType":[
-			5
-		],
-		"script":"SkillAttack",
-		"HP":0,
-		"speed":0,
-		"icon":0,
-		"Skill_DisplayType":0,
-		"skill_SameCastNum":[
-			1
-		],
-		"skill_CastType":[
-			5
-		],
-		"skill_Cast":[
-			2
-		],
-		"Skill_LV":1,
-		"typePinJie":2,
-		"DF":1,
-		"TuJianType":0,
-		"Skill_Open":1,
-		"Skill_castTime":1,
-		"canUseDistMax":30,
-		"CD":10000
-	},
-	"997103":{
-		"id":997103,
-		"Skill_ID":99710,
-		"Skill_Lv":3,
-		"skillEffect":"312",
-		"Skill_Type":3,
-		"name":"加魅惑",
-		"qingjiaotype":7,
-		"seid":[
-			4
-		],
-		"Affix":[],
-		"Affix2":[
-		],
-		"descr":"敌方获得【魅惑】*10",
-		"TuJiandescr":"敌方获得#c449491【魅惑】#n*4",
-		"AttackType":[
-			5
-		],
-		"script":"SkillAttack",
-		"HP":0,
-		"speed":0,
-		"icon":0,
-		"Skill_DisplayType":0,
-		"skill_SameCastNum":[
-			1
-		],
-		"skill_CastType":[
-			5
-		],
-		"skill_Cast":[
-			2
-		],
-		"Skill_LV":1,
-		"typePinJie":2,
-		"DF":1,
-		"TuJianType":0,
-		"Skill_Open":1,
-		"Skill_castTime":1,
-		"canUseDistMax":30,
-		"CD":10000
-	},
-	"997104":{
-		"id":997104,
-		"Skill_ID":99710,
-		"Skill_Lv":4,
-		"skillEffect":"312",
-		"Skill_Type":3,
-		"name":"加魅惑",
-		"qingjiaotype":7,
-		"seid":[
-			4
-		],
-		"Affix":[],
-		"Affix2":[
-		],
-		"descr":"敌方获得【魅惑】*10",
-		"TuJiandescr":"敌方获得#c449491【魅惑】#n*4",
-		"AttackType":[
-			5
-		],
-		"script":"SkillAttack",
-		"HP":0,
-		"speed":0,
-		"icon":0,
-		"Skill_DisplayType":0,
-		"skill_SameCastNum":[
-			1
-		],
-		"skill_CastType":[
-			5
-		],
-		"skill_Cast":[
-			2
-		],
-		"Skill_LV":1,
-		"typePinJie":2,
-		"DF":1,
-		"TuJianType":0,
-		"Skill_Open":1,
-		"Skill_castTime":1,
-		"canUseDistMax":30,
-		"CD":10000
-	},
-	"997105":{
-		"id":997105,
-		"Skill_ID":99710,
-		"Skill_Lv":5,
-		"skillEffect":"312",
-		"Skill_Type":3,
-		"name":"加魅惑",
-		"qingjiaotype":7,
-		"seid":[
-			4
-		],
-		"Affix":[],
-		"Affix2":[
-		],
-		"descr":"敌方获得【魅惑】*10",
-		"TuJiandescr":"敌方获得#c449491【魅惑】#n*4",
-		"AttackType":[
-			5
-		],
-		"script":"SkillAttack",
-		"HP":0,
-		"speed":0,
-		"icon":0,
-		"Skill_DisplayType":0,
-		"skill_SameCastNum":[
-			1
-		],
-		"skill_CastType":[
-			5
-		],
-		"skill_Cast":[
-			2
-		],
-		"Skill_LV":1,
-		"typePinJie":2,
-		"DF":1,
-		"TuJianType":0,
-		"Skill_Open":1,
-		"Skill_castTime":1,
-		"canUseDistMax":30,
-		"CD":10000
-	},
+	
 	"997111":{
 		"id":997111,
 		"Skill_ID":99711,
@@ -410,31 +243,31 @@
 		"CD":10000
 	},
 	
-	"997201":{
-		"id":997201,
+	"99720":{
+		"id":99720,
 		"Skill_ID":99720,
 		"Skill_Lv":1,
 		"skillEffect":"312",
 		"Skill_Type":3,
-		"name":"Test普通攻击1",
+		"name":"神诱术",
 		"qingjiaotype":7,
 		"seid":[
+			598,551,
 		],
 		"Affix":[],
 		"Affix2":[
 		],
-		"descr":"Test普通攻击1",
-		"TuJiandescr":"Test普通攻击1",
+		"descr":"基础诱惑神通，敌方获得【欲望】*4 多次使用效果下降 最少增加1层",
+		"TuJiandescr":"基础诱惑神通，敌方获得【欲望】*4 多次使用效果下降 最少增加1层",
 		"AttackType":[
 			5
 		],
 		"script":"SkillAttack",
-		"HP":1,
+		"HP":0,
 		"speed":0,
 		"icon":0,
 		"Skill_DisplayType":0,
 		"skill_SameCastNum":[
-			1
 		],
 		"skill_CastType":[
 			5
@@ -451,26 +284,68 @@
 		"canUseDistMax":30,
 		"CD":10000
 	},
-	"997211":{
-		"id":997211,
+	"99721":{
+		"id":99721,
 		"Skill_ID":99721,
 		"Skill_Lv":1,
-		"skillEffect":"312",
-		"Skill_Type":3,
-		"name":"振衣诀",
+		"skillEffect":"6",
+		"Skill_Type":6,
+		"name":"纵地淫光",
 		"qingjiaotype":7,
 		"seid":[
-			550
+			30,6
 		],
 		"Affix":[],
 		"Affix2":[
 		],
-		"descr":"哎呀，全都被掀起来了",
-		"TuJiandescr":"Test普通攻击2",
+		"descr":"【后继无力】吸收8点灵气，消散其中所有的非金系灵气",
+		"TuJiandescr":"【后继无力】吸收8点灵气，消散其中所有的非金系灵气",
 		"AttackType":[
+			0
+		],
+		"script":"SkillSelf",
+		"HP":1,
+		"speed":0,
+		"icon":0,
+		"Skill_DisplayType":0,
+		"skill_SameCastNum":[
+			1
+		],
+		"skill_CastType":[
 			5
 		],
-		"script":"SkillAttack",
+		"skill_Cast":[
+			1
+		],
+		"Skill_LV":1,
+		"typePinJie":2,
+		"DF":1,
+		"TuJianType":0,
+		"Skill_Open":1,
+		"Skill_castTime":1,
+		"canUseDistMax":30,
+		"CD":10000
+	},
+	"99722":{
+		"id":99722,
+		"Skill_ID":99722,
+		"Skill_Lv":1,
+		"skillEffect":"6",
+		"Skill_Type":3,
+		"name":"敛容术",
+		"qingjiaotype":7,
+		"seid":[
+			550,59,551
+		],
+		"Affix":[],
+		"Affix2":[
+		],
+		"descr":"好了，不闹了...\r\n恢复衣装、生命值，降低欲望",
+		"TuJiandescr":"好了，不闹了",
+		"AttackType":[
+			0
+		],
+		"script":"SkillSelf",
 		"HP":1,
 		"speed":0,
 		"icon":0,
@@ -493,74 +368,38 @@
 		"canUseDistMax":30,
 		"CD":10000
 	},
-	"997221":{
-		"id":997221,
-		"Skill_ID":99722,
-		"Skill_Lv":1,
-		"skillEffect":"312",
-		"Skill_Type":3,
-		"name":"Test普通攻击3",
-		"qingjiaotype":7,
-		"seid":[
-		],
-		"Affix":[],
-		"Affix2":[
-		],
-		"descr":"Test普通攻击3",
-		"TuJiandescr":"Test普通攻击3",
-		"AttackType":[
-			5
-		],
-		"script":"SkillAttack",
-		"HP":1,
-		"speed":0,
-		"icon":0,
-		"Skill_DisplayType":0,
-		"skill_SameCastNum":[
-			1
-		],
-		"skill_CastType":[
-		],
-		"skill_Cast":[
-		],
-		"Skill_LV":1,
-		"typePinJie":2,
-		"DF":1,
-		"TuJianType":0,
-		"Skill_Open":1,
-		"Skill_castTime":1,
-		"canUseDistMax":30,
-		"CD":10000
-	},
-	"997231":{
-		"id":997231,
+	"99723":{
+		"id":99723,
 		"Skill_ID":99723,
 		"Skill_Lv":1,
 		"skillEffect":"312",
 		"Skill_Type":3,
-		"name":"Test普通攻击4",
+		"name":"振衣诀",
 		"qingjiaotype":7,
 		"seid":[
+			550
 		],
 		"Affix":[],
 		"Affix2":[
 		],
-		"descr":"Test普通攻击4",
-		"TuJiandescr":"Test普通攻击4",
+		"descr":"哎呀，全都被掀起来了",
+		"TuJiandescr":"Test普通攻击2",
 		"AttackType":[
-			5
+			0
 		],
-		"script":"SkillAttack",
+		"script":"SkillSelf",
 		"HP":1,
 		"speed":0,
 		"icon":0,
 		"Skill_DisplayType":0,
 		"skill_SameCastNum":[
-			1
+			
 		],
 		"skill_CastType":[
+			5,
 		],
 		"skill_Cast":[
+			2,
 		],
 		"Skill_LV":1,
 		"typePinJie":2,
@@ -756,6 +595,89 @@
 		"skill_CastType":[
 		],
 		"skill_Cast":[
+		],
+		"Skill_LV":1,
+		"typePinJie":2,
+		"DF":1,
+		"TuJianType":0,
+		"Skill_Open":1,
+		"Skill_castTime":1,
+		"canUseDistMax":30,
+		"CD":10000
+	},
+	"99730":{
+		"id":99730,
+		"Skill_ID":99730,
+		"Skill_Lv":1,
+		"skillEffect":"300",
+		"Skill_Type":3,
+		"name":"连丝指",
+		"qingjiaotype":7,
+		"seid":[
+			561,562
+		],
+		"Affix":[],
+		"Affix2":[
+		],
+		"descr":"【淫意】造成5点快感",
+		"TuJiandescr":"【淫意】造成5点快感",
+		"AttackType":[
+			5
+		],
+		"script":"SkillAttack",
+		"HP":0,
+		"speed":0,
+		"icon":0,
+		"Skill_DisplayType":0,
+		"skill_SameCastNum":[
+			1
+		],
+		"skill_CastType":[
+			5
+		],
+		"skill_Cast":[
+			3
+		],
+		"Skill_LV":1,
+		"typePinJie":2,
+		"DF":1,
+		"TuJianType":0,
+		"Skill_Open":1,
+		"Skill_castTime":1,
+		"canUseDistMax":30,
+		"CD":10000
+	},
+	"99799":{
+		"id":99799,
+		"Skill_ID":99799,
+		"Skill_Lv":1,
+		"skillEffect":"312",
+		"Skill_Type":3,
+		"name":"进手",
+		"qingjiaotype":7,
+		"seid":[
+			147,560
+		],
+		"Affix":[],
+		"Affix2":[
+		],
+		"descr":"主动进入手状态 切换技能组 只有对方发情才可使用",
+		"TuJiandescr":"主动进入手状态 切换技能组",
+		"AttackType":[
+			5
+		],
+		"script":"SkillAttack",
+		"HP":0,
+		"speed":0,
+		"icon":0,
+		"Skill_DisplayType":0,
+		"skill_SameCastNum":[
+		],
+		"skill_CastType":[
+			5
+		],
+		"skill_Cast":[
+			4
 		],
 		"Skill_LV":1,
 		"typePinJie":2,

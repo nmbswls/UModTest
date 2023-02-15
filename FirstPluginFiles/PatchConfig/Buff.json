@@ -113,15 +113,15 @@
 	},
 	"9971002":{
 		"buffid":9971002,
-		"BuffIcon":0,
+		"BuffIcon":70108,
 		"skillEffect":"fx_Summoner_o",
-		"name":"快乐",
+		"name":"快感",
 		"Affix":[
 			
 		],
 		"bufftype":3,
 		"seid":[],
-		"descr":"快乐",
+		"descr":"快感",
 		"trigger":5,
 		"removeTrigger":7,
 		"script":"Buff",
@@ -133,14 +133,14 @@
 	},
 	"9971003":{
 		"buffid":9971003,
-		"BuffIcon":0,
+		"BuffIcon":70108,
 		"skillEffect":"fx_Summoner_o",
 		"name":"欲望",
 		"Affix":[
 			
 		],
 		"bufftype":3,
-		"seid":[],
+		"seid":[64],
 		"descr":"欲望",
 		"trigger":5,
 		"removeTrigger":7,
@@ -153,7 +153,7 @@
 	},
 	"9971004":{
 		"buffid":9971004,
-		"BuffIcon":0,
+		"BuffIcon":600224,
 		"skillEffect":"fx_Summoner_o",
 		"name":"衣装",
 		"Affix":[
@@ -175,13 +175,33 @@
 		"buffid":9971005,
 		"BuffIcon":0,
 		"skillEffect":"fx_Summoner_o",
-		"name":"基础淫灵根",
+		"name":"天性解放",
 		"Affix":[
 			
 		],
 		"bufftype":3,
 		"seid":[64],
-		"descr":"基础淫灵根",
+		"descr":"增加淫灵根权重50",
+		"trigger":5,
+		"removeTrigger":7,
+		"script":"Buff",
+		"looptime":1,
+		"totaltime":1,
+		"BuffType":1,
+		"isHide":0,
+		"ShowOnlyOne":0
+	},
+	"9971006":{
+		"buffid":9971006,
+		"BuffIcon":0,
+		"skillEffect":"fx_Summoner_o",
+		"name":"兴奋",
+		"Affix":[
+			
+		],
+		"bufftype":3,
+		"seid":[],
+		"descr":"部位已经做好了战斗准备",
 		"trigger":5,
 		"removeTrigger":7,
 		"script":"Buff",
@@ -209,6 +229,86 @@
 		"totaltime":1,
 		"BuffType":1,
 		"isHide":1,
+		"ShowOnlyOne":0
+	},
+	"9971010":{
+		"buffid":9971010,
+		"BuffIcon":0,
+		"skillEffect":"fx_Summoner_o",
+		"name":"理性击穿",
+		"Affix":[
+			
+		],
+		"bufftype":3,
+		"seid":[],
+		"descr":"",
+		"trigger":5,
+		"removeTrigger":7,
+		"script":"Buff",
+		"looptime":1,
+		"totaltime":1,
+		"BuffType":1,
+		"isHide":0,
+		"ShowOnlyOne":0
+	},
+	"9972000":{
+		"buffid":9972000,
+		"BuffIcon":0,
+		"skillEffect":"fx_Summoner_o",
+		"name":"体位：正常",
+		"Affix":[
+			
+		],
+		"bufftype":3,
+		"seid":[],
+		"descr":"",
+		"trigger":5,
+		"removeTrigger":7,
+		"script":"Buff",
+		"looptime":1,
+		"totaltime":1,
+		"BuffType":1,
+		"isHide":0,
+		"ShowOnlyOne":0
+	},
+	"9972001":{
+		"buffid":9972001,
+		"BuffIcon":0,
+		"skillEffect":"fx_Summoner_o",
+		"name":"体位：手",
+		"Affix":[
+			
+		],
+		"bufftype":3,
+		"seid":[],
+		"descr":"",
+		"trigger":5,
+		"removeTrigger":7,
+		"script":"Buff",
+		"looptime":1,
+		"totaltime":1,
+		"BuffType":1,
+		"isHide":0,
+		"ShowOnlyOne":0
+	},
+	"9972002":{
+		"buffid":9972002,
+		"BuffIcon":0,
+		"skillEffect":"fx_Summoner_o",
+		"name":"无力",
+		"Affix":[
+			
+		],
+		"bufftype":3,
+		"seid":[],
+		"descr":"",
+		"trigger":5,
+		"removeTrigger":7,
+		"script":"Buff",
+		"looptime":1,
+		"totaltime":1,
+		"BuffType":1,
+		"isHide":0,
 		"ShowOnlyOne":0
 	},
 }
