@@ -229,6 +229,7 @@ namespace FirstBepinPlugin
 
         public KBEngine.Avatar m_player;
         public HFightCtx m_ctx = new HFightCtx();
+        public bool IsInBattle;
 
         /// <summary>
         /// 初始化
@@ -236,6 +237,7 @@ namespace FirstBepinPlugin
         public void FightHInit()
         {
             m_ctx.Clear();
+            IsInBattle = true;
             m_player = Tools.instance.getPlayer();
 
             m_ctx.StaticAttributeBaseVal.Add(HModeAttributeType.HAtk, 0);

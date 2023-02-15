@@ -38,6 +38,22 @@ namespace FirstBepinPlugin.Patch
         }
     }
 
+
+    [DialogEvent("FightEndCallback")]
+    public class FightEndCallback : IDialogEvent
+    {
+        public void Execute(DialogCommand command, DialogEnvironment env, Action callback)
+        {
+
+            env.tmpArgs.TryGetValue("callbackParam", out var callbackParam);
+            if(SecretsSystem.FightManager.IsInBattle)
+            {
+
+            }
+            callback?.Invoke();
+        }
+    }
+
     /// <summary>
     /// 对话事件扩展
     /// </summary>
@@ -50,6 +66,8 @@ namespace FirstBepinPlugin.Patch
             Main.LogInfo("InitExInitExInitExInitExInitExInitExInitExInitExInitExInitExInitExInitExInitExInitExInitExInitExInitExInitExInitExInitExInitExInitExInitEx");
             DialogAnalysis.RegisterCommand("MyCustom", Activator.CreateInstance(typeof(MyCustom)) as IDialogEvent);
             DialogAnalysis.RegisterCommand("SecretJieSuan", Activator.CreateInstance(typeof(SecretJieSuan)) as IDialogEvent);
+            DialogAnalysis.RegisterCommand("FightEndCallback", Activator.CreateInstance(typeof(FightEndCallback)) as IDialogEvent);
+            
         }
     }
 }
