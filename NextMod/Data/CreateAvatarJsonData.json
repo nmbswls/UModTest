@@ -1,0 +1,16 @@
+{
+	"99414":{
+		"id":99414,
+		"Title":"圣女",
+		"fenZu":15,
+		"feiYong":0,
+		"fenLei":"角色设定",
+		"fenLeiGuanLian":2,
+		"seid":[
+			19
+		],
+		"jiesuo":0,
+		"Desc":"圣女前置",
+		"Info":"圣女前置。"
+	},
+}

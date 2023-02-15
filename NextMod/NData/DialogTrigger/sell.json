@@ -1,0 +1,10 @@
+[
+    {
+        "id": "secrets-sell",
+        "type": "交谈",
+        "condition": "GetNpcSex(roleID) == 1 && GetLuaInt(\"Secrets\",\"IsSecretOpen\")",
+        "triggerEvent": "secretJiaohu-entry",
+		"default" : true,
+		"once": false,
+    },
+]
