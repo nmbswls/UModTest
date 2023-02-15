@@ -1,4 +1,5 @@
 ﻿using Bag;
+using BehaviorDesigner.Runtime;
 using DebuggingEssentials;
 using GUIPackage;
 using HarmonyLib;
@@ -137,7 +138,7 @@ namespace FirstBepinPlugin.Patch
     [HarmonyPatch(typeof(KBEngine.Buff), "CanRealizeSeid")]
     public class BuffPatcher_CanRealizeSeid
     {
-        public static bool Prefix(KBEngine.Buff __instance, ref bool __result, Avatar _avatar, List<int> flag, int nowSeid, BuffLoopData buffLoopData = null, List<int> buffInfo = null)
+        public static bool Prefix(KBEngine.Buff __instance, ref bool __result, KBEngine.Avatar _avatar, List<int> flag, int nowSeid, BuffLoopData buffLoopData = null, List<int> buffInfo = null)
         {
             if (nowSeid != Consts.BuffSeId_CheckIntoHMode
                 && nowSeid != Consts.BuffSeId_CheckOutHMode)
@@ -286,5 +287,4 @@ namespace FirstBepinPlugin.Patch
             }
         }
     }
-
 }

@@ -1,6 +1,8 @@
-﻿using FirstBepinPlugin.Patch;
+﻿using BehaviorDesigner.Runtime;
+using FirstBepinPlugin.Patch;
 using GUIPackage;
 using KBEngine;
+using Newtonsoft.Json;
 using SkySwordKill.Next.DialogSystem;
 using System;
 using System.Collections.Generic;
@@ -9,8 +11,10 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using YSGame;
 using YSGame.Fight;
 using static FirstBepinPlugin.HModeFightManager;
 using static KBEngine.Buff;
@@ -246,6 +250,7 @@ namespace FirstBepinPlugin
             m_ctx.StaticAttributeBaseVal.Add(HModeAttributeType.HMaxTili, 100);
             m_ctx.StaticAttributeBaseVal.Add(HModeAttributeType.HMaxXingFen, 100);
             m_ctx.StaticAttributeBaseVal.Add(HModeAttributeType.HMaxKuaiGan, 100);
+
         }
 
         public void FightOnRoungStart(KBEngine.Avatar avatar)
@@ -254,9 +259,6 @@ namespace FirstBepinPlugin
             if(avatar == m_player)
             {
                 CheckKuaiGanReachMax(m_ctx.Self);
-
-                DialogAnalysis.SwitchDialogEvent("secretJiaohu-Cancel");
-
             }
             else
             {
@@ -269,6 +271,8 @@ namespace FirstBepinPlugin
             }
 
         }
+
+
 
         /// <summary>
         /// 进入H形态
@@ -315,7 +319,7 @@ namespace FirstBepinPlugin
                 RoundManager.instance.DrawCard(m_player, (int)LingQiType.魔);
             }
             // 基础淫比重 不高 也就50%
-            SetBuffLayer(player, Consts.BuffId_BasicYinLingen, 1); 
+            SetBuffLayer(player, Consts.BuffId_BasicYinLingen, 1);
         }
 
         /// <summary>
@@ -349,6 +353,26 @@ namespace FirstBepinPlugin
                 CheckHFightEnd();
             }
         }
+
+        /// <summary>
+        /// 计算发情状态下敌人的h技能
+        /// </summary>
+        public void ApplyEnemyHSkill()
+        {
+            Queue<UnityAction> queue = new Queue<UnityAction>();
+
+            for (int i=0;i<3;i++)
+            {
+                UnityAction unityAction = delegate
+                {
+                    ShowHAnim();
+                };
+                queue.Enqueue(unityAction);
+            }
+
+            YSFuncList.Ints.AddFunc(queue);
+        }
+
 
         /// <summary>
         /// 使用ctx数据更新显示用buff列表
@@ -462,6 +486,7 @@ namespace FirstBepinPlugin
         private List<int> m_skillIdCache = new List<int>();
 
         public FightUISkillTabController m_cachedSkillTab;
+        public FightHAnimController m_cachedHAnimController;
 
         private UILingQiImageData m_cachedNormalUI;
         private Sprite m_cachedNormalUI2;
@@ -507,6 +532,9 @@ namespace FirstBepinPlugin
             var skillTab = UnityEngine.GameObject.Instantiate(PluginMain.Main.LoadGameObjectFromAB("FightSkillGroupTab"), UIFightPanel.Inst.transform);
             m_cachedSkillTab = skillTab.AddComponent<FightUISkillTabController>();
             m_cachedSkillTab.Init(this);
+
+            m_cachedHAnimController.EventOnAnimEnd += OnHAnimEnd;
+            //m_cachedHAnimController = 
         }
 
 
@@ -802,6 +830,12 @@ namespace FirstBepinPlugin
         }
 
 
+        public void OnFightTalkFinish(int param)
+        {
+            // use skill
+            PluginMain.Main.LogError($"OnFightTalkFinish {param}");
+        }
+
 
 
         //public void FightEnterHMode()
@@ -907,5 +941,58 @@ namespace FirstBepinPlugin
             }
         }
 
+
+        /// <summary>
+        /// 回调
+        /// </summary>
+        public void ShowHAnim()
+        {
+            m_cachedHAnimController.PlayHAnim("anim_mo_ru", 2f);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void OnHAnimEnd()
+        {
+            YSFuncList.Ints.Continue();
+        }
+    }
+
+    public class FightHAnimController : MonoBehaviour
+    {
+        public Animator m_animator;
+        public Animation m_animation;
+
+        public event Action EventOnAnimEnd;
+
+        private float m_playTime;
+        private float m_timer;
+
+        public void PlayHAnim(string animName, float playTime)
+        {
+            m_animation.clip = null;
+            m_animation.Play();
+
+            m_playTime = playTime;
+            m_timer = 0;
+
+            m_animator.gameObject.SetActive(true);
+        }
+
+        public void Update()
+        {
+            if (m_timer > m_playTime)
+            {
+                m_animator.gameObject.SetActive(false);
+                EventOnAnimEnd?.Invoke();
+            }
+            m_timer += Time.deltaTime;
+        }
+
+        public void OnDestroy()
+        {
+            SecretsSystem.FightManager.m_cachedHAnimController = null;
+        }
     }
 }

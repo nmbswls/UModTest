@@ -48,7 +48,7 @@ namespace FirstBepinPlugin.Patch
             env.tmpArgs.TryGetValue("callbackParam", out var callbackParam);
             if(SecretsSystem.FightManager.IsInBattle)
             {
-
+                SecretsSystem.FightManager.OnFightTalkFinish(callbackParam);
             }
             callback?.Invoke();
         }
