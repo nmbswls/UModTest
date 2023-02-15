@@ -28,6 +28,13 @@ namespace FirstBepinPlugin
         public const int BuffId_YinYiZhuang = 9971004;
 
         public const int BuffId_BasicYinLingen = 9971005; //进战后的基础淫灵根比率
+        public const int BuffId_YinXingFen = 9971006; // 兴奋度
+
+        public const int BuffId_FlagFaQing = 9971010; // 敌方发情
+
+        public const int BuffId_FlagNormal = 9972000;
+        public const int BuffId_FlagShou = 9972001;
+        public const int BuffId_FlagWuLi = 9972002;
 
         //public const int BuffTriggerId_CheckLayerBetween = 9971; // 检查层数要求 其具体参数定义在seid 9971文件中
 
@@ -48,6 +55,15 @@ namespace FirstBepinPlugin
 
         // 改变衣装
         public const int SkillSeId_ModYiZhuang = 550; // 移除衣装 p1 固定值 p2 最大百分比
+        public const int SkillSeId_ModYuWang = 551; // 改变欲望 p1 固定值
+        public const int SkillSeId_ModXingFen = 552; // 改变部位兴奋度 p1 固定值
+
+
+        public const int SkillSeId_SwitchTiWei = 560; // 切换体味 p1 体位id
+        public const int SkillSeId_ModKuaiGan = 561; // 改变对象 p1:1自身2敌方 p2:数值
+        public const int SkillSeId_YinYi = 562; // 淫意
+
+        public const int SkillSeId_MultiTriggerByUsedTimee = 598; // 根据本回合使用次数改变后续触发次数 初始触发p1次 每次连续使用效果减少触发p2次 最低触发p3次 最高触发p4次
 
         public const int SkillSeId_EnterHMode = 599;
     }

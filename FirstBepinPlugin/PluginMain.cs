@@ -12,6 +12,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace FirstBepinPlugin
 {
@@ -81,6 +82,7 @@ namespace FirstBepinPlugin
 		public static string NpcSecretDetailPanelName = "NpcSecretDetailPanel";
 
 		public AssetBundle allNeed;
+		public Font font_YaHei;
 
 		public IEnumerator LoadAssetAsync()
 		{
@@ -102,7 +104,9 @@ namespace FirstBepinPlugin
 				Logger.LogInfo("------------------------------- name" + gameObject.name);
 				m_GoDict.TryAdd(gameObject.name, gameObject);
 			}
-		}
+
+            font_YaHei = Font.CreateDynamicFontFromOSFont("Microsoft YaHei", 6);
+        }
 
 		public UnityEngine.GameObject LoadGameObjectFromAB(string assetName)
         {

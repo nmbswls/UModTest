@@ -51,6 +51,19 @@ namespace FirstBepinPlugin.Patch
         }
     }
 
+    /// <summary>
+    /// 回合开始扩展事件
+    /// </summary>
+    [HarmonyPatch(typeof(RoundManager), "startRound")]
+    public class RoundManagerPatcher_startRound
+    {
+        public static void Postfix(RoundManager __instance, Entity _avater)
+        {
+            PluginMain.Main.LogInfo("RoundManagerPatcher_startRound Postfix ");
+            SecretsSystem.FightManager.FightOnRoungStart((KBEngine.Avatar)_avater);
+        }
+    }
+
 
     /// <summary>
     /// 技能扩展 H 状态下 改变提示
@@ -156,7 +169,13 @@ namespace FirstBepinPlugin.Patch
         public static bool Prefix(GUIPackage.Skill __instance, int seid, List<int> damage, Entity _attaker, Entity _receiver, int type)
         {
             if (seid != Consts.SkillSeId_EnterHMode
-                && seid != Consts.SkillSeId_ModYiZhuang)
+                && seid != Consts.SkillSeId_ModYiZhuang
+                && seid != Consts.SkillSeId_ModYuWang
+                && seid != Consts.SkillSeId_ModXingFen
+                && seid != Consts.SkillSeId_SwitchTiWei
+                && seid != Consts.SkillSeId_ModKuaiGan
+                && seid != Consts.SkillSeId_MultiTriggerByUsedTimee
+                && seid != Consts.SkillSeId_YinYi)
             {
                 return true;
             }
@@ -175,6 +194,50 @@ namespace FirstBepinPlugin.Patch
                         __instance.realizeSeid_ModYiZhuang(seid, damage, (KBEngine.Avatar)_attaker, (KBEngine.Avatar)_receiver, type);
                     }
                     break;
+                case Consts.SkillSeId_ModYuWang:
+                    {
+                        PluginMain.Main.LogInfo("Skill realizeSeid Handle realizeSeid_ModYiZhuang ");
+                        __instance.realizeSeid_ModYuWang(seid, damage, (KBEngine.Avatar)_attaker, (KBEngine.Avatar)_receiver, type);
+                        
+                    }
+                    break;
+                case Consts.SkillSeId_ModXingFen:
+                    {
+                        PluginMain.Main.LogInfo("Skill realizeSeid Handle realizeSeid_ModYiZhuang ");
+                        __instance.realizeSeid_ModXingFen(seid, damage, (KBEngine.Avatar)_attaker, (KBEngine.Avatar)_receiver, type);
+
+                    }
+                    break;
+                case Consts.SkillSeId_SwitchTiWei:
+                    {
+                        PluginMain.Main.LogInfo("Skill realizeSeid Handle realizeSeid_SwitchTiWei ");
+                        __instance.realizeSeid_SwitchTiWei(seid, damage, (KBEngine.Avatar)_attaker, (KBEngine.Avatar)_receiver, type);
+
+                    }
+                    break;
+                case Consts.SkillSeId_ModKuaiGan:
+                    {
+                        PluginMain.Main.LogInfo("Skill realizeSeid Handle realizeSeid_ModKuaiGan ");
+                        __instance.realizeSeid_ModKuaiGan(seid, damage, (KBEngine.Avatar)_attaker, (KBEngine.Avatar)_receiver, type);
+
+                    }
+                    break;
+                case Consts.SkillSeId_MultiTriggerByUsedTimee:
+                    {
+                        PluginMain.Main.LogInfo("Skill realizeSeid Handle realizeSeid_MultiTriggerByUsedTimee ");
+                        __instance.realizeSeid_MultiTriggerByUsedTimee(seid, damage, (KBEngine.Avatar)_attaker, (KBEngine.Avatar)_receiver, type);
+
+                    }
+                    break;
+                case Consts.SkillSeId_YinYi:
+                    {
+                        PluginMain.Main.LogInfo("Skill realizeSeid Handle realizeSeid_YinYi ");
+                        __instance.realizeSeid_YinYi(seid, damage, (KBEngine.Avatar)_attaker, (KBEngine.Avatar)_receiver, type);
+
+                    }
+                    break;
+
+
             }
 
             return false;
