@@ -70,7 +70,7 @@ namespace FirstBepinPlugin
                 var textComp = tab.GetComponentInChildren<Text>();
                 textComp.font = PluginMain.Main.font_YaHei;
             }
-            m_textPose = m_toggleList[1].GetComponent<Text>();
+            m_textPose = m_toggleList[1].GetComponentInChildren<Text>();
 
             RefreshUI();
         }
@@ -533,7 +533,12 @@ namespace FirstBepinPlugin
             m_cachedSkillTab = skillTab.AddComponent<FightUISkillTabController>();
             m_cachedSkillTab.Init(this);
 
-            m_cachedHAnimController.EventOnAnimEnd += OnHAnimEnd;
+            ((RectTransform)UIFightPanel.Inst.FightJiLu.transform).anchorMin = new Vector2(0,0.5f);
+            ((RectTransform)UIFightPanel.Inst.FightJiLu.transform).anchorMax = new Vector2(0,0.5f);
+
+            ((RectTransform)UIFightPanel.Inst.FightJiLu.transform).anchoredPosition = new Vector2(100,0);
+            UIFightPanel.Inst.FightJiLu.Show();
+            //m_cachedHAnimController.EventOnAnimEnd += OnHAnimEnd;
             //m_cachedHAnimController = 
         }
 
