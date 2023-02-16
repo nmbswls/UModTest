@@ -8,6 +8,7 @@ using KBEngine;
 using PaiMai;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -15,8 +16,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using YSGame.Fight;
 using static ICSharpCode.SharpZipLib.Zip.ExtendedUnixData;
+using static UIIconShow;
 
 namespace FirstBepinPlugin.Patch
 {
@@ -287,4 +290,78 @@ namespace FirstBepinPlugin.Patch
             }
         }
     }
+
+
+    /// <summary>
+    /// 重写ai模块 canendround逻辑 必须等待h逻辑完毕
+    /// </summary>
+    [HarmonyPatch(typeof(BehaviorDesigner.Runtime.Tasks.Basic.UnityAnimation.EndRound), "CanEndRound")]
+    public class TaskEndRoundPatcher_CanEndRound
+    {
+        public static void Postfix(BehaviorDesigner.Runtime.Tasks.Basic.UnityAnimation.EndRound __instance, ref bool __result)
+        {
+            if(__result == false)
+            {
+                return;
+            }
+
+            if(!SecretsSystem.FightManager.IsInBattle)
+            {
+                return;
+            }
+
+            // 检查是否有正在进行的process
+            if(SecretsSystem.FightManager.m_runningProcessList.Count == 0)
+            {
+                return;
+            }
+
+            __result = false;
+        }
+    }
+
+    /// <summary>
+    /// 重写ai模块 EndRound节点 进入节点时触发h结算
+    /// </summary>
+    [HarmonyPatch(typeof(BehaviorDesigner.Runtime.Tasks.Basic.UnityAnimation.EndRound), "OnStart")]
+    public class TaskEndRoundPatcher_OnStart
+    {
+        public static void Postfix(BehaviorDesigner.Runtime.Tasks.Basic.UnityAnimation.EndRound __instance)
+        {
+            SecretsSystem.FightManager.ApplyEnemyHSkill();
+        }
+    }
+
+    /// <summary>
+    /// 支持poptip新格式
+    /// </summary>
+    [HarmonyPatch(typeof(UIPopTip), "CreateTipObject")]
+    public class UIPopTipPatcher_CreateTipObject
+    {
+        public static void Postfix(UIPopTip __instance, PopTipData data, ref UIPopTipItem __result)
+        {
+            if(data.IconType == (PopTipIconType)12)
+            {
+                // 更改图标及颜色
+                __result.GetComponent<Image>().color = new Color(0.9f, 0.2f, 0.9f);
+            }
+        }
+    }
+    /// <summary>
+    /// 增加新图标支持
+    /// </summary>
+    [HarmonyPatch(typeof(UIPopTip), "Awake")]
+    public class UIPopTipPatcher_Awake
+    {
+        public static void Postfix(UIPopTip __instance)
+        {
+            var icons = typeof(UIPopTip).GetField("Icon", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(__instance) as List<Sprite>;
+            while(icons.Count <= 12)
+            {
+                icons.Add(null);
+            }
+            icons[12] = PluginMain.Main.LoadAsset<Sprite>("Icons/icon_lianqi_tab_sex.png");
+        }
+    }
+
 }

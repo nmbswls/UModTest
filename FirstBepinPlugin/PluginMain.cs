@@ -40,6 +40,14 @@ namespace FirstBepinPlugin
 			StartCoroutine(LoadAssetAsync());
 		}
 
+		public void Update()
+		{
+			if(SecretsSystem.FightManager.IsInBattle)
+			{
+				SecretsSystem.FightManager.FightTick(Time.deltaTime);
+            }
+		}
+
 		#region 日志
 		public void LogInfo(string msg)
         {
@@ -53,23 +61,37 @@ namespace FirstBepinPlugin
         #endregion
 
         public SecretsConfig config;
+
+		public Dictionary<int, ConfigDataHAttackShowInfo> ConfigDataHAttackShowInfo = new Dictionary<int, ConfigDataHAttackShowInfo>();
 		public void LoadConfig()
 		{
 
 			try
 			{
-				var fileName = Path + "/Config/SecretsConfig.json";
-				if (!File.Exists(fileName))
 				{
-					Logger.LogError($"load config Error");
-					return;
-				}
-				var json = File.ReadAllText(fileName);
-				config = JsonConvert.DeserializeObject<SecretsConfig>(json);
-				if (config == null)
-					throw new JsonException("json data is invalid.");
+                    var fileName = Path + "/Config/SecretsConfig.json";
+                    if (!File.Exists(fileName))
+                    {
+                        Logger.LogError($"load config Error");
+                        return;
+                    }
+                    var json = File.ReadAllText(fileName);
+                    config = JsonConvert.DeserializeObject<SecretsConfig>(json);
+                    if (config == null)
+                        throw new JsonException("json data is invalid.");
+                }
 
-			}
+				{
+                    var hInfoConfigName = Path + "/Config/HAttackShowInfo.json";
+                    if (!File.Exists(hInfoConfigName))
+                    {
+                        Logger.LogError($"load hInfoConfigName Error");
+                        return;
+                    }
+                    var json = File.ReadAllText(hInfoConfigName);
+                    ConfigDataHAttackShowInfo = JsonConvert.DeserializeObject<Dictionary<int, ConfigDataHAttackShowInfo>>(json);
+                }
+            }
 			catch (Exception e)
 			{
 				Logger.LogError($"load config Error");

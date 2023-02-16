@@ -1,6 +1,7 @@
 ﻿using BehaviorDesigner.Runtime;
 using FirstBepinPlugin.Patch;
 using GUIPackage;
+using JSONClass;
 using KBEngine;
 using Newtonsoft.Json;
 using SkySwordKill.Next.DialogSystem;
@@ -8,12 +9,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
+using UltimateSurvival;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using WXB;
 using YSGame;
 using YSGame.Fight;
 using static FirstBepinPlugin.HModeFightManager;
@@ -179,6 +183,8 @@ namespace FirstBepinPlugin
         public HModeActor Enemy = new HModeActor();
 
         public bool IsEnemyFaQing = false;
+        public int EnemyXingge = 0;
+        public int EnemySexType = 1;
 
         // 静态属性
         public Dictionary<HModeAttributeType, long> StaticAttributeBaseVal = new Dictionary<HModeAttributeType, long>();
@@ -236,6 +242,11 @@ namespace FirstBepinPlugin
         public bool IsInBattle;
 
         /// <summary>
+        /// 是否正在等待结算h攻击
+        /// </summary>
+        public bool IsWaitHAttack;
+
+        /// <summary>
         /// 初始化
         /// </summary>
         public void FightHInit()
@@ -246,11 +257,46 @@ namespace FirstBepinPlugin
 
             m_ctx.StaticAttributeBaseVal.Add(HModeAttributeType.HAtk, 0);
             m_ctx.StaticAttributeBaseVal.Add(HModeAttributeType.HDef, 0);
-            m_ctx.StaticAttributeBaseVal.Add(HModeAttributeType.HMaxClothes, 100);
-            m_ctx.StaticAttributeBaseVal.Add(HModeAttributeType.HMaxTili, 100);
-            m_ctx.StaticAttributeBaseVal.Add(HModeAttributeType.HMaxXingFen, 100);
-            m_ctx.StaticAttributeBaseVal.Add(HModeAttributeType.HMaxKuaiGan, 100);
+            m_ctx.StaticAttributeBaseVal.Add(HModeAttributeType.HMaxClothes, 10000);
+            m_ctx.StaticAttributeBaseVal.Add(HModeAttributeType.HMaxTili, 10000);
+            m_ctx.StaticAttributeBaseVal.Add(HModeAttributeType.HMaxXingFen, 10000);
+            m_ctx.StaticAttributeBaseVal.Add(HModeAttributeType.HMaxKuaiGan, 10000);
 
+            JSONObject jSONObject = jsonData.instance.AvatarJsonData[string.Concat(Tools.instance.MonstarID)];
+            if(jSONObject.HasField("XingGe"))
+            {
+                m_ctx.EnemyXingge = jSONObject.GetField("XingGe").I;
+            }
+            if (jSONObject.HasField("SexType"))
+            {
+                m_ctx.EnemySexType = jSONObject.GetField("SexType").I;
+            }
+        }
+
+        /// <summary>
+        /// tick
+        /// </summary>
+        public void FightTick(float dt)
+        {
+            // 一帧一个
+            if(m_runningProcessList.Count != 0)
+            {
+                var firstProcess = m_runningProcessList.Peek();
+                if(!firstProcess.m_isStart)
+                {
+                    firstProcess.OnStart();
+                    firstProcess.m_isStart = true;
+                }
+                // tick firstProcess
+                firstProcess.Tick(dt);
+                PluginMain.Main.LogInfo("firstProcess " + firstProcess.GetType());
+                // 持续时间非0 表示通过倒计时结束
+                if (firstProcess.m_isEnd)
+                {
+                    firstProcess.OnEnd();
+                    m_runningProcessList.Dequeue();
+                }
+            }
         }
 
         public void FightOnRoungStart(KBEngine.Avatar avatar)
@@ -269,7 +315,6 @@ namespace FirstBepinPlugin
                     SetBuffLayer(m_player.OtherAvatar, Consts.BuffId_FlagFaQing, 1);
                 }
             }
-
         }
 
 
@@ -292,8 +337,8 @@ namespace FirstBepinPlugin
 
             // 初始化属性
             m_ctx.m_hState = HModeState.Normal;
-            m_ctx.Tili = 100;
-            m_ctx.YiZhuang = 100;
+            m_ctx.Tili = 10000;
+            m_ctx.YiZhuang = 10000;
 
             m_ctx.Self.NaiLi = 3;
             m_ctx.Self.KuaiGan = 0;
@@ -314,12 +359,16 @@ namespace FirstBepinPlugin
 
             m_ctx.m_isInHMode = true;
 
-            for(int i=0;i<6;i++)
+            RoundManager.instance.removeCard(m_player, 6);
+
+            for (int i=0;i<10;i++)
             {
                 RoundManager.instance.DrawCard(m_player, (int)LingQiType.魔);
             }
-            // 基础淫比重 不高 也就50%
+
+            // 提高双方 淫比重
             SetBuffLayer(player, Consts.BuffId_BasicYinLingen, 1);
+            SetBuffLayer(player.OtherAvatar, Consts.BuffId_BasicYinLingen, 1);
         }
 
         /// <summary>
@@ -335,7 +384,7 @@ namespace FirstBepinPlugin
             }
             else
             {
-                maxKuaiGan = 100;
+                maxKuaiGan = 10000;
             }
 
             // 没达到满 无事发生
@@ -359,18 +408,61 @@ namespace FirstBepinPlugin
         /// </summary>
         public void ApplyEnemyHSkill()
         {
-            Queue<UnityAction> queue = new Queue<UnityAction>();
-
-            for (int i=0;i<3;i++)
+            if(!m_ctx.m_isInHMode)
             {
-                UnityAction unityAction = delegate
-                {
-                    ShowHAnim();
-                };
-                queue.Enqueue(unityAction);
+                return;
+            }
+            // 只有发情时才结算
+            if (!m_ctx.IsEnemyFaQing)
+            {
+                return;
             }
 
-            YSFuncList.Ints.AddFunc(queue);
+            int actTimes = 3; // 计算性行动数 仅和境界相关？
+            int hAck = 5;
+            // 获取敌人配置
+            for (int i=0;i< actTimes; i++)
+            {
+                int randTarget = UnityEngine.Random.Range(1, 5);
+                
+                // 男性 更倾向于
+                bool isEvil = false;
+                if (NpcXingGeDate.DataDict.ContainsKey(m_ctx.EnemyXingge))
+                {
+                    isEvil = NpcXingGeDate.DataDict[m_ctx.EnemyXingge].zhengxie == 2;
+                }
+                int attackType = 1;
+                if(isEvil)
+                {
+                    attackType = 2;
+                }
+
+                List<KeyValuePair<int, int>> weights = new List<KeyValuePair<int, int>>();
+                foreach (var pair in PluginMain.Main.ConfigDataHAttackShowInfo)
+                {
+                    if (pair.Value.AttackType != attackType)
+                    {
+                        continue;
+                    }
+                    if(pair.Value.SexType != 0 && pair.Value.SexType != m_ctx.EnemySexType)
+                    {
+                        continue;
+                    }
+                    if(pair.Value.TargetPart != randTarget)
+                    {
+                        continue;
+                    }
+                    weights.Add(new KeyValuePair<int,int>(pair.Key, pair.Value.DefaultWeight));
+                }
+                if(weights.Count == 0)
+                {
+                    continue;
+                }
+                int showId = weights.First().Key;
+                ShowHAnim($"Animation/h/{showId}.anim");
+                var hContent = PluginMain.Main.ConfigDataHAttackShowInfo[showId].HintContent;
+                ShowHHint(hContent);
+            }
         }
 
 
@@ -440,6 +532,8 @@ namespace FirstBepinPlugin
                     return (int)HSkillGroupType.Normal;
                 case HModeState.Shou:
                     return (int)HSkillGroupType.Shou;
+                case HModeState.Wuli:
+                    return (int)HSkillGroupType.Wuli;
             }
             return -1;
         }
@@ -486,7 +580,7 @@ namespace FirstBepinPlugin
         private List<int> m_skillIdCache = new List<int>();
 
         public FightUISkillTabController m_cachedSkillTab;
-        public FightHAnimController m_cachedHAnimController;
+        public FightHShowController m_cachedHAnimController;
 
         private UILingQiImageData m_cachedNormalUI;
         private Sprite m_cachedNormalUI2;
@@ -533,13 +627,11 @@ namespace FirstBepinPlugin
             m_cachedSkillTab = skillTab.AddComponent<FightUISkillTabController>();
             m_cachedSkillTab.Init(this);
 
-            ((RectTransform)UIFightPanel.Inst.FightJiLu.transform).anchorMin = new Vector2(0,0.5f);
-            ((RectTransform)UIFightPanel.Inst.FightJiLu.transform).anchorMax = new Vector2(0,0.5f);
+            m_cachedSkillTab.transform.SetAsFirstSibling();
 
-            ((RectTransform)UIFightPanel.Inst.FightJiLu.transform).anchoredPosition = new Vector2(100,0);
-            UIFightPanel.Inst.FightJiLu.Show();
-            //m_cachedHAnimController.EventOnAnimEnd += OnHAnimEnd;
-            //m_cachedHAnimController = 
+            var HShowPanel = UnityEngine.GameObject.Instantiate(PluginMain.Main.LoadGameObjectFromAB("HShowPanel"), UIFightPanel.Inst.transform);
+            m_cachedHAnimController = HShowPanel.AddComponent<FightHShowController>();
+            m_cachedHAnimController.Init();
         }
 
 
@@ -593,6 +685,11 @@ namespace FirstBepinPlugin
             }
             
             UpdateAllStateBuff();
+
+            if(target == 2)
+            {
+                ((UnityEngine.GameObject)m_player.OtherAvatar.renderObj).GetComponentInChildren<AvatarShowHpDamage>().show($"欲望 +{addVal/100}");
+            }
         }
 
         /// <summary>
@@ -642,14 +739,12 @@ namespace FirstBepinPlugin
             }
 
             UpdateAllStateBuff();
-
-            
         }
 
         public void TriggerYinYi()
         {
             // 初始时仅增加1点Kuaigan
-            ModKuaiGan(1, 1);
+            ModKuaiGan(1, 100);
 
             UIFightPanel.Inst.FightJiLu.AddText($"{m_player.name} 快感增加了");
         }
@@ -759,7 +854,7 @@ namespace FirstBepinPlugin
 
                     var configInfo = jSONObject[buffId.ToString()];
 
-                    addVal += (long)configInfo["value1"].n * buffLayer;
+                    addVal += (long)configInfo["value1"].n * 100 * buffLayer;
                 }
             }
             PluginMain.Main.LogInfo($"try GetAttributeValue {type} base {baseVal} add {addVal} ");
@@ -950,49 +1045,234 @@ namespace FirstBepinPlugin
         /// <summary>
         /// 回调
         /// </summary>
-        public void ShowHAnim()
+        public void ShowHAnim(string animState)
         {
-            m_cachedHAnimController.PlayHAnim("anim_mo_ru", 2f);
+            var newProcess = new FightProcessWaitAnimation(this, animState);
+            m_runningProcessList.Enqueue(newProcess);
         }
 
         /// <summary>
-        /// 
+        /// 显示h信息
         /// </summary>
-        public void OnHAnimEnd()
+        public void ShowHHint(string hHintContent)
         {
-            YSFuncList.Ints.Continue();
+            m_runningProcessList.Enqueue(new FightProcessApplyEffect(this, 500, 200));
+            var newProcess = new FightProcessWaitHHint(this, 0.5f, hHintContent);
+            m_runningProcessList.Enqueue(newProcess);
+        }
+
+        public Queue<FightProcessBase> m_runningProcessList = new Queue<FightProcessBase>();
+
+        #region temp
+
+        public static List<int> TempHPreferByXingGe(int Xingge)
+        {
+            var ret = new List<int>();
+            switch(Xingge)
+            {
+                case 1:
+                { 
+                }
+                break;
+            }
+            return ret;
+        }
+
+        public static string GetHAnimNameByInfo(int targetPart, int attackType, int sex)
+        {
+            return "";
+        }
+
+        #endregion
+    }
+
+    #region 表现
+
+    public abstract class FightProcessBase
+    {
+        public HModeFightManager Owner;
+        public ulong m_id;
+        public bool m_isEnd;
+        public bool m_isStart;
+
+        public FightProcessBase(HModeFightManager owner)
+        {
+            Owner = owner;
+            m_isEnd = false;
+            m_isStart = false;
+        }
+
+        public virtual void OnStart()
+        {
+        }
+        public abstract void Tick(float dt);
+
+        public event Action EventOnEnd;
+        public virtual void OnEnd()
+        {
+            EventOnEnd?.Invoke();
         }
     }
 
-    public class FightHAnimController : MonoBehaviour
+    public class FightProcessWait : FightProcessBase
     {
-        public Animator m_animator;
-        public Animation m_animation;
+        public float m_lastTime;
+        public float m_tickTimer;
 
-        public event Action EventOnAnimEnd;
+        public FightProcessWait(HModeFightManager owner, float lastTime) : base(owner)
+        {
+            m_lastTime = lastTime;
+            m_tickTimer = 0;
+        }
+
+        public override void Tick(float dt)
+        {
+            m_tickTimer += dt;
+            if(m_tickTimer > m_lastTime)
+            {
+                m_isEnd = true;
+            }
+        }
+    }
+
+    public class FightProcessWaitHHint : FightProcessWait
+    {
+        private string m_hintContent;
+        public FightProcessWaitHHint(HModeFightManager owner, float lastTime, string hintContent) : base(owner, lastTime)
+        {
+            m_hintContent = hintContent;
+        }
+
+        public override void OnStart()
+        {
+            base.OnStart();
+            UIPopTip.Inst.Pop(m_hintContent, (PopTipIconType)12);
+        }
+    }
+
+    public class FightProcessWaitAnimation : FightProcessBase
+    {
+        public string m_animationName;
+        public bool m_isLoop;
+        public bool m_loopTime;
+
+        private float m_tickTimer;
+
+        public FightProcessWaitAnimation(HModeFightManager owner, string animationName) : base(owner)
+        {
+            m_animationName = animationName;
+            m_tickTimer = 0;
+        }
+
+        public override void OnStart()
+        {
+            base.OnStart();
+            Owner.m_cachedHAnimController.PlayHAnim(m_animationName, OnAnimationEnd);
+        }
+
+        public override void Tick(float dt)
+        {
+            if(!m_isLoop)
+            {
+                return;
+            }
+        }
+
+        /// <summary>
+        /// 是否播放完成
+        /// </summary>
+        /// <param name="isFinish"></param>
+        public void OnAnimationEnd(bool isFinish)
+        {
+            m_isEnd = true;
+        }
+    }
+
+    public class FightProcessApplyEffect : FightProcessBase
+    {
+        public int m_damageSelf;
+        public int m_damageEnemy;
+
+        public FightProcessApplyEffect(HModeFightManager owner, int damageSelf, int damageEnemy) : base(owner)
+        {
+            m_damageSelf = damageSelf;
+            m_damageEnemy = damageEnemy;
+        }
+
+        public override void OnStart()
+        {
+            base.OnStart();
+            Owner.ModKuaiGan(1, m_damageSelf);
+            Owner.ModKuaiGan(2, m_damageEnemy);
+        }
+
+        public override void Tick(float dt)
+        {
+            m_isEnd = true;
+        }
+    }
+
+
+    #endregion
+
+    public class FightHShowController : MonoBehaviour
+    {
+        public UnityEngine.GameObject m_showImage;
+        public Animator m_animator;
+
+        public event Action<bool> EventOnAnimEnd;
 
         private float m_playTime;
         private float m_timer;
 
-        public void PlayHAnim(string animName, float playTime)
+
+        private bool m_isPlaying;
+
+        public void Init()
         {
-            m_animation.clip = null;
-            m_animation.Play();
+            m_showImage = transform.Find("ShowImage").gameObject;
+            m_animator = m_showImage.GetComponentInChildren<Animator>();
 
-            m_playTime = playTime;
+            m_showImage.SetActive(false);
+        }
+
+        public void PlayHAnim(string stateName, Action<bool> onEnd = null)
+        {
+            if(m_isPlaying)
+            {
+                // 缓存或暂不处理？
+                return;
+            }
+            EventOnAnimEnd = onEnd;
+            m_showImage.SetActive(true);
+
+            PluginMain.Main.LogInfo($"PlayHAnim {stateName}" );
+            m_animator.Play(stateName, 0, 0f);
+            m_isPlaying = true;
             m_timer = 0;
-
-            m_animator.gameObject.SetActive(true);
+            m_playTime = 1f;
         }
 
         public void Update()
         {
-            if (m_timer > m_playTime)
+            if (!m_isPlaying)
             {
-                m_animator.gameObject.SetActive(false);
-                EventOnAnimEnd?.Invoke();
+                return;
             }
             m_timer += Time.deltaTime;
+
+            var currStateInfo = m_animator.GetCurrentAnimatorStateInfo(0);
+            if (currStateInfo.normalizedTime < 1.0)
+            {
+                return;
+            }
+            //if (m_timer > m_playTime)
+            {
+                EventOnAnimEnd?.Invoke(true);
+                EventOnAnimEnd = null;
+                m_isPlaying = false;
+                m_showImage.SetActive(false);
+            }
         }
 
         public void OnDestroy()

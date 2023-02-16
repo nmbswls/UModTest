@@ -5,9 +5,26 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UltimateSurvival.AI.Actions;
+using UnityEngine;
 
 namespace FirstBepinPlugin
 {
+    public static class TransformEx
+    {
+        public static void LogAll(this Transform transform)
+        {
+            PluginMain.Main.LogInfo($"========{transform.gameObject.name} comps:" );
+            var comps = transform.gameObject.GetComponents<MonoBehaviour>();
+            foreach(var comp in comps)
+            {
+                PluginMain.Main.LogInfo($"================{comp.GetType()} :");
+            }
+            for(int i=0;i<transform.childCount;i++)
+            {
+                transform.GetChild(i).LogAll();
+            }
+        }
+    }
     public static class BuffEx
     {
         //public static void ListRealizeSeid_SwitchIntoHMode(this KBEngine.Buff buff,int seid, Avatar avatar, List<int> buffInfo, List<int> flag)
@@ -30,20 +47,20 @@ namespace FirstBepinPlugin
 
         public static void realizeSeid_ModYiZhuang(this GUIPackage.Skill skill, int seid, List<int> damage, KBEngine.Avatar attaker, KBEngine.Avatar receiver, int type)
         {
-            int modVal = skill.getSeidJson(seid)["value1"].I;
+            int modVal = skill.getSeidJson(seid)["value1"].I * 100;
             int modVal2 = skill.getSeidJson(seid)["value2"].I;
             SecretsSystem.FightManager.ModYiZhuang((long)modVal);
         }
         public static void realizeSeid_ModYuWang(this GUIPackage.Skill skill, int seid, List<int> damage, KBEngine.Avatar attaker, KBEngine.Avatar receiver, int type)
         {
             int target = skill.getSeidJson(seid)["value1"].I;
-            int modVal = skill.getSeidJson(seid)["value2"].I;
+            int modVal = skill.getSeidJson(seid)["value2"].I * 100;
             SecretsSystem.FightManager.ModYuWang(target,(long)modVal);
         }
 
         public static void realizeSeid_ModXingFen(this GUIPackage.Skill skill, int seid, List<int> damage, KBEngine.Avatar attaker, KBEngine.Avatar receiver, int type)
         {
-            int modVal = skill.getSeidJson(seid)["value1"].I;
+            int modVal = skill.getSeidJson(seid)["value1"].I * 100;
             SecretsSystem.FightManager.ModXingFen((long)modVal);
         }
 
@@ -56,7 +73,7 @@ namespace FirstBepinPlugin
         public static void realizeSeid_ModKuaiGan(this GUIPackage.Skill skill, int seid, List<int> damage, KBEngine.Avatar attaker, KBEngine.Avatar receiver, int type)
         {
             int target = skill.getSeidJson(seid)["value1"].I;
-            int modVal = skill.getSeidJson(seid)["value2"].I;
+            int modVal = skill.getSeidJson(seid)["value2"].I * 100;
             SecretsSystem.FightManager.ModKuaiGan(target, (long)modVal);
         }
 

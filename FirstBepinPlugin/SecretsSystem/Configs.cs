@@ -65,4 +65,27 @@ namespace FirstBepinPlugin.Config
         /// </summary>
         public int JingAbsorbRate;
     }
+
+    public class ConfigDataHAttackShowInfo
+    {
+
+        public Int32 ID; // 主键
+
+        public String Name; // 名称
+
+        public Int32 TargetPart; // 部位 1口 2乳 3穴 4鬼
+
+        public Int32 AttackType; // 攻击类型 1 轻 2 重
+
+        public Int32 RaceType; // 种族（1人，2妖 3魔 4鬼）
+
+        public Int32 SexType; // 性别要求
+
+        public Int32 DefaultWeight; // 基础权重
+
+        public String HintContent; // 提示语
+
+        public String AnimName; // 动画名
+
+    }
 }
