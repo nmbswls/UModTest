@@ -1,0 +1,89 @@
+ManifestFileVersion: 0
+CRC: 3505309905
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: a83b1c69a39d25d5d0ff140efdf4f7a5
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 51d3e36d0cb198712c4c4948ffe98e7a
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 74
+  Script: {instanceID: 0}
+- Class: 91
+  Script: {instanceID: 0}
+- Class: 95
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 1392445389, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+- Class: 114
+  Script: {fileID: -405508275, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+- Class: 114
+  Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+- Class: 114
+  Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+- Class: 114
+  Script: {fileID: 2109663825, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+- Class: 114
+  Script: {fileID: -1184210157, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+- Class: 114
+  Script: {fileID: 1297475563, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 128
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+- Class: 222
+  Script: {instanceID: 0}
+- Class: 224
+  Script: {instanceID: 0}
+Assets:
+- Assets/Res/allneed/Icons/Lingqi_yin/MCS_ZD_linqi_yinduo2_bk.png
+- Assets/Res/allneed/Icons/Lingqi_yin/MCS_ZD_linqi_yinduo_hlg.png
+- Assets/Res/allneed/Animation/h/202.anim
+- Assets/Res/allneed/Animation/h/401.anim
+- Assets/Res/allneed/secret_part_kou.png
+- Assets/Res/allneed/Animation/h/testconvert.png
+- Assets/Res/allneed/secret_part_ru.png
+- Assets/Res/allneed/secrets_girl.png
+- Assets/Res/allneed/Animation/h/Image.controller
+- Assets/Res/allneed/Animation/h/100.anim
+- Assets/Res/allneed/HShowPanel.prefab
+- Assets/Res/allneed/Icons/Lingqi_yin/MCS_ZD_linqi_yin_an.png
+- Assets/Res/allneed/Icons/Lingqi_yin/MCS_ZD_linqi_yinduo2_hlg.png
+- Assets/Res/allneed/Animation/h/203.anim
+- Assets/Res/allneed/Icons/icon_lianqi_tab_sex.png
+- Assets/Res/allneed/NpcSecretDetailPanel.prefab
+- Assets/Res/allneed/Icons/Cast/cast_type_9.png
+- Assets/Res/allneed/PlayerSecretDetailPanel.prefab
+- Assets/Res/allneed/Animation/h/101.anim
+- Assets/Res/allneed/icon_yin_open.png
+- Assets/Res/allneed/NpcSecretsDetailButton.prefab
+- Assets/Res/allneed/Icons/Lingqi_yin/MCS_ZD_linqi_yinduo_an.png
+- Assets/Res/allneed/Animation/h/201.anim
+- Assets/Res/allneed/Animation/h/102.anim
+- Assets/Res/allneed/Animation/h/402.anim
+- Assets/Res/allneed/FightSkillGroupTab.prefab
+- Assets/Res/allneed/Icons/Lingqi_yin/MCS_ZD_linqi_yinduo2_an.png
+- Assets/Res/allneed/Icons/Lingqi_yin/MCS_ZD_linqi_yinduo_bk.png
+- Assets/Res/allneed/Icons/Lingqi_yin/MCS_ZD_linqi_yin_hlg.png
+- Assets/Res/allneed/Icons/Lingqi_yin/MCS_ZD_linqi_yinduo.png
+- Assets/Res/allneed/Icons/Fight/fight_skill_tab_on.png
+- Assets/Res/allneed/MCS_TAB_shuxin_bg2.png
+- Assets/Res/allneed/Icons/Lingqi_yin/MCS_ZD_linqi_yin_bk.png
+- Assets/Res/allneed/Icons/Lingqi_yin/MCS_ZD_linqi_yin.png
+- Assets/Res/allneed/Icons/Fight/fight_skill_tab_off.png
+- Assets/Res/allneed/Animation/h/301.anim
+- Assets/Res/allneed/Icons/Lingqi_yin/MCS_ZD_linqi_yinduo2.png
+- Assets/Res/allneed/Animation/h/302.anim
+Dependencies: []
