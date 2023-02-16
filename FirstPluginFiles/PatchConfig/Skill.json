@@ -377,7 +377,7 @@
 		"name":"振衣诀",
 		"qingjiaotype":7,
 		"seid":[
-			550
+			550,551
 		],
 		"Affix":[],
 		"Affix2":[
@@ -387,8 +387,8 @@
 		"AttackType":[
 			0
 		],
-		"script":"SkillSelf",
-		"HP":1,
+		"script":"SkillAttack",
+		"HP":0,
 		"speed":0,
 		"icon":0,
 		"Skill_DisplayType":0,

@@ -1,0 +1,112 @@
+{
+  "100": {
+    "ID": 100,
+    "Name": "吮指",
+    "TargetPart": 1,
+    "AttackType": 1,
+    "RaceType": 1,
+    "SexType": 0,
+    "DefaultWeight": 10,
+    "HintContent": "触发敌方H行为显示 100",
+    "AnimName": ""
+  },
+  "101": {
+    "ID": 101,
+    "Name": "抚唇",
+    "TargetPart": 1,
+    "AttackType": 1,
+    "RaceType": 1,
+    "SexType": 0,
+    "DefaultWeight": 10,
+    "HintContent": "触发敌方H行为显示 101",
+    "AnimName": ""
+  },
+  "102": {
+    "ID": 102,
+    "Name": "蛇吻",
+    "TargetPart": 1,
+    "AttackType": 2,
+    "RaceType": 1,
+    "SexType": 0,
+    "DefaultWeight": 10,
+    "HintContent": "触发敌方H行为显示 102",
+    "AnimName": ""
+  },
+  "201": {
+    "ID": 201,
+    "Name": "抚摸胸部",
+    "TargetPart": 2,
+    "AttackType": 1,
+    "RaceType": 1,
+    "SexType": 0,
+    "DefaultWeight": 10,
+    "HintContent": "触发敌方H行为显示 201",
+    "AnimName": ""
+  },
+  "202": {
+    "ID": 202,
+    "Name": "重揉胸部",
+    "TargetPart": 2,
+    "AttackType": 2,
+    "RaceType": 1,
+    "SexType": 0,
+    "DefaultWeight": 10,
+    "HintContent": "触发敌方H行为显示 202",
+    "AnimName": ""
+  },
+  "203": {
+    "ID": 203,
+    "Name": "拉扯乳头",
+    "TargetPart": 2,
+    "AttackType": 2,
+    "RaceType": 1,
+    "SexType": 0,
+    "DefaultWeight": 5,
+    "HintContent": "触发敌方H行为显示 203",
+    "AnimName": ""
+  },
+  "301": {
+    "ID": 301,
+    "Name": "",
+    "TargetPart": 3,
+    "AttackType": 1,
+    "RaceType": 1,
+    "SexType": 0,
+    "DefaultWeight": 10,
+    "HintContent": "触发敌方H行为显示 301",
+    "AnimName": ""
+  },
+  "302": {
+    "ID": 302,
+    "Name": "",
+    "TargetPart": 3,
+    "AttackType": 2,
+    "RaceType": 1,
+    "SexType": 0,
+    "DefaultWeight": 10,
+    "HintContent": "触发敌方H行为显示 302",
+    "AnimName": ""
+  },
+  "401": {
+    "ID": 401,
+    "Name": "",
+    "TargetPart": 4,
+    "AttackType": 1,
+    "RaceType": 1,
+    "SexType": 0,
+    "DefaultWeight": 10,
+    "HintContent": "触发敌方H行为显示 401",
+    "AnimName": ""
+  },
+  "402": {
+    "ID": 402,
+    "Name": "",
+    "TargetPart": 4,
+    "AttackType": 2,
+    "RaceType": 1,
+    "SexType": 0,
+    "DefaultWeight": 10,
+    "HintContent": "触发敌方H行为显示 402",
+    "AnimName": ""
+  }
+}

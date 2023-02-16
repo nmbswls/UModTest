@@ -140,7 +140,7 @@
 			
 		],
 		"bufftype":3,
-		"seid":[64],
+		"seid":[],
 		"descr":"欲望",
 		"trigger":5,
 		"removeTrigger":7,
@@ -240,9 +240,9 @@
 			
 		],
 		"bufftype":3,
-		"seid":[],
+		"seid":[83],
 		"descr":"",
-		"trigger":5,
+		"trigger":8,
 		"removeTrigger":7,
 		"script":"Buff",
 		"looptime":1,
