@@ -48,7 +48,11 @@ namespace FirstBepinPlugin
         public static void realizeSeid_ModYiZhuang(this GUIPackage.Skill skill, int seid, List<int> damage, KBEngine.Avatar attaker, KBEngine.Avatar receiver, int type)
         {
             int modVal = skill.getSeidJson(seid)["value1"].I * 100;
-            int modVal2 = skill.getSeidJson(seid)["value2"].I;
+            int modVal2 = 0;
+            if (skill.getSeidJson(seid).HasField("value2"))
+            {
+                modVal2 = skill.getSeidJson(seid)["value2"].I;
+            }
             SecretsSystem.FightManager.ModYiZhuang((long)modVal);
         }
         public static void realizeSeid_ModYuWang(this GUIPackage.Skill skill, int seid, List<int> damage, KBEngine.Avatar attaker, KBEngine.Avatar receiver, int type)

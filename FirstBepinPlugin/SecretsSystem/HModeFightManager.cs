@@ -369,6 +369,9 @@ namespace FirstBepinPlugin
             // 提高双方 淫比重
             SetBuffLayer(player, Consts.BuffId_BasicYinLingen, 1);
             SetBuffLayer(player.OtherAvatar, Consts.BuffId_BasicYinLingen, 1);
+
+            player.buffmag.RemoveBuff(10000);
+            player.OtherAvatar.buffmag.RemoveBuff(10000);
         }
 
         /// <summary>
@@ -471,18 +474,16 @@ namespace FirstBepinPlugin
         /// </summary>
         public void UpdateAllStateBuff()
         {
-            var player = Tools.instance.getPlayer();
+            SetBuffLayer(m_player, Consts.BuffId_YinTili, (int)(m_ctx.Tili/100));
+            SetBuffLayer(m_player, Consts.BuffId_YinYiZhuang, (int)(m_ctx.YiZhuang/100));
 
-            SetBuffLayer(player, Consts.BuffId_YinTili, (int)(m_ctx.Tili/100));
-            SetBuffLayer(player, Consts.BuffId_YinYiZhuang, (int)(m_ctx.YiZhuang/100));
+            SetBuffLayer(m_player, Consts.BuffId_YinNaili, (int)(m_ctx.Self.NaiLi));
+            SetBuffLayer(m_player, Consts.BuffId_YinKuaiGan, (int)(m_ctx.Self.KuaiGan / 100));
+            SetBuffLayer(m_player, Consts.BuffId_YinYuWang, (int)(m_ctx.Self.YuWang / 100));
 
-            SetBuffLayer(player, Consts.BuffId_YinNaili, (int)(m_ctx.Self.NaiLi / 100));
-            SetBuffLayer(player, Consts.BuffId_YinKuaiGan, (int)(m_ctx.Self.KuaiGan / 100));
-            SetBuffLayer(player, Consts.BuffId_YinYuWang, (int)(m_ctx.Self.YuWang / 100));
-
-            SetBuffLayer(player.OtherAvatar, Consts.BuffId_YinNaili, (int)(m_ctx.Enemy.NaiLi / 100));
-            SetBuffLayer(player.OtherAvatar, Consts.BuffId_YinKuaiGan, (int)(m_ctx.Enemy.KuaiGan / 100));
-            SetBuffLayer(player.OtherAvatar, Consts.BuffId_YinYuWang, (int)(m_ctx.Enemy.YuWang / 100));
+            SetBuffLayer(m_player.OtherAvatar, Consts.BuffId_YinNaili, (int)(m_ctx.Enemy.NaiLi));
+            SetBuffLayer(m_player.OtherAvatar, Consts.BuffId_YinKuaiGan, (int)(m_ctx.Enemy.KuaiGan / 100));
+            SetBuffLayer(m_player.OtherAvatar, Consts.BuffId_YinYuWang, (int)(m_ctx.Enemy.YuWang / 100));
         }
 
         /// <summary>
@@ -676,14 +677,14 @@ namespace FirstBepinPlugin
             {
                 actor = m_ctx.Enemy;
             }
-
             actor.YuWang += addVal;
             
             if (actor.YuWang < 0)
             {
                 actor.YuWang = 0;
             }
-            
+
+            PluginMain.Main.LogError("?ModYuWang");
             UpdateAllStateBuff();
 
             if(target == 2)

@@ -144,7 +144,8 @@ namespace FirstBepinPlugin.Patch
         public static bool Prefix(KBEngine.Buff __instance, ref bool __result, KBEngine.Avatar _avatar, List<int> flag, int nowSeid, BuffLoopData buffLoopData = null, List<int> buffInfo = null)
         {
             if (nowSeid != Consts.BuffSeId_CheckIntoHMode
-                && nowSeid != Consts.BuffSeId_CheckOutHMode)
+                && nowSeid != Consts.BuffSeId_CheckOutHMode
+                )
             {
                 return true;
             }
