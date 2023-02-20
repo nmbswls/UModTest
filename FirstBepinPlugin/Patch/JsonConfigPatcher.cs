@@ -120,7 +120,23 @@ namespace FirstBepinPlugin.Patch
                 }
             }
 
-            
+            // 追加显示字符串
+            if (jsondata == __instance.StrTextJsonData)
+            {
+                try
+                {
+                    // 初始化 StrText
+                    var fileNameStrText = PluginMain.Main.Path + "/PatchConfig/StrText.json";
+                    var jsonStrText = File.ReadAllText(fileNameStrText);
+                    var jsondataStrText = new JSONObject(jsonStrText);
+
+                    jsondata.Merge(jsondataStrText);
+                }
+                catch (Exception e)
+                {
+                    PluginMain.Main.LogError("jsonConfig init StrText Fail.");
+                }
+            }
 
         }
     }
