@@ -1,5 +1,6 @@
 ﻿using BehaviorDesigner.Runtime;
 using DebuggingEssentials;
+using FirstBepinPlugin.Config;
 using FirstBepinPlugin.Patch;
 using GUIPackage;
 using JSONClass;
@@ -87,11 +88,11 @@ namespace FirstBepinPlugin
             m_toggleList[1].gameObject.SetActive(true);
             m_toggleList[2].gameObject.SetActive(true);
 
-            if(Owner.m_ctx.m_hState == HModeFightManager.HModeState.Normal)
+            if(Owner.m_ctx.m_hState == HModeState.Normal)
             {
                 m_textPose.text = "正常";
             }
-            else if (Owner.m_ctx.m_hState == HModeFightManager.HModeState.Wuli)
+            else if (Owner.m_ctx.m_hState == HModeState.Wuli)
             {
                 m_textPose.text = "虚脱";
             }
@@ -162,14 +163,38 @@ namespace FirstBepinPlugin
         }
     }
 
-    public class HModeActor
+    public class HModeEnemyInfo
     {
         public int Id;
         public long YuWang;
         public long KuaiGan;
-        public long NaiLi;
+        public long MaxKuaiGan;
 
-        public KBEngine.Avatar BindAvatar;
+        public int Xingge;
+        public int SexType;
+        public int JingJie;
+
+        public bool IsFaQing;
+        public int TiWeiAccRate;
+    }
+
+    // HMode属性类型
+    public enum HModeAttributeType
+    {
+        Invalid,
+        HAtk,
+        HDef,
+        HMaxClothes,
+        HMaxTili,
+        HMaxXingFen,
+        HMaxKuaiGan, // 受耐力影响 达到后gc
+        HMeiLi,
+        Max,
+    }
+
+    public class HModeAttribute
+    {
+        public long BaseVal;
     }
 
     public class HFightCtx
@@ -180,19 +205,14 @@ namespace FirstBepinPlugin
         // 动态数值
         public long Tili;
         public long YiZhuang;
-        public long MeiLi;
         public long Xingfen;
+        public long YuWang;
+        public long KuaiGan;
 
-
-        public HModeActor Self = new HModeActor();
-        public HModeActor Enemy = new HModeActor();
-
-        public bool IsEnemyFaQing = false;
-        public int EnemyXingge = 0;
-        public int EnemySexType = 1;
+        public HModeEnemyInfo Enemy = new HModeEnemyInfo();
 
         // 静态属性
-        public Dictionary<HModeAttributeType, long> StaticAttributeBaseVal = new Dictionary<HModeAttributeType, long>();
+        public HModeAttribute[] StaticAttributeBaseVal = new HModeAttribute[(int)HModeAttributeType.Max];
 
         public HModeState m_hState = HModeState.Invalid;
 
@@ -202,20 +222,17 @@ namespace FirstBepinPlugin
         public void Clear()
         {
             m_isInHMode = false;
-            StaticAttributeBaseVal.Clear();
+            foreach(var attr in StaticAttributeBaseVal)
+            {
+                if (attr == null) continue;
+                attr.BaseVal = 0;
+            }
         }
     }
 
     public class HModeFightManager
     {
-        public enum HModeState
-        {
-            Invalid,
-            Normal,
-            Wuli,
-            Shou,
-            Max,
-        }
+        
 
         public enum HSkillGroupType
         {
@@ -226,18 +243,6 @@ namespace FirstBepinPlugin
             Wuli,
             JueDing,
             Shou,
-        }
-
-        // HMode属性类型
-        public enum HModeAttributeType
-        {
-            Invalid,
-            HAtk,
-            HDef,
-            HMaxClothes,
-            HMaxTili,
-            HMaxXingFen,
-            HMaxKuaiGan, // 受耐力影响 达到后gc
         }
 
         
@@ -266,15 +271,20 @@ namespace FirstBepinPlugin
             InitAttribute(HModeAttributeType.HMaxTili, 100);
             InitAttribute(HModeAttributeType.HMaxXingFen, 100);
             InitAttribute(HModeAttributeType.HMaxKuaiGan, 100);
+            InitAttribute(HModeAttributeType.HMeiLi, 5);
 
             JSONObject jSONObject = jsonData.instance.AvatarJsonData[string.Concat(Tools.instance.MonstarID)];
             if(jSONObject.HasField("XingGe"))
             {
-                m_ctx.EnemyXingge = jSONObject.GetField("XingGe").I;
+                m_ctx.Enemy.Xingge = jSONObject.GetField("XingGe").I;
             }
             if (jSONObject.HasField("SexType"))
             {
-                m_ctx.EnemySexType = jSONObject.GetField("SexType").I;
+                m_ctx.Enemy.SexType = jSONObject.GetField("SexType").I;
+            }
+            if (jSONObject.HasField("Level"))
+            {
+                m_ctx.Enemy.JingJie = jSONObject.GetField("Level").I / 3;
             }
         }
 
@@ -309,7 +319,12 @@ namespace FirstBepinPlugin
             // 玩家回合开始
             if(avatar == m_player)
             {
-                CheckKuaiGanReachMax(m_ctx.Self);
+                CheckKuaiGanReachMax(1);
+
+                //check
+                int yuwangVal =(int)( m_ctx.YuWang * 1.0f / Consts.Float2Int100);
+                int turnXingFen = StaticConfigContainer.GetTurnXingFenByYuWang(yuwangVal);
+
             }
             else
             {
@@ -317,6 +332,9 @@ namespace FirstBepinPlugin
                 {
                     ApplyEnemyFaQing();
                 }
+                CheckKuaiGanReachMax(2);
+
+                // startRound
             }
         }
 
@@ -343,11 +361,9 @@ namespace FirstBepinPlugin
             m_ctx.Tili = 100 * Consts.Float2Int100;
             m_ctx.YiZhuang = 100 * Consts.Float2Int100;
 
-            m_ctx.Self.NaiLi = 3;
-            m_ctx.Self.KuaiGan = 0;
-            m_ctx.Self.YuWang = 0;
+            m_ctx.KuaiGan = 0;
+            m_ctx.YuWang = 0;
 
-            m_ctx.Enemy.NaiLi = 1;
             m_ctx.Enemy.KuaiGan = 0;
             m_ctx.Enemy.YuWang = 0;
 
@@ -379,7 +395,7 @@ namespace FirstBepinPlugin
 
             // 初始魅力
             {
-                m_ctx.MeiLi += 2000;
+
             }
 
             SetBuffLayer(player, Consts.BuffId_TurnModYuWang, 10);
@@ -389,91 +405,121 @@ namespace FirstBepinPlugin
         /// 检查快感满
         /// </summary>
         /// <param name="target"></param>
-        protected void CheckKuaiGanReachMax(HModeActor target)
+        protected void CheckKuaiGanReachMax(int targetId)
         {
+            long kuaiGan;
             long maxKuaiGan;
-            if (target == m_ctx.Self)
+            if (targetId == 1)
             {
+                kuaiGan = m_ctx.KuaiGan;
                 maxKuaiGan = GetAttributeValue(HModeAttributeType.HMaxKuaiGan);
             }
             else
             {
-                maxKuaiGan = 10000;
+                kuaiGan = m_ctx.Enemy.KuaiGan;
+                maxKuaiGan = m_ctx.Enemy.MaxKuaiGan;
             }
 
             // 没达到满 无事发生
-            if (target.KuaiGan < maxKuaiGan)
+            if (kuaiGan < maxKuaiGan)
             {
                 return;
             }
 
-            // 播放特效 扣减耐力
-            target.KuaiGan = 0;
-            target.NaiLi -= 1;
-
-            if (target.NaiLi <= 0)
+            if (targetId == 1)
             {
-                CheckHFightEnd();
+                m_ctx.KuaiGan = 0;
+                var damage = CalculateSelfGaoChaoDamage();
+                m_player.recvDamage(m_player, m_player, 10000, (int)damage);
+                SwitchTiWei((int)HModeState.Wuli);
+            }
+            else
+            {
+                m_ctx.Enemy.KuaiGan = 0;
+                var damage = CalculateEnemyGaoChaoDamage(0);
+                m_player.OtherAvatar.recvDamage(m_player, m_player, 10000, (int)damage);
             }
         }
 
         /// <summary>
         /// 计算发情状态下敌人的h技能
         /// </summary>
-        public void ApplyEnemyHSkill()
+        public void ApplyEnemyHAction()
         {
             if(!m_ctx.m_isInHMode)
             {
                 return;
             }
             // 只有发情时才结算
-            if (!m_ctx.IsEnemyFaQing)
+            if (!m_ctx.Enemy.IsFaQing)
             {
                 return;
             }
 
-            int actTimes = 3; // 计算性行动数 仅和境界相关？
-            int hAck = 5;
-            // 获取敌人配置
+            int actTimes = StaticConfigContainer.GetHActionTimesByJingjie(m_ctx.Enemy.JingJie); // 计算性行动数 仅和境界相关？
+            // check Tiwei
+            if (m_ctx.m_hState > HModeState.TiWeiStart)
+            {
+                var jiaoheBuff = m_player.OtherAvatar.buffmag.GetBuffById(Consts.BuffId_JiaoHe);
+                actTimes -= jiaoheBuff[1];
+                if (actTimes < 0) actTimes = 0;
+            }
+
+            // 检查敌人进入体位
+            if(m_ctx.m_hState == HModeState.Normal)
+            {
+                int valRate = UnityEngine.Random.Range(0, 100);
+                int totalRate = m_ctx.Enemy.TiWeiAccRate;
+                // 计算魅力
+                {
+                    long meiLiVal = GetAttributeValue(HModeAttributeType.HMeiLi);
+                    int meiLiLevel = (int)(meiLiVal / 2000);
+                    if (meiLiLevel > 5) meiLiLevel = 5;
+                    totalRate += 5 * meiLiLevel;
+                }
+                {
+                    int yuwangLevel = (int)(m_ctx.Enemy.YuWang / 2000);
+                    totalRate += 5 * yuwangLevel;
+                }
+                if(valRate < totalRate)
+                {
+                    // 进体位 todo 计算权重
+                    SwitchTiWei((int)HModeState.Shou);
+                }
+                else
+                {
+                    m_ctx.Enemy.TiWeiAccRate += 10;
+                }
+            }
+            
+            // 基础h伤害
+            int hAck = StaticConfigContainer.GetHAtkByJingjie(m_ctx.Enemy.JingJie);
+            
+            // 执行h
             for (int i=0;i< actTimes; i++)
             {
-                int randTarget = UnityEngine.Random.Range(1, 5);
-                
-                // 男性 更倾向于
-                bool isEvil = false;
-                if (NpcXingGeDate.DataDict.ContainsKey(m_ctx.EnemyXingge))
-                {
-                    isEvil = NpcXingGeDate.DataDict[m_ctx.EnemyXingge].zhengxie == 2;
-                }
-                int attackType = 1;
-                if(isEvil)
-                {
-                    attackType = 2;
-                }
+                List<int> candicateHSkills = new List<int>() { 100, 101, 102};
 
                 List<KeyValuePair<int, int>> weights = new List<KeyValuePair<int, int>>();
-                foreach (var pair in PluginMain.Main.ConfigDataHAttackShowInfo)
+
+                foreach(var skillId in candicateHSkills)
                 {
-                    if (pair.Value.AttackType != attackType)
+                    if(PluginMain.Main.ConfigDataHAttackShowInfo.TryGetValue(skillId, out var skillInfo))
                     {
-                        continue;
+                        weights.Add(new KeyValuePair<int, int>(skillInfo.ID, skillInfo.DefaultWeight));
                     }
-                    if(pair.Value.SexType != 0 && pair.Value.SexType != m_ctx.EnemySexType)
-                    {
-                        continue;
-                    }
-                    if(pair.Value.TargetPart != randTarget)
-                    {
-                        continue;
-                    }
-                    weights.Add(new KeyValuePair<int,int>(pair.Key, pair.Value.DefaultWeight));
                 }
+                
                 if(weights.Count == 0)
                 {
                     continue;
                 }
-                int showId = weights.First().Key;
-                ShowHAnim($"Animation/h/{showId}.anim");
+                int showId = RandomValueByWeight(weights);
+
+                // 体力伤害
+                ModTiLi(hAck * 1.5f);
+
+                ShowHAnim($"{showId}");
                 var hContent = PluginMain.Main.ConfigDataHAttackShowInfo[showId].HintContent;
                 ShowHHint(hContent);
             }
@@ -488,11 +534,9 @@ namespace FirstBepinPlugin
             SetBuffLayer(m_player, Consts.BuffId_YinTili, (int)(m_ctx.Tili/Consts.Float2Int100));
             SetBuffLayer(m_player, Consts.BuffId_YinYiZhuang, (int)(m_ctx.YiZhuang/ Consts.Float2Int100));
 
-            SetBuffLayer(m_player, Consts.BuffId_YinNaili, (int)(m_ctx.Self.NaiLi));
-            SetBuffLayer(m_player, Consts.BuffId_YinKuaiGan, (int)(m_ctx.Self.KuaiGan / Consts.Float2Int100));
-            SetBuffLayer(m_player, Consts.BuffId_YinYuWang, (int)(m_ctx.Self.YuWang / Consts.Float2Int100));
+            SetBuffLayer(m_player, Consts.BuffId_YinKuaiGan, (int)(m_ctx.KuaiGan / Consts.Float2Int100));
+            SetBuffLayer(m_player, Consts.BuffId_YinYuWang, (int)(m_ctx.YuWang / Consts.Float2Int100));
 
-            SetBuffLayer(m_player.OtherAvatar, Consts.BuffId_YinNaili, (int)(m_ctx.Enemy.NaiLi));
             SetBuffLayer(m_player.OtherAvatar, Consts.BuffId_YinKuaiGan, (int)(m_ctx.Enemy.KuaiGan / Consts.Float2Int100));
             SetBuffLayer(m_player.OtherAvatar, Consts.BuffId_YinYuWang, (int)(m_ctx.Enemy.YuWang / Consts.Float2Int100));
         }
@@ -524,7 +568,17 @@ namespace FirstBepinPlugin
                         m_skillIdCache.Add(99799);
                     }
                     break;
-                case (int)HSkillGroupType.Shou: // 普通技能
+                case (int)HSkillGroupType.Shou: // 手技能
+                    {
+                        m_skillIdCache.Add(99730);
+                    }
+                    break;
+                case (int)HSkillGroupType.Wuli: // 体力归零技能组 复活
+                    {
+                        m_skillIdCache.Add(99730);
+                    }
+                    break;
+                case (int)HSkillGroupType.JueDing: // 绝顶后 技能组 复活
                     {
                         m_skillIdCache.Add(99730);
                     }
@@ -546,6 +600,8 @@ namespace FirstBepinPlugin
                     return (int)HSkillGroupType.Shou;
                 case HModeState.Wuli:
                     return (int)HSkillGroupType.Wuli;
+                case HModeState.GaoChao:
+                    return (int)HSkillGroupType.JueDing;
             }
             return -1;
         }
@@ -702,27 +758,54 @@ namespace FirstBepinPlugin
         }
 
         /// <summary>
+        /// 衣装变化
+        /// </summary>
+        /// <param name="modVal"></param>
+        public void ModTiLi(float modVal)
+        {
+            m_ctx.Tili += (long)(modVal * Consts.Float2Int100);
+            long maxVal = GetAttributeValue(HModeAttributeType.HMaxTili);
+            if (maxVal < 0)
+            {
+                maxVal = 0;
+            }
+            if (m_ctx.Tili > maxVal)
+            {
+                m_ctx.Tili = maxVal;
+            }
+
+            // tili归零
+            if (m_ctx.Tili <= 0)
+            {
+                SwitchTiWei((int)HModeState.Wuli);
+            }
+            UpdateAllStateBuff();
+        }
+
+        /// <summary>
         /// 欲望变化
         /// </summary>
         /// <param name="target"></param>
         /// <param name="addVal"></param>
         public void ModYuWang(int target, float modVal)
         {
-            HModeActor actor;
             if(target == 1)
             {
-                actor = m_ctx.Self;
+                m_ctx.YuWang += (long)(modVal * Consts.Float2Int100);
+                if(m_ctx.YuWang < 0)
+                {
+                    m_ctx.YuWang = 0;
+                }
             }
             else
             {
-                actor = m_ctx.Enemy;
+                m_ctx.Enemy.YuWang += (long)(modVal * Consts.Float2Int100);
+                if (m_ctx.Enemy.YuWang < 0)
+                {
+                    m_ctx.Enemy.YuWang = 0;
+                }
             }
-            actor.YuWang += (long)(modVal * Consts.Float2Int100);
             
-            if (actor.YuWang < 0)
-            {
-                actor.YuWang = 0;
-            }
 
             PluginMain.Main.LogError("?ModYuWang");
             UpdateAllStateBuff();
@@ -765,22 +848,15 @@ namespace FirstBepinPlugin
         /// <param name="addVal"></param>
         public void ModKuaiGan(int target, float modVal)
         {
-
-            HModeActor actor;
             if (target == 1)
             {
-                actor = m_ctx.Self;
+                m_ctx.KuaiGan += (long)(modVal * Consts.Float2Int100);
+                if (m_ctx.KuaiGan < 0) m_ctx.KuaiGan = 0;
             }
             else
             {
-                actor = m_ctx.Enemy;
-            }
-
-            actor.KuaiGan += (long)(modVal * Consts.Float2Int100);
-
-            if (actor.KuaiGan < 0)
-            {
-                actor.KuaiGan = 0;
+                m_ctx.Enemy.KuaiGan += (long)(modVal * Consts.Float2Int100);
+                if (m_ctx.Enemy.KuaiGan < 0) m_ctx.Enemy.KuaiGan = 0;
             }
 
             UpdateAllStateBuff();
@@ -796,16 +872,7 @@ namespace FirstBepinPlugin
 
         public void CheckHFightEnd()
         {
-            // 优先自己死
-            if(m_ctx.Self.NaiLi <= 0)
-            {
-                m_player.setHP(-99999);
-            }
             
-            if(m_ctx.Enemy.NaiLi <= 0)
-            {
-                m_player.OtherAvatar.setHP(-99999);
-            }
         }
 
 
@@ -879,7 +946,12 @@ namespace FirstBepinPlugin
             long baseVal = 0;
             long addVal = 0;
 
-            m_ctx.StaticAttributeBaseVal.TryGetValue(type, out baseVal);
+            var attr = m_ctx.StaticAttributeBaseVal[(int)type]; 
+            if(attr == null)
+            {
+                return 0;
+            }
+            baseVal = attr.BaseVal;
             int modSeid = ModSeidGetByAttribute(type);
 
             if(modSeid != 0)
@@ -903,7 +975,7 @@ namespace FirstBepinPlugin
                 }
             }
             PluginMain.Main.LogInfo($"try GetAttributeValue {type} base {baseVal} add {addVal} ");
-            return baseVal + addVal;
+            return (baseVal + addVal);
         }
 
         /// <summary>
@@ -916,6 +988,8 @@ namespace FirstBepinPlugin
             {
                 case HModeAttributeType.HMaxClothes:
                     return Consts.BuffSeId_ModMaxYizhuang;
+                case HModeAttributeType.HMeiLi:
+                    return Consts.BuffSeId_ModMeiLi;
             }
             return 0;
         }
@@ -925,16 +999,11 @@ namespace FirstBepinPlugin
         /// </summary>
         /// <param name="attr"></param>
         /// <param name="value"></param>
-        protected void InitAttribute(HModeAttributeType attr, float value)
+        protected void InitAttribute(HModeAttributeType attrType, float value)
         {
-            if(m_ctx.StaticAttributeBaseVal.ContainsKey(attr))
-            {
-                m_ctx.StaticAttributeBaseVal[attr] = (long)(value * Consts.Float2Int100);
-            }
-            else
-            {
-                m_ctx.StaticAttributeBaseVal.Add(attr, (long)(value * Consts.Float2Int100));
-            }
+            var attr = new HModeAttribute();
+            attr.BaseVal = (long)(value * Consts.Float2Int100);
+            m_ctx.StaticAttributeBaseVal[(int)attrType] = attr;
         }
 
         #endregion
@@ -977,7 +1046,7 @@ namespace FirstBepinPlugin
         /// </summary>
         public void ApplyEnemyFaQing()
         {
-            m_ctx.IsEnemyFaQing = true;
+            m_ctx.Enemy.IsFaQing = true;
             SetHasBuff(m_player.OtherAvatar, Consts.BuffId_FlagFaQing);
 
             long preYuWang = m_ctx.Enemy.YuWang;
@@ -1079,7 +1148,23 @@ namespace FirstBepinPlugin
             PluginMain.Main.LogError($"OnFightTalkFinish {param}");
         }
 
+        /// <summary>
+        /// 计算自身高潮伤害
+        /// </summary>
+        /// <returns></returns>
+        protected long CalculateSelfGaoChaoDamage()
+        {
+            return (long)(m_player.HP_Max * 0.3f);
+        }
 
+        /// <summary>
+        /// 计算自身高潮伤害
+        /// </summary>
+        /// <returns></returns>
+        protected long CalculateEnemyGaoChaoDamage(int enemyId)
+        {
+            return (long)(m_player.HP_Max * 0.5f) + 50;
+        }
 
         //public void FightEnterHMode()
         //{
@@ -1184,7 +1269,38 @@ namespace FirstBepinPlugin
             }
         }
 
+        #region 工具
 
+        /// <summary>
+        /// 通过weight获取id
+        /// </summary>
+        /// <param name="weights"></param>
+        /// <returns></returns>
+        protected int RandomValueByWeight(List<KeyValuePair<int, int>> weights)
+        {
+            int maxWeighht = 0;
+            for(int i=0;i<weights.Count;i++)
+            {
+                maxWeighht += weights[i].Value;
+            }
+            if(maxWeighht == 0)
+            {
+                return 0;
+            }
+            int randVal = UnityEngine.Random.Range(0, maxWeighht);
+            int currWeight = 0;
+            for (int i = 0; i < weights.Count; i++)
+            {
+                currWeight += weights[i].Value;
+                if(randVal < currWeight)
+                {
+                    return weights[i].Key;
+                }
+            }
+            return 0;
+        }
+
+        #endregion
         /// <summary>
         /// 回调
         /// </summary>

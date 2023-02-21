@@ -23,20 +23,36 @@ namespace FirstBepinPlugin
         public const int ItemId_MineLu = 99790;
 
         // 战斗buff
+        #region 基础状态显示 9971000 - 9971200
+
         public const int BuffId_YinTili = 9971000;
         public const int BuffId_YinNaili = 9971001;
         public const int BuffId_YinKuaiGan = 9971002;
         public const int BuffId_YinYuWang = 9971003;
         public const int BuffId_YinYiZhuang = 9971004;
-
-        public const int BuffId_BasicYinLingen = 9971005; //进战后的基础淫灵根比率
         public const int BuffId_YinXingFen = 9971006; // 兴奋度
-        public const int BuffId_TurnModYuWang = 9971007; // 回合开始改变欲望
-        public const int BuffId_FlagFaQing = 9971010; // 敌方发情
 
+        #endregion
+
+        #region 状态标记 9971200 - 9971400
+
+        public const int BuffId_FlagFaQing = 9971010; // 敌方发情
         public const int BuffId_FlagNormal = 9972000;
         public const int BuffId_FlagShou = 9972001;
         public const int BuffId_FlagWuLi = 9972002;
+
+        #endregion
+
+        #region 机制 9971400 - 9971600
+
+        public const int BuffId_JiaoHe = 9971400; // 交合类技能 减少行动点
+
+        #endregion
+
+        #region 非技能状态
+        public const int BuffId_BasicYinLingen = 9971005; //进战后的基础淫灵根比率
+        public const int BuffId_TurnModYuWang = 9971007; // 回合开始改变欲望
+        #endregion
 
         //public const int BuffTriggerId_CheckLayerBetween = 9971; // 检查层数要求 其具体参数定义在seid 9971文件中
 
@@ -55,6 +71,7 @@ namespace FirstBepinPlugin
 
         // bonus
         public const int BuffSeId_ModMaxYizhuang = 540; // 改变衣装最大值
+        public const int BuffSeId_ModMeiLi = 541; // 改变衣装最大值
 
         // 改变衣装
         public const int SkillSeId_ModYiZhuang = 550; // 移除衣装 p1 固定值 p2 最大百分比

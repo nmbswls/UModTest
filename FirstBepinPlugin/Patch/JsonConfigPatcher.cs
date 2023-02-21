@@ -138,6 +138,24 @@ namespace FirstBepinPlugin.Patch
                 }
             }
 
+            // 追加显示字符串
+            if (jsondata == __instance.TuJianChunWenBen)
+            {
+                try
+                {
+                    // 初始化 TuJianChunWenBen
+                    var fileNameTuJianChunWenBen = PluginMain.Main.Path + "/PatchConfig/TuJianChunWenBen.json";
+                    var jsonTuJianChunWenBen = File.ReadAllText(fileNameTuJianChunWenBen);
+                    var jsondataTuJianChunWenBen = new JSONObject(jsonTuJianChunWenBen);
+
+                    jsondata.Merge(jsondataTuJianChunWenBen);
+                }
+                catch (Exception e)
+                {
+                    PluginMain.Main.LogError("jsonConfig init TuJianChunWenBen Fail.");
+                }
+            }
+
         }
     }
 

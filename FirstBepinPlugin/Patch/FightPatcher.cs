@@ -327,7 +327,7 @@ namespace FirstBepinPlugin.Patch
     {
         public static void Postfix(BehaviorDesigner.Runtime.Tasks.Basic.UnityAnimation.EndRound __instance)
         {
-            SecretsSystem.FightManager.ApplyEnemyHSkill();
+            SecretsSystem.FightManager.ApplyEnemyHAction();
         }
     }
 
