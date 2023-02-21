@@ -115,21 +115,20 @@ namespace FirstBepinPlugin.Patch
     {
         public static bool Prefix(KBEngine.Buff __instance, int seid, Entity _avatar, List<int> buffInfo, List<int> flag)
         {
-            if (seid != Consts.BuffSeId_SwitchIntoHMode
-                && seid != Consts.BuffSeId_SwitchOutHMode)
+            if (seid != Consts.BuffSeId_ModYuWang)
             {
                 return true;
             }
 
-            //switch (seid)
-            //{
-            //    case Consts.BuffSeId_SwitchIntoHMode:
-            //        {
-            //            PluginMain.Main.LogInfo("Buff loopRealizeSeid Handle ListRealizeSeid_CheckIntoHMode ");
-            //            __instance.ListRealizeSeid_SwitchIntoHMode(seid, (Avatar)_avatar, buffInfo, flag);
-            //        }
-            //        break;
-            //}
+            switch (seid)
+            {
+                case Consts.BuffSeId_ModYuWang:
+                    {
+                        PluginMain.Main.LogInfo("Buff loopRealizeSeid Handle ListRealizeSeid_ModYuWang ");
+                        __instance.ListRealizeSeid_ModYuWang(seid, (KBEngine.Avatar)_avatar, buffInfo, flag);
+                    }
+                    break;
+            }
 
             return false;
         }
@@ -141,28 +140,27 @@ namespace FirstBepinPlugin.Patch
     [HarmonyPatch(typeof(KBEngine.Buff), "CanRealizeSeid")]
     public class BuffPatcher_CanRealizeSeid
     {
-        public static bool Prefix(KBEngine.Buff __instance, ref bool __result, KBEngine.Avatar _avatar, List<int> flag, int nowSeid, BuffLoopData buffLoopData = null, List<int> buffInfo = null)
-        {
-            if (nowSeid != Consts.BuffSeId_CheckIntoHMode
-                && nowSeid != Consts.BuffSeId_CheckOutHMode
-                )
-            {
-                return true;
-            }
+        //public static bool Prefix(KBEngine.Buff __instance, ref bool __result, KBEngine.Avatar _avatar, List<int> flag, int nowSeid, BuffLoopData buffLoopData = null, List<int> buffInfo = null)
+        //{
+        //    if (nowSeid != Consts.BuffSeId_ModYuWang
+        //        )
+        //    {
+        //        return true;
+        //    }
 
-            __result = false;
+        //    __result = false;
 
-            //switch (nowSeid)
-            //{
-            //    case Consts.BuffSeId_CheckIntoHMode:
-            //        {
-            //            __result = SecretsSystem.Instance.CheckFightEnterHMode(_avatar);
-            //        }
-            //        break;
-            //}
+        //    //switch (nowSeid)
+        //    //{
+        //    //    case Consts.BuffSeId_CheckIntoHMode:
+        //    //        {
+        //    //            __result = SecretsSystem.Instance.CheckFightEnterHMode(_avatar);
+        //    //        }
+        //    //        break;
+        //    //}
 
-            return false;
-        }
+        //    return false;
+        //}
     }
 
     /// <summary>
@@ -364,5 +362,4 @@ namespace FirstBepinPlugin.Patch
             icons[12] = PluginMain.Main.LoadAsset<Sprite>("Icons/icon_lianqi_tab_sex.png");
         }
     }
-
 }

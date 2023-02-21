@@ -1,4 +1,5 @@
 ﻿using BehaviorDesigner.Runtime;
+using DebuggingEssentials;
 using FirstBepinPlugin.Patch;
 using GUIPackage;
 using JSONClass;
@@ -9,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
@@ -166,6 +168,8 @@ namespace FirstBepinPlugin
         public long YuWang;
         public long KuaiGan;
         public long NaiLi;
+
+        public KBEngine.Avatar BindAvatar;
     }
 
     public class HFightCtx
@@ -176,6 +180,7 @@ namespace FirstBepinPlugin
         // 动态数值
         public long Tili;
         public long YiZhuang;
+        public long MeiLi;
         public long Xingfen;
 
 
@@ -255,12 +260,12 @@ namespace FirstBepinPlugin
             IsInBattle = true;
             m_player = Tools.instance.getPlayer();
 
-            m_ctx.StaticAttributeBaseVal.Add(HModeAttributeType.HAtk, 0);
-            m_ctx.StaticAttributeBaseVal.Add(HModeAttributeType.HDef, 0);
-            m_ctx.StaticAttributeBaseVal.Add(HModeAttributeType.HMaxClothes, 10000);
-            m_ctx.StaticAttributeBaseVal.Add(HModeAttributeType.HMaxTili, 10000);
-            m_ctx.StaticAttributeBaseVal.Add(HModeAttributeType.HMaxXingFen, 10000);
-            m_ctx.StaticAttributeBaseVal.Add(HModeAttributeType.HMaxKuaiGan, 10000);
+            InitAttribute(HModeAttributeType.HAtk, 0);
+            InitAttribute(HModeAttributeType.HDef, 0);
+            InitAttribute(HModeAttributeType.HMaxClothes, 100);
+            InitAttribute(HModeAttributeType.HMaxTili, 100);
+            InitAttribute(HModeAttributeType.HMaxXingFen, 100);
+            InitAttribute(HModeAttributeType.HMaxKuaiGan, 100);
 
             JSONObject jSONObject = jsonData.instance.AvatarJsonData[string.Concat(Tools.instance.MonstarID)];
             if(jSONObject.HasField("XingGe"))
@@ -308,11 +313,9 @@ namespace FirstBepinPlugin
             }
             else
             {
-                var ret = CheckEnemyFaQing();
-                if (ret)
+                if (CheckEnemyFaQing())
                 {
-                    m_ctx.IsEnemyFaQing = true;
-                    SetBuffLayer(m_player.OtherAvatar, Consts.BuffId_FlagFaQing, 1);
+                    ApplyEnemyFaQing();
                 }
             }
         }
@@ -337,8 +340,8 @@ namespace FirstBepinPlugin
 
             // 初始化属性
             m_ctx.m_hState = HModeState.Normal;
-            m_ctx.Tili = 10000;
-            m_ctx.YiZhuang = 10000;
+            m_ctx.Tili = 100 * Consts.Float2Int100;
+            m_ctx.YiZhuang = 100 * Consts.Float2Int100;
 
             m_ctx.Self.NaiLi = 3;
             m_ctx.Self.KuaiGan = 0;
@@ -367,11 +370,19 @@ namespace FirstBepinPlugin
             }
 
             // 提高双方 淫比重
-            SetBuffLayer(player, Consts.BuffId_BasicYinLingen, 1);
-            SetBuffLayer(player.OtherAvatar, Consts.BuffId_BasicYinLingen, 1);
+            SetHasBuff(player, Consts.BuffId_BasicYinLingen);
+            SetHasBuff(player.OtherAvatar, Consts.BuffId_BasicYinLingen);
 
+            // 移除魔气buff
             player.buffmag.RemoveBuff(10000);
             player.OtherAvatar.buffmag.RemoveBuff(10000);
+
+            // 初始魅力
+            {
+                m_ctx.MeiLi += 2000;
+            }
+
+            SetBuffLayer(player, Consts.BuffId_TurnModYuWang, 10);
         }
 
         /// <summary>
@@ -474,16 +485,16 @@ namespace FirstBepinPlugin
         /// </summary>
         public void UpdateAllStateBuff()
         {
-            SetBuffLayer(m_player, Consts.BuffId_YinTili, (int)(m_ctx.Tili/100));
-            SetBuffLayer(m_player, Consts.BuffId_YinYiZhuang, (int)(m_ctx.YiZhuang/100));
+            SetBuffLayer(m_player, Consts.BuffId_YinTili, (int)(m_ctx.Tili/Consts.Float2Int100));
+            SetBuffLayer(m_player, Consts.BuffId_YinYiZhuang, (int)(m_ctx.YiZhuang/ Consts.Float2Int100));
 
             SetBuffLayer(m_player, Consts.BuffId_YinNaili, (int)(m_ctx.Self.NaiLi));
-            SetBuffLayer(m_player, Consts.BuffId_YinKuaiGan, (int)(m_ctx.Self.KuaiGan / 100));
-            SetBuffLayer(m_player, Consts.BuffId_YinYuWang, (int)(m_ctx.Self.YuWang / 100));
+            SetBuffLayer(m_player, Consts.BuffId_YinKuaiGan, (int)(m_ctx.Self.KuaiGan / Consts.Float2Int100));
+            SetBuffLayer(m_player, Consts.BuffId_YinYuWang, (int)(m_ctx.Self.YuWang / Consts.Float2Int100));
 
             SetBuffLayer(m_player.OtherAvatar, Consts.BuffId_YinNaili, (int)(m_ctx.Enemy.NaiLi));
-            SetBuffLayer(m_player.OtherAvatar, Consts.BuffId_YinKuaiGan, (int)(m_ctx.Enemy.KuaiGan / 100));
-            SetBuffLayer(m_player.OtherAvatar, Consts.BuffId_YinYuWang, (int)(m_ctx.Enemy.YuWang / 100));
+            SetBuffLayer(m_player.OtherAvatar, Consts.BuffId_YinKuaiGan, (int)(m_ctx.Enemy.KuaiGan / Consts.Float2Int100));
+            SetBuffLayer(m_player.OtherAvatar, Consts.BuffId_YinYuWang, (int)(m_ctx.Enemy.YuWang / Consts.Float2Int100));
         }
 
         /// <summary>
@@ -633,8 +644,36 @@ namespace FirstBepinPlugin
             var HShowPanel = UnityEngine.GameObject.Instantiate(PluginMain.Main.LoadGameObjectFromAB("HShowPanel"), UIFightPanel.Inst.transform);
             m_cachedHAnimController = HShowPanel.AddComponent<FightHShowController>();
             m_cachedHAnimController.Init();
+
+            ExtendAvatarShowDamageUI(m_player);
+            ExtendAvatarShowDamageUI(m_player.OtherAvatar);
         }
 
+        public void ExtendAvatarShowDamageUI(KBEngine.Avatar avatar)
+        {
+            var compShow = ((UnityEngine.GameObject)avatar.renderObj).GetComponentInChildren<AvatarShowHpDamage>();
+            if (compShow == null || compShow.DamageTemp == null)
+            {
+                return;
+            }
+
+            var damagePrefab = compShow.DamageTemp;
+            damagePrefab.name = "nmbbbbbbbbbbbbb";
+            Transform child0 = damagePrefab.transform.GetChild(0);
+            var newChild = UnityEngine.GameObject.Instantiate(child0.gameObject, child0.parent);
+            newChild.transform.SetAsLastSibling();
+
+
+
+            var go = new UnityEngine.GameObject();
+            var image = go.AddComponent<Image>();
+            image.color = new Color(1, 0, 0);
+            go.transform.SetParent(newChild.transform);
+
+            damagePrefab.transform.LogAll();
+            PluginMain.Main.LogError("newChild parent:" + newChild.transform.parent.name);
+            
+        }
 
 
         #region 取属性
@@ -642,10 +681,10 @@ namespace FirstBepinPlugin
         /// <summary>
         /// 衣装变化
         /// </summary>
-        /// <param name="addVal"></param>
-        public void ModYiZhuang(long addVal)
+        /// <param name="modVal"></param>
+        public void ModYiZhuang(float modVal)
         {
-            m_ctx.YiZhuang += addVal;
+            m_ctx.YiZhuang += (long)(modVal * Consts.Float2Int100);
             long maxVal = GetAttributeValue(HModeAttributeType.HMaxClothes);
             if(maxVal < 0)
             {
@@ -665,8 +704,9 @@ namespace FirstBepinPlugin
         /// <summary>
         /// 欲望变化
         /// </summary>
+        /// <param name="target"></param>
         /// <param name="addVal"></param>
-        public void ModYuWang(int target, long addVal)
+        public void ModYuWang(int target, float modVal)
         {
             HModeActor actor;
             if(target == 1)
@@ -677,7 +717,7 @@ namespace FirstBepinPlugin
             {
                 actor = m_ctx.Enemy;
             }
-            actor.YuWang += addVal;
+            actor.YuWang += (long)(modVal * Consts.Float2Int100);
             
             if (actor.YuWang < 0)
             {
@@ -689,7 +729,10 @@ namespace FirstBepinPlugin
 
             if(target == 2)
             {
-                ((UnityEngine.GameObject)m_player.OtherAvatar.renderObj).GetComponentInChildren<AvatarShowHpDamage>().show($"欲望 +{addVal/100}");
+                var hpShow = ((UnityEngine.GameObject)m_player.OtherAvatar.renderObj).GetComponentInChildren<AvatarShowHpDamage>();
+                var go = hpShow.DamageTemp;
+                go.transform.LogAll();
+                //((UnityEngine.GameObject)m_player.OtherAvatar.renderObj).GetComponentInChildren<AvatarShowHpDamage>().SetText($"欲望+{addVal / 100}",4);
             }
         }
 
@@ -697,9 +740,9 @@ namespace FirstBepinPlugin
         /// 兴奋度变化
         /// </summary>
         /// <param name="addVal"></param>
-        public void ModXingFen(long addVal)
+        public void ModXingFen(float modVal)
         {
-            m_ctx.Xingfen += addVal;
+            m_ctx.Xingfen += (long)(modVal * Consts.Float2Int100);
             long maxVal = GetAttributeValue(HModeAttributeType.HMaxXingFen);
 
             if (m_ctx.Xingfen < 0)
@@ -718,8 +761,9 @@ namespace FirstBepinPlugin
         /// <summary>
         /// 累加快感
         /// </summary>
+        /// <param name="target"></param>
         /// <param name="addVal"></param>
-        public void ModKuaiGan(int target, long addVal)
+        public void ModKuaiGan(int target, float modVal)
         {
 
             HModeActor actor;
@@ -732,7 +776,7 @@ namespace FirstBepinPlugin
                 actor = m_ctx.Enemy;
             }
 
-            actor.KuaiGan += addVal;
+            actor.KuaiGan += (long)(modVal * Consts.Float2Int100);
 
             if (actor.KuaiGan < 0)
             {
@@ -745,7 +789,7 @@ namespace FirstBepinPlugin
         public void TriggerYinYi()
         {
             // 初始时仅增加1点Kuaigan
-            ModKuaiGan(1, 100);
+            ModKuaiGan(1, 1.0f);
 
             UIFightPanel.Inst.FightJiLu.AddText($"{m_player.name} 快感增加了");
         }
@@ -802,7 +846,7 @@ namespace FirstBepinPlugin
             }
             if(newBuffId != -1)
             {
-                SetBuffLayer(m_player, newBuffId, 1);
+                SetHasBuff(m_player, newBuffId);
             }
         }
 
@@ -876,6 +920,23 @@ namespace FirstBepinPlugin
             return 0;
         }
 
+        /// <summary>
+        /// 初始化属性值
+        /// </summary>
+        /// <param name="attr"></param>
+        /// <param name="value"></param>
+        protected void InitAttribute(HModeAttributeType attr, float value)
+        {
+            if(m_ctx.StaticAttributeBaseVal.ContainsKey(attr))
+            {
+                m_ctx.StaticAttributeBaseVal[attr] = (long)(value * Consts.Float2Int100);
+            }
+            else
+            {
+                m_ctx.StaticAttributeBaseVal.Add(attr, (long)(value * Consts.Float2Int100));
+            }
+        }
+
         #endregion
 
         /// <summary>
@@ -907,29 +968,110 @@ namespace FirstBepinPlugin
             }
             else
             {
-                return true;
+                return false;
             }
         }
 
         /// <summary>
-        /// 指定avatar 设置buff层数
+        /// 实现发情
+        /// </summary>
+        public void ApplyEnemyFaQing()
+        {
+            m_ctx.IsEnemyFaQing = true;
+            SetHasBuff(m_player.OtherAvatar, Consts.BuffId_FlagFaQing);
+
+            long preYuWang = m_ctx.Enemy.YuWang;
+            long convertKuaiGan = (long)(preYuWang * 0.5f);
+
+            m_ctx.Enemy.YuWang = 0;
+            m_ctx.Enemy.KuaiGan += convertKuaiGan;
+            UpdateAllStateBuff();
+        }
+
+        /// <summary>
+        /// 指定avatar 设置buff层数 仅支持叠加的
         /// </summary>
         /// <param name="target"></param>
         /// <param name="buffId"></param>
         /// <param name="newLayer"></param>
         public void SetBuffLayer(KBEngine.Avatar target, int buffId, int newLayer)
         {
+            var buffInfo = _BuffJsonData.DataDict[buffId];
+            if(buffInfo == null)
+            {
+                return;
+            }
+            if(buffInfo.BuffType != 0)
+            {
+                PluginMain.Main.LogError($"Only Stackable Buff Can Use SetBuffLayer. {buffId}");
+                return;
+            }
+
             List<List<int>> buffByID = target.buffmag.getBuffByID(buffId);
+            int oldLayer = 0;
             if (buffByID.Count > 0)
             {
+                oldLayer = buffByID.Count;
                 buffByID[0][1] = newLayer;
             }
             else
             {
                 target.spell.addDBuff(buffId, newLayer);
             }
+
+            // 特殊处理
+            if(buffInfo.seid.Contains(64))
+            {
+                var seidJson = Buff.getSeidJson(64, buffId);
+                var v1 = seidJson["value1"].I;
+                var v2 = seidJson["value2"].I;
+                int oldVal = 0;
+                if(!target.SkillSeidFlag.ContainsKey(13))
+                {
+                    target.SkillSeidFlag[13] = new Dictionary<int, int>();
+                }
+
+                PluginMain.Main.LogError($"seid64 check v1 {v1} v2 {v2} newLayer {newLayer} oldLayer {oldLayer}");
+
+                if (target.SkillSeidFlag[13].ContainsKey(v1))
+                {
+                    oldVal = target.SkillSeidFlag[13][v1];
+                }
+                int changedVal = (newLayer - oldLayer) * v2;
+                target.SkillSeidFlag[13][v1] = oldVal + changedVal;
+
+                // 打印额外灵根情况
+                foreach(var kv in target.SkillSeidFlag[13])
+                {
+                    PluginMain.Main.LogError($"灵根情况 {kv.Key} {kv.Value}");
+                }
+            }
         }
 
+        /// <summary>
+        /// 使对象拥有指定buff
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="buffId"></param>
+        public void SetHasBuff(KBEngine.Avatar target, int buffId)
+        {
+            var buffInfo = _BuffJsonData.DataDict[buffId];
+            if (buffInfo == null)
+            {
+                return;
+            }
+            if (buffInfo.BuffType != 1)
+            {
+                PluginMain.Main.LogError($"Only Override Buff Can Use SetHasBuff. {buffId}");
+                return;
+            }
+            List<List<int>> buffByID = target.buffmag.getBuffByID(buffId);
+            if (buffByID.Count > 0)
+            {
+                return;
+            }
+            target.spell.addDBuff(buffId, 1);
+        }
 
         public void OnFightTalkFinish(int param)
         {

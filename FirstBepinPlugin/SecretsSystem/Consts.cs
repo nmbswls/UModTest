@@ -12,6 +12,8 @@ namespace FirstBepinPlugin
     /// </summary>
     public static class Consts
     {
+        public static int Float2Int100 = 100;
+
         public const int SecretEquipType = 997;
         public const string sLianqi_SecretTabName = "Toggle_Sex";
         //public const int YinLingQiTypeInt = 9;
@@ -29,7 +31,7 @@ namespace FirstBepinPlugin
 
         public const int BuffId_BasicYinLingen = 9971005; //进战后的基础淫灵根比率
         public const int BuffId_YinXingFen = 9971006; // 兴奋度
-
+        public const int BuffId_TurnModYuWang = 9971007; // 回合开始改变欲望
         public const int BuffId_FlagFaQing = 9971010; // 敌方发情
 
         public const int BuffId_FlagNormal = 9972000;
@@ -38,10 +40,11 @@ namespace FirstBepinPlugin
 
         //public const int BuffTriggerId_CheckLayerBetween = 9971; // 检查层数要求 其具体参数定义在seid 9971文件中
 
-        public const int BuffSeId_CheckIntoHMode = 599; // 特殊检查 判断进入yinzhan
-        public const int BuffSeId_SwitchIntoHMode = 598; // 特殊效果 进入Hmode
-        public const int BuffSeId_CheckOutHMode = 597; // 特殊seid 检查退出yinzhan的条件
-        public const int BuffSeId_SwitchOutHMode = 596; // 特殊效果 进入Hmode
+        //public const int BuffSeId_CheckIntoHMode = 599; // 特殊检查 判断进入yinzhan
+        //public const int BuffSeId_SwitchIntoHMode = 598; // 特殊效果 进入Hmode
+        //public const int BuffSeId_CheckOutHMode = 597; // 特殊seid 检查退出yinzhan的条件
+        //public const int BuffSeId_SwitchOutHMode = 596; // 特殊效果 进入Hmode
+        public const int BuffSeId_ModYuWang = 595; // 增加欲望 p1 每层加多少 p2 非0时固定增加 无关层数
 
 
         //public const int BuffSeId_CheckIntoYinNormal = 901; // 特殊seid 检查进入yinzhan的条件
