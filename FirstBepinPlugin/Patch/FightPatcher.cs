@@ -61,13 +61,37 @@ namespace FirstBepinPlugin.Patch
     [HarmonyPatch(typeof(RoundManager), "startRound")]
     public class RoundManagerPatcher_startRound
     {
+        public static void Prefix(RoundManager __instance, Entity _avater)
+        {
+            PluginMain.Main.LogInfo("RoundManagerPatcher_startRound Prefix ");
+            SecretsSystem.FightManager.FightOnRoungStartPre((KBEngine.Avatar)_avater);
+        }
+
         public static void Postfix(RoundManager __instance, Entity _avater)
         {
             PluginMain.Main.LogInfo("RoundManagerPatcher_startRound Postfix ");
-            SecretsSystem.FightManager.FightOnRoungStart((KBEngine.Avatar)_avater);
+            SecretsSystem.FightManager.FightOnRoungStartPost((KBEngine.Avatar)_avater);
         }
     }
 
+    /// <summary>
+    /// 回合介绍扩展事件
+    /// </summary>
+    [HarmonyPatch(typeof(RoundManager), "endRound")]
+    public class RoundManagerPatcher_endRound
+    {
+        public static void Prefix(RoundManager __instance, Entity _avater)
+        {
+            PluginMain.Main.LogInfo("RoundManagerPatcher_endRound Prefix ");
+            SecretsSystem.FightManager.FightOnRoungEndPre((KBEngine.Avatar)_avater);
+        }
+
+        public static void Postfix(RoundManager __instance, Entity _avater)
+        {
+            PluginMain.Main.LogInfo("RoundManagerPatcher_endRound Postfix ");
+            SecretsSystem.FightManager.FightOnRoungEndPost((KBEngine.Avatar)_avater);
+        }
+    }
 
     /// <summary>
     /// 技能扩展 H 状态下 改变提示
@@ -248,15 +272,34 @@ namespace FirstBepinPlugin.Patch
     }
 
 
+
     /// <summary>
-    /// 技能扩展 支持设置buff层数
+    /// 技能扩展 支持自定义canuse
     /// </summary>
-    [HarmonyPatch(typeof(GUIPackage.Skill), "reduceBuff")]
-    public class SkillPatcher_reduceBuff
+    [HarmonyPatch(typeof(GUIPackage.Skill), "CanUse")]
+    public class SkillPatcher_CanUse
     {
-        public static void Postfix(GUIPackage.Skill __instance, KBEngine.Avatar Targ, int X, int Y, int __state)
+        public static void Postfix(GUIPackage.Skill __instance, ref SkillCanUseType __result, Entity _attaker, Entity _receiver, bool showError = true, string uuid = "")
         {
-            //_BuffJsonData.DataDict[avatar.bufflist[buff][2]] //层数 持续 id
+            if(__result != SkillCanUseType.可以使用)
+            {
+                return;
+            }
+
+            foreach (int item in _skillJsonData.DataDict[__instance.skill_ID].seid)
+            {
+                if (item == Consts.SkillSeId_CheckNotWuLi)
+                {
+                    if(SecretsSystem.FightManager.m_ctx.Tili <= 0)
+                    {
+                        if (_attaker.isPlayer() && showError)
+                        {
+                            UIPopTip.Inst.Pop("无力状态不可使用");
+                        }
+                        __result = (SkillCanUseType)199;
+                    }
+                }
+            }
         }
     }
 

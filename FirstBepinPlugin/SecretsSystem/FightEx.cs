@@ -38,6 +38,12 @@ namespace FirstBepinPlugin
             SecretsSystem.FightManager.ModYuWang(1, num);
         }
 
+        public static void ListRealizeSeid_ModXingFen(this KBEngine.Buff buff, int seid, KBEngine.Avatar avatar, List<int> buffInfo, List<int> flag)
+        {
+            int targetPart = buff.getSeidJson(seid)["value1"].I;
+            float val = buff.getSeidJson(seid)["value2"].f * buffInfo[1];
+            SecretsSystem.FightManager.ModXingFen(1, val);
+        }
         //public void ListRealizeSeid9(int seid, Avatar avatar, List<int> buffInfo, List<int> flag)
         //{
         //    int num = getSeidJson(seid)["value2"].I * buffInfo[1];
@@ -83,8 +89,9 @@ namespace FirstBepinPlugin
 
         public static void realizeSeid_ModXingFen(this GUIPackage.Skill skill, int seid, List<int> damage, KBEngine.Avatar attaker, KBEngine.Avatar receiver, int type)
         {
-            float modVal = skill.getSeidJson(seid)["value1"].f;
-            SecretsSystem.FightManager.ModXingFen(modVal);
+            int targetPart = skill.getSeidJson(seid)["value1"].I;
+            float modVal = skill.getSeidJson(seid)["value2"].f;
+            SecretsSystem.FightManager.ModXingFen(targetPart, modVal);
         }
 
         public static void realizeSeid_SwitchTiWei(this GUIPackage.Skill skill, int seid, List<int> damage, KBEngine.Avatar attaker, KBEngine.Avatar receiver, int type)

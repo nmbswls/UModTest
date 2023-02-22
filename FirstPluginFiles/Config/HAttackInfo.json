@@ -1,0 +1,210 @@
+{
+  "100": {
+    "ID": 100,
+    "Name": "吮指",
+    "TargetPart": [
+      1
+    ],
+    "AttackType": 1,
+    "Conditions": [
+      100
+    ],
+    "DamageRate": 100,
+    "KuaiGanRate": 100,
+    "Tags": [],
+    "DefaultWeight": 100,
+    "HintContent": "触发敌方H行为显示 100",
+    "AnimName": ""
+  },
+  "101": {
+    "ID": 101,
+    "Name": "抚唇",
+    "TargetPart": [
+      1
+    ],
+    "AttackType": 1,
+    "Conditions": [
+      101
+    ],
+    "DamageRate": 100,
+    "KuaiGanRate": 100,
+    "Tags": [],
+    "DefaultWeight": 100,
+    "HintContent": "触发敌方H行为显示 101",
+    "AnimName": ""
+  },
+  "102": {
+    "ID": 102,
+    "Name": "蛇吻",
+    "TargetPart": [
+      1
+    ],
+    "AttackType": 2,
+    "Conditions": [
+      102
+    ],
+    "DamageRate": 100,
+    "KuaiGanRate": 100,
+    "Tags": [],
+    "DefaultWeight": 100,
+    "HintContent": "触发敌方H行为显示 102",
+    "AnimName": ""
+  },
+  "103": {
+    "ID": 103,
+    "Name": "插入",
+    "TargetPart": [
+      1
+    ],
+    "AttackType": 2,
+    "Conditions": [
+      103
+    ],
+    "DamageRate": 100,
+    "KuaiGanRate": 100,
+    "Tags": [],
+    "DefaultWeight": 100,
+    "HintContent": "触发敌方H行为显示 102",
+    "AnimName": ""
+  },
+  "201": {
+    "ID": 201,
+    "Name": "抚摸胸部",
+    "TargetPart": [
+      2
+    ],
+    "AttackType": 1,
+    "Conditions": [
+      201
+    ],
+    "DamageRate": 100,
+    "KuaiGanRate": 100,
+    "Tags": [],
+    "DefaultWeight": 100,
+    "HintContent": "触发敌方H行为显示 201",
+    "AnimName": ""
+  },
+  "202": {
+    "ID": 202,
+    "Name": "重揉胸部",
+    "TargetPart": [
+      2
+    ],
+    "AttackType": 2,
+    "Conditions": [
+      202
+    ],
+    "DamageRate": 100,
+    "KuaiGanRate": 100,
+    "Tags": [],
+    "DefaultWeight": 100,
+    "HintContent": "触发敌方H行为显示 202",
+    "AnimName": ""
+  },
+  "203": {
+    "ID": 203,
+    "Name": "拉扯乳头",
+    "TargetPart": [
+      2
+    ],
+    "AttackType": 2,
+    "Conditions": [
+      203
+    ],
+    "DamageRate": 100,
+    "KuaiGanRate": 100,
+    "Tags": [],
+    "DefaultWeight": 100,
+    "HintContent": "触发敌方H行为显示 203",
+    "AnimName": ""
+  },
+  "301": {
+    "ID": 301,
+    "Name": "",
+    "TargetPart": [
+      3
+    ],
+    "AttackType": 1,
+    "Conditions": [
+      301
+    ],
+    "DamageRate": 100,
+    "KuaiGanRate": 100,
+    "Tags": [],
+    "DefaultWeight": 100,
+    "HintContent": "触发敌方H行为显示 301",
+    "AnimName": ""
+  },
+  "302": {
+    "ID": 302,
+    "Name": "",
+    "TargetPart": [
+      3
+    ],
+    "AttackType": 2,
+    "Conditions": [
+      302
+    ],
+    "DamageRate": 100,
+    "KuaiGanRate": 100,
+    "Tags": [],
+    "DefaultWeight": 100,
+    "HintContent": "触发敌方H行为显示 302",
+    "AnimName": ""
+  },
+  "401": {
+    "ID": 401,
+    "Name": "",
+    "TargetPart": [
+      4
+    ],
+    "AttackType": 1,
+    "Conditions": [
+      401
+    ],
+    "DamageRate": 100,
+    "KuaiGanRate": 100,
+    "Tags": [],
+    "DefaultWeight": 100,
+    "HintContent": "触发敌方H行为显示 401",
+    "AnimName": ""
+  },
+  "402": {
+    "ID": 402,
+    "Name": "",
+    "TargetPart": [
+      4
+    ],
+    "AttackType": 2,
+    "Conditions": [
+      402
+    ],
+    "DamageRate": 100,
+    "KuaiGanRate": 100,
+    "Tags": [],
+    "DefaultWeight": 100,
+    "HintContent": "触发敌方H行为显示 402",
+    "AnimName": ""
+  },
+  "999": {
+    "ID": 999,
+    "Name": "魔袭",
+    "TargetPart": [
+      1,
+      2,
+      4
+    ],
+    "AttackType": 1,
+    "Conditions": [
+      999
+    ],
+    "DamageRate": 100,
+    "KuaiGanRate": 100,
+    "Tags": [
+      999
+    ],
+    "DefaultWeight": 100,
+    "HintContent": "触发敌方H行为显示 999",
+    "AnimName": ""
+  }
+}

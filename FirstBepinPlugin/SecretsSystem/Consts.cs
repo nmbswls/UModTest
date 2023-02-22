@@ -39,7 +39,10 @@ namespace FirstBepinPlugin
         public const int BuffId_FlagFaQing = 9971010; // 敌方发情
         public const int BuffId_FlagNormal = 9972000;
         public const int BuffId_FlagShou = 9972001;
-        public const int BuffId_FlagWuLi = 9972002;
+
+        public const int BuffId_FlagJingJin = 9971220; // jingjin
+        public const int BuffId_FlagJueDing = 9971221; // jueding
+        public const int BuffId_FlagWuLi = 9971222; // 无力
 
         #endregion
 
@@ -66,12 +69,13 @@ namespace FirstBepinPlugin
         //public const int BuffSeId_CheckIntoYinNormal = 901; // 特殊seid 检查进入yinzhan的条件
         //public const int BuffSeId_CheckIntoYinShou = 902; // 特殊seid 检查进入yinzhan手的条件
 
-        public const int SkillSeId_CheckOutHMode = 597; // 特殊seid 检查退出HMode的条件
+        
         public const int SkillSeId_SwitchOutHMode = 596; // 特殊效果 脱离Hmode
 
         // bonus
         public const int BuffSeId_ModMaxYizhuang = 540; // 改变衣装最大值
         public const int BuffSeId_ModMeiLi = 541; // 改变衣装最大值
+        public const int BuffSeId_ModMaxTili = 542; // 改变最大体力
 
         // 改变衣装
         public const int SkillSeId_ModYiZhuang = 550; // 移除衣装 p1 固定值 p2 最大百分比
@@ -84,6 +88,7 @@ namespace FirstBepinPlugin
         public const int SkillSeId_YinYi = 562; // 淫意
 
         public const int SkillSeId_MultiTriggerByUsedTimee = 598; // 根据本回合使用次数改变后续触发次数 初始触发p1次 每次连续使用效果减少触发p2次 最低触发p3次 最高触发p4次
+        public const int SkillSeId_CheckNotWuLi = 597; // 特殊seid 检查退出HMode的条件
 
         public const int SkillSeId_EnterHMode = 599;
     }

@@ -1,0 +1,42 @@
+{
+  "1": {
+    "ID": 1,
+    "Name": "口",
+    "Armar": 3,
+    "HitKuaiGan": 5,
+    "CounterKuaiGan": 5,
+    "MaxXingFen": 50,
+    "MinXingFen": 0,
+    "SuoJing": 5
+  },
+  "2": {
+    "ID": 2,
+    "Name": "乳",
+    "Armar": 3,
+    "HitKuaiGan": 5,
+    "CounterKuaiGan": 5,
+    "MaxXingFen": 50,
+    "MinXingFen": 0,
+    "SuoJing": 5
+  },
+  "3": {
+    "ID": 3,
+    "Name": "穴",
+    "Armar": 1,
+    "HitKuaiGan": 5,
+    "CounterKuaiGan": 5,
+    "MaxXingFen": 50,
+    "MinXingFen": 0,
+    "SuoJing": 5
+  },
+  "4": {
+    "ID": 4,
+    "Name": "肛",
+    "Armar": 8,
+    "HitKuaiGan": 5,
+    "CounterKuaiGan": 5,
+    "MaxXingFen": 50,
+    "MinXingFen": 0,
+    "SuoJing": 5
+  }
+}

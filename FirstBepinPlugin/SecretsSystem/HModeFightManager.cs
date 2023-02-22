@@ -3,9 +3,11 @@ using DebuggingEssentials;
 using FirstBepinPlugin.Config;
 using FirstBepinPlugin.Patch;
 using GUIPackage;
+using HarmonyLib;
 using JSONClass;
 using KBEngine;
 using Newtonsoft.Json;
+using SkySwordKill.Next;
 using SkySwordKill.Next.DialogSystem;
 using System;
 using System.Collections.Generic;
@@ -25,6 +27,7 @@ using YSGame;
 using YSGame.Fight;
 using static FirstBepinPlugin.HModeFightManager;
 using static KBEngine.Buff;
+using static SeaAvatarObjBase;
 
 namespace FirstBepinPlugin
 {
@@ -46,9 +49,11 @@ namespace FirstBepinPlugin
     {
         public HModeFightManager Owner;
         public List<Toggle> m_toggleList = new List<Toggle>();
+        public List<Text> m_toggleText = new List<Text>();
 
-        public Text m_textPose;
         public int m_currSelectIdx = -1;
+
+        public bool m_isWuLi = false;
         public void Init(HModeFightManager owner)
         {
             this.Owner = owner;
@@ -66,18 +71,21 @@ namespace FirstBepinPlugin
                 {
                     OnTogglePointerEnter(tabIdx);
                 };
-                listener.EventOnPointerEnter += delegate ()
+
+                listener.EventOnPointerExit += delegate ()
                 {
                     OnTogglePointerExit(tabIdx);
                 };
-                tab.onValueChanged.AddListener(delegate(bool isOn) {
+
+                tab.onValueChanged.AddListener(delegate(bool isOn)
+                {
                     OnToggleValueChange(tabIdx);
                 });
 
                 var textComp = tab.GetComponentInChildren<Text>();
+                m_toggleText.Add(textComp);
                 textComp.font = PluginMain.Main.font_YaHei;
             }
-            m_textPose = m_toggleList[1].GetComponentInChildren<Text>();
 
             RefreshUI();
         }
@@ -88,23 +96,46 @@ namespace FirstBepinPlugin
             m_toggleList[1].gameObject.SetActive(true);
             m_toggleList[2].gameObject.SetActive(true);
 
-            if(Owner.m_ctx.m_hState == HModeState.Normal)
+            switch(Owner.m_ctx.m_hTiWei)
             {
-                m_textPose.text = "正常";
-            }
-            else if (Owner.m_ctx.m_hState == HModeState.Wuli)
-            {
-                m_textPose.text = "虚脱";
+                case HModeTiWei.None:
+                    {
+                        m_toggleText[1].text = "体位:无";
+                    }
+                    break;
+                case HModeTiWei.Shou:
+                    {
+                        m_toggleText[1].text = "体位:手";
+                    }
+                    break;
+                case HModeTiWei.Ru:
+                    {
+                        m_toggleText[1].text = "体位:乳";
+                    }
+                    break;
+                case HModeTiWei.Kou:
+                    {
+                        m_toggleText[1].text = "体位:口";
+                    }
+                    break;
+                case HModeTiWei.Gang:
+                    {
+                        m_toggleText[1].text = "体位:尻";
+                    }
+                    break;
+                case HModeTiWei.Xue:
+                    {
+                        m_toggleText[1].text = "体位:穴";
+                    }
+                    break;
             }
 
             if (m_currSelectIdx == -1)
             {
-                m_toggleList[0].isOn = true;
+                m_currSelectIdx = 0;
             }
-            else
-            {
-                m_toggleList[m_currSelectIdx].isOn = true;
-            }
+
+            m_toggleList[m_currSelectIdx].isOn = true;
         }
 
         public void OnToggleValueChange(int idx)
@@ -124,11 +155,11 @@ namespace FirstBepinPlugin
 
             if (m_currSelectIdx == 0)
             {
-                skillGroupId = (int)HModeFightManager.HSkillGroupType.Common;
+                skillGroupId = Owner.GetCurrStateSkillGroupId();
             }
             else if (m_currSelectIdx == 1)
             {
-                skillGroupId = SecretsSystem.FightManager.GetCurrPoseSkillGroupId();
+                skillGroupId = Owner.GetCurrTiWeiSkillGroupId();
             }
             else if (m_currSelectIdx == 2)
             {
@@ -186,9 +217,12 @@ namespace FirstBepinPlugin
         HDef,
         HMaxClothes,
         HMaxTili,
-        HMaxXingFen,
         HMaxKuaiGan, // 受耐力影响 达到后gc
         HMeiLi,
+        HMaxXingFen_1,
+        HMaxXingFen_2,
+        HMaxXingFen_3,
+        HMaxXingFen_4,
         Max,
     }
 
@@ -205,7 +239,7 @@ namespace FirstBepinPlugin
         // 动态数值
         public long Tili;
         public long YiZhuang;
-        public long Xingfen;
+        public long[] Xingfen = new long[(int)EnumPartType.Max];
         public long YuWang;
         public long KuaiGan;
 
@@ -215,6 +249,7 @@ namespace FirstBepinPlugin
         public HModeAttribute[] StaticAttributeBaseVal = new HModeAttribute[(int)HModeAttributeType.Max];
 
         public HModeState m_hState = HModeState.Invalid;
+        public HModeTiWei m_hTiWei = HModeTiWei.None;
 
         public Dictionary<int, GUIPackage.Skill> m_stateSkillCache = new Dictionary<int, GUIPackage.Skill>();
         public List<int> m_nonHSkillCache = new List<int>();
@@ -238,14 +273,18 @@ namespace FirstBepinPlugin
         {
             Invalid,
             Common,
-            Normal,
-            Function,
             Wuli,
             JueDing,
-            Shou,
+            TiWeiNone,
+            TiWeiShou,
+            TiWeiKou,
+            TiWeiRu,
+            TiWeiXue,
+            TiWeiGang,
+            Function,
         }
 
-        
+
 
         public KBEngine.Avatar m_player;
         public HFightCtx m_ctx = new HFightCtx();
@@ -269,9 +308,14 @@ namespace FirstBepinPlugin
             InitAttribute(HModeAttributeType.HDef, 0);
             InitAttribute(HModeAttributeType.HMaxClothes, 100);
             InitAttribute(HModeAttributeType.HMaxTili, 100);
-            InitAttribute(HModeAttributeType.HMaxXingFen, 100);
             InitAttribute(HModeAttributeType.HMaxKuaiGan, 100);
             InitAttribute(HModeAttributeType.HMeiLi, 5);
+
+            InitAttribute(HModeAttributeType.HMaxXingFen_1, 0);
+            InitAttribute(HModeAttributeType.HMaxXingFen_2, 0);
+            InitAttribute(HModeAttributeType.HMaxXingFen_3, 0);
+            InitAttribute(HModeAttributeType.HMaxXingFen_4, 0);
+
 
             JSONObject jSONObject = jsonData.instance.AvatarJsonData[string.Concat(Tools.instance.MonstarID)];
             if(jSONObject.HasField("XingGe"))
@@ -304,7 +348,6 @@ namespace FirstBepinPlugin
                 }
                 // tick firstProcess
                 firstProcess.Tick(dt);
-                PluginMain.Main.LogInfo("firstProcess " + firstProcess.GetType());
                 // 持续时间非0 表示通过倒计时结束
                 if (firstProcess.m_isEnd)
                 {
@@ -314,17 +357,22 @@ namespace FirstBepinPlugin
             }
         }
 
-        public void FightOnRoungStart(KBEngine.Avatar avatar)
+        public void FightOnRoungStartPre(KBEngine.Avatar avatar)
+        {
+            if (avatar == m_player)
+            {
+                // 计算兴奋度
+                ApplyTurnXingFen();
+            }
+                
+        }
+
+        public void FightOnRoungStartPost(KBEngine.Avatar avatar)
         {
             // 玩家回合开始
             if(avatar == m_player)
             {
                 CheckKuaiGanReachMax(1);
-
-                //check
-                int yuwangVal =(int)( m_ctx.YuWang * 1.0f / Consts.Float2Int100);
-                int turnXingFen = StaticConfigContainer.GetTurnXingFenByYuWang(yuwangVal);
-
             }
             else
             {
@@ -338,7 +386,15 @@ namespace FirstBepinPlugin
             }
         }
 
+        public void FightOnRoungEndPre(KBEngine.Avatar avatar)
+        {
 
+        }
+
+        public void FightOnRoungEndPost(KBEngine.Avatar avatar)
+        {
+
+        }
 
         /// <summary>
         /// 进入H形态
@@ -393,12 +449,18 @@ namespace FirstBepinPlugin
             player.buffmag.RemoveBuff(10000);
             player.OtherAvatar.buffmag.RemoveBuff(10000);
 
-            // 初始魅力
-            {
-
-            }
-
+            // 每回合增加欲望
             SetBuffLayer(player, Consts.BuffId_TurnModYuWang, 10);
+        }
+
+
+        /// <summary>
+        /// 检查更新动态buff
+        /// </summary>
+        protected void ApplyTurnXingFen()
+        {
+            int turnXingFen = StaticConfigContainer.GetTurnXingFenByYuWang((int)m_ctx.YuWang / 100);
+            ModXingFen(0, turnXingFen);
         }
 
         /// <summary>
@@ -431,13 +493,16 @@ namespace FirstBepinPlugin
                 m_ctx.KuaiGan = 0;
                 var damage = CalculateSelfGaoChaoDamage();
                 m_player.recvDamage(m_player, m_player, 10000, (int)damage);
-                SwitchTiWei((int)HModeState.Wuli);
+                SwitchTiWei((int)HModeState.JueDing);
+
+                OnJueDing();
             }
             else
             {
                 m_ctx.Enemy.KuaiGan = 0;
                 var damage = CalculateEnemyGaoChaoDamage(0);
                 m_player.OtherAvatar.recvDamage(m_player, m_player, 10000, (int)damage);
+                SetHasBuff(m_player.OtherAvatar, Consts.BuffId_FlagJingJin);
             }
         }
 
@@ -456,72 +521,47 @@ namespace FirstBepinPlugin
                 return;
             }
 
+            // 检查敌人进入体位
+            if(m_ctx.m_hState == HModeState.Normal)
+            {
+                CheckEnemySwitchTiWei();
+            }
+
             int actTimes = StaticConfigContainer.GetHActionTimesByJingjie(m_ctx.Enemy.JingJie); // 计算性行动数 仅和境界相关？
             // check Tiwei
-            if (m_ctx.m_hState > HModeState.TiWeiStart)
+            if (m_ctx.m_hTiWei > HModeTiWei.None)
             {
                 var jiaoheBuff = m_player.OtherAvatar.buffmag.GetBuffById(Consts.BuffId_JiaoHe);
                 actTimes -= jiaoheBuff[1];
                 if (actTimes < 0) actTimes = 0;
             }
 
-            // 检查敌人进入体位
-            if(m_ctx.m_hState == HModeState.Normal)
-            {
-                int valRate = UnityEngine.Random.Range(0, 100);
-                int totalRate = m_ctx.Enemy.TiWeiAccRate;
-                // 计算魅力
-                {
-                    long meiLiVal = GetAttributeValue(HModeAttributeType.HMeiLi);
-                    int meiLiLevel = (int)(meiLiVal / 2000);
-                    if (meiLiLevel > 5) meiLiLevel = 5;
-                    totalRate += 5 * meiLiLevel;
-                }
-                {
-                    int yuwangLevel = (int)(m_ctx.Enemy.YuWang / 2000);
-                    totalRate += 5 * yuwangLevel;
-                }
-                if(valRate < totalRate)
-                {
-                    // 进体位 todo 计算权重
-                    SwitchTiWei((int)HModeState.Shou);
-                }
-                else
-                {
-                    m_ctx.Enemy.TiWeiAccRate += 10;
-                }
-            }
-            
             // 基础h伤害
-            int hAck = StaticConfigContainer.GetHAtkByJingjie(m_ctx.Enemy.JingJie);
-            
-            // 执行h
+            int hAtk = StaticConfigContainer.GetHAtkByJingjie(m_ctx.Enemy.JingJie);
+            // 计算增幅
+
+            // 执行h行动
             for (int i=0;i< actTimes; i++)
             {
-                List<int> candicateHSkills = new List<int>() { 100, 101, 102};
-
-                List<KeyValuePair<int, int>> weights = new List<KeyValuePair<int, int>>();
-
-                foreach(var skillId in candicateHSkills)
+                int hAtkId = RandomChooseHAttack();
+                var hAtckInfo = PluginMain.Main.ConfigDataLoader.GetConfigDataHAttackInfo(hAtkId);
+                if(hAtckInfo == null)
                 {
-                    if(PluginMain.Main.ConfigDataHAttackShowInfo.TryGetValue(skillId, out var skillInfo))
-                    {
-                        weights.Add(new KeyValuePair<int, int>(skillInfo.ID, skillInfo.DefaultWeight));
-                    }
-                }
-                
-                if(weights.Count == 0)
-                {
+                    PluginMain.Main.LogError("wrong config not Found.");
                     continue;
                 }
-                int showId = RandomValueByWeight(weights);
+                // 对每次部位伤害进行结算
+                foreach (var p in hAtckInfo.TargetPart)
+                {
+                    ApplyPartAttack(hAtckInfo, p, hAtk);
+                }
 
-                // 体力伤害
-                ModTiLi(hAck * 1.5f);
-
-                ShowHAnim($"{showId}");
-                var hContent = PluginMain.Main.ConfigDataHAttackShowInfo[showId].HintContent;
-                ShowHHint(hContent);
+                CheckKuaiGanReachMax(2);
+                //虚脱则跳出
+                if (m_player.OtherAvatar.buffmag.HasBuff(Consts.BuffId_FlagJingJin) /*&& nojianting*/)
+                {
+                    break;
+                }
             }
         }
 
@@ -541,70 +581,6 @@ namespace FirstBepinPlugin
             SetBuffLayer(m_player.OtherAvatar, Consts.BuffId_YinYuWang, (int)(m_ctx.Enemy.YuWang / Consts.Float2Int100));
         }
 
-        /// <summary>
-        /// 获取对应组的技能
-        /// </summary>
-        /// <returns></returns>
-        public List<int> HSkillListGetByGroup(int skillGroup)
-        {
-            m_skillIdCache.Clear();
-            // skil list
-            switch (skillGroup)
-            {
-                case (int)HSkillGroupType.Common: // 通用技能
-                    {
-                        m_skillIdCache.Add(99720);
-                        m_skillIdCache.Add(99721);
-                        m_skillIdCache.Add(99722);
-                    }
-                    break;
-                case (int)HSkillGroupType.Normal: // 普通技能
-                    {
-                        m_skillIdCache.Add(99723);
-                    }
-                    break;
-                case (int)HSkillGroupType.Function: // 功能技能
-                    {
-                        m_skillIdCache.Add(99799);
-                    }
-                    break;
-                case (int)HSkillGroupType.Shou: // 手技能
-                    {
-                        m_skillIdCache.Add(99730);
-                    }
-                    break;
-                case (int)HSkillGroupType.Wuli: // 体力归零技能组 复活
-                    {
-                        m_skillIdCache.Add(99730);
-                    }
-                    break;
-                case (int)HSkillGroupType.JueDing: // 绝顶后 技能组 复活
-                    {
-                        m_skillIdCache.Add(99730);
-                    }
-                    break;
-            }
-            return m_skillIdCache;
-        }
-
-        /// <summary>
-        /// 获取当前pose 技能组id
-        /// </summary>
-        public int GetCurrPoseSkillGroupId()
-        {
-            switch(m_ctx.m_hState)
-            {
-                case HModeState.Normal:
-                    return (int)HSkillGroupType.Normal;
-                case HModeState.Shou:
-                    return (int)HSkillGroupType.Shou;
-                case HModeState.Wuli:
-                    return (int)HSkillGroupType.Wuli;
-                case HModeState.GaoChao:
-                    return (int)HSkillGroupType.JueDing;
-            }
-            return -1;
-        }
 
         /// <summary>
         /// 执行切换技能
@@ -765,19 +741,22 @@ namespace FirstBepinPlugin
         {
             m_ctx.Tili += (long)(modVal * Consts.Float2Int100);
             long maxVal = GetAttributeValue(HModeAttributeType.HMaxTili);
-            if (maxVal < 0)
+            if (maxVal < 1)
             {
-                maxVal = 0;
+                maxVal = 1;
             }
             if (m_ctx.Tili > maxVal)
             {
                 m_ctx.Tili = maxVal;
             }
-
             // tili归零
             if (m_ctx.Tili <= 0)
             {
-                SwitchTiWei((int)HModeState.Wuli);
+                SetIsWuLi(true);
+            }
+            else
+            {
+                SetIsWuLi(false);
             }
             UpdateAllStateBuff();
         }
@@ -820,22 +799,41 @@ namespace FirstBepinPlugin
         }
 
         /// <summary>
-        /// 兴奋度变化
+        /// 兴奋度变化 part=0 表示随机
         /// </summary>
         /// <param name="addVal"></param>
-        public void ModXingFen(float modVal)
+        public void ModXingFen(int part, float modVal)
         {
-            m_ctx.Xingfen += (long)(modVal * Consts.Float2Int100);
-            long maxVal = GetAttributeValue(HModeAttributeType.HMaxXingFen);
-
-            if (m_ctx.Xingfen < 0)
+            int realPart = part;
+            if(part == 0)
             {
-                m_ctx.Xingfen = 0;
+                List<KeyValuePair<int, int>> weights = new List<KeyValuePair<int, int>>() 
+                { 
+                    new KeyValuePair<int, int>(1,3),
+                    new KeyValuePair<int, int>(2,3),
+                    new KeyValuePair<int, int>(3,2),
+                    new KeyValuePair<int, int>(4,3),
+                };
+                int k = RandomValueByWeight(weights);
+                realPart = k;
+            }
+            if(realPart == 0)
+            {
+                return;
+            }
+            
+
+            m_ctx.Xingfen[realPart] += (long)(modVal * Consts.Float2Int100);
+            long maxVal = (long)(GetMaxPartXingFen(realPart) * Consts.Float2Int100);
+
+            if (m_ctx.Xingfen[realPart] < 0)
+            {
+                m_ctx.Xingfen[realPart] = 0;
             }
 
-            if (m_ctx.Xingfen > maxVal)
+            if (m_ctx.Xingfen[realPart] > maxVal)
             {
-                m_ctx.Xingfen = maxVal;
+                m_ctx.Xingfen[realPart] = maxVal;
             }
 
             UpdateAllStateBuff();
@@ -875,33 +873,48 @@ namespace FirstBepinPlugin
             
         }
 
+        /// <summary>
+        /// 切换无力状态
+        /// </summary>
+        /// <param name="isWuLi"></param>
+        public void SetIsWuLi(bool isWuLi)
+        {
+            m_cachedSkillTab.m_isWuLi = isWuLi;
+            m_cachedSkillTab.RefreshUI();
+        }
+
+        public void OnJueDing()
+        {
+            //trigger
+        }
 
         /// <summary>
         /// 切换体位
         /// </summary>
         /// <param name="addVal"></param>
-        public void SwitchTiWei(int tiweiId)
+        public void SwitchTiWei(int tiweiId, bool showEffect = false)
         {
-            var preState = m_ctx.m_hState;
-            if(preState == (HModeState)tiweiId)
+            var preTiWei = m_ctx.m_hTiWei;
+            if(preTiWei == (HModeTiWei)tiweiId)
             {
                 PluginMain.Main.LogInfo("HModeFightManager SwitchTiWei same.");
                 return;
             }
-            m_ctx.m_hState = (HModeState)tiweiId;
+            m_ctx.m_hTiWei = (HModeTiWei)tiweiId;
             // 重置标记位buff
-            ResetTiWeiBuff(preState, m_ctx.m_hState);
+            ResetTiWeiBuff(preTiWei, m_ctx.m_hTiWei);
 
             m_cachedSkillTab.RefreshUI();
+            PluginMain.Main.LogInfo($"SwitchTiWei new Tiwei {tiweiId}.");
         }
 
         /// <summary>
         /// 切换buff
         /// </summary>
-        protected void ResetTiWeiBuff(HModeState preState, HModeState nowState)
+        protected void ResetTiWeiBuff(HModeTiWei preTiWei, HModeTiWei nowTiWei)
         {
-            int oldBuffId = FlagBuffIdGetByState(preState);
-            int newBuffId = FlagBuffIdGetByState(nowState);
+            int oldBuffId = FlagBuffIdGetByTiWei(preTiWei);
+            int newBuffId = FlagBuffIdGetByTiWei(nowTiWei);
 
             if(oldBuffId == newBuffId)
             {
@@ -922,15 +935,13 @@ namespace FirstBepinPlugin
         /// </summary>
         /// <param name="state"></param>
         /// <returns></returns>
-        public static int FlagBuffIdGetByState(HModeState state)
+        public static int FlagBuffIdGetByTiWei(HModeTiWei tiWei)
         {
-            switch(state)
+            switch(tiWei)
             {
-                case HModeState.Normal:
+                case HModeTiWei.None:
                     return Consts.BuffId_FlagNormal;
-                case HModeState.Wuli:
-                    return Consts.BuffId_FlagWuLi;
-                case HModeState.Shou:
+                case HModeTiWei.Shou:
                     return Consts.BuffId_FlagShou;
             }
             return -1;
@@ -990,6 +1001,9 @@ namespace FirstBepinPlugin
                     return Consts.BuffSeId_ModMaxYizhuang;
                 case HModeAttributeType.HMeiLi:
                     return Consts.BuffSeId_ModMeiLi;
+                case HModeAttributeType.HMaxTili:
+                    return Consts.BuffSeId_ModMaxTili;
+                    
             }
             return 0;
         }
@@ -1046,6 +1060,7 @@ namespace FirstBepinPlugin
         /// </summary>
         public void ApplyEnemyFaQing()
         {
+            PluginMain.Main.LogInfo("ApplyEnemyFaQing");
             m_ctx.Enemy.IsFaQing = true;
             SetHasBuff(m_player.OtherAvatar, Consts.BuffId_FlagFaQing);
 
@@ -1148,88 +1163,78 @@ namespace FirstBepinPlugin
             PluginMain.Main.LogError($"OnFightTalkFinish {param}");
         }
 
-        /// <summary>
-        /// 计算自身高潮伤害
-        /// </summary>
-        /// <returns></returns>
-        protected long CalculateSelfGaoChaoDamage()
+
+
+        #region 内部方法
+
+        private List<int> m_candicateHSkills = new List<int>();
+        protected int RandomChooseHAttack()
         {
-            return (long)(m_player.HP_Max * 0.3f);
+            m_candicateHSkills.Clear();
+            var poolInfo = PluginMain.Main.ConfigDataLoader.GetConfigDataHAttackPoolInfo(20000);
+            foreach (var attackId in poolInfo.AttackIdList)
+            {
+                var atkInfo = PluginMain.Main.ConfigDataLoader.GetConfigDataHAttackInfo(attackId);
+                bool checkFail = false;
+                foreach (var condId in atkInfo.Conditions)
+                {
+                    var condInfo = PluginMain.Main.ConfigDataLoader.GetConfigDataHAttackConditionInfo(condId);
+                }
+                if (checkFail)
+                {
+                    continue;
+                }
+                m_candicateHSkills.Add(attackId);
+            }
+
+            List<KeyValuePair<int, int>> weights = new List<KeyValuePair<int, int>>();
+
+
+            foreach (var skillId in m_candicateHSkills)
+            {
+                var conf = PluginMain.Main.ConfigDataLoader.GetConfigDataHAttackInfo(skillId);
+                weights.Add(new KeyValuePair<int, int>(conf.ID, conf.DefaultWeight));
+            }
+
+            if (weights.Count == 0)
+            {
+                return -1;
+            }
+            int hAtakId = RandomValueByWeight(weights);
+            return hAtakId;
         }
 
+
         /// <summary>
-        /// 计算自身高潮伤害
+        /// 检查敌方主动进入体位
         /// </summary>
-        /// <returns></returns>
-        protected long CalculateEnemyGaoChaoDamage(int enemyId)
+        protected void CheckEnemySwitchTiWei()
         {
-            return (long)(m_player.HP_Max * 0.5f) + 50;
+            int valRate = UnityEngine.Random.Range(0, 100);
+            int totalRate = m_ctx.Enemy.TiWeiAccRate;
+            // 计算魅力
+            {
+                long meiLiVal = GetAttributeValue(HModeAttributeType.HMeiLi);
+                int meiLiLevel = (int)(meiLiVal / 2000);
+                if (meiLiLevel > 5) meiLiLevel = 5;
+                totalRate += 5 * meiLiLevel;
+            }
+            {
+                int yuwangLevel = (int)(m_ctx.Enemy.YuWang / 2000);
+                totalRate += 5 * yuwangLevel;
+            }
+            if (valRate < totalRate)
+            {
+                // 进体位 todo 计算权重
+                SwitchTiWei((int)HModeTiWei.Shou);
+            }
+            else
+            {
+                m_ctx.Enemy.TiWeiAccRate += 10;
+            }
         }
 
-        //public void FightEnterHMode()
-        //{
-        //    PluginMain.Main.LogInfo("try enter h mode.");
-
-        //    if (m_ctx == null || m_ctx.m_isInHMode)
-        //    {
-        //        return;
-        //    }
-        //    var player = Tools.instance.getPlayer();
-        //    m_ctx.m_isInHMode = true;
-
-        //    m_ctx.m_hState = "";
-
-        //    var skillList = new List<int>();
-        //    // skil list
-        //    switch (m_ctx.m_hState)
-        //    {
-        //        case "": // 原始形态
-        //            {
-        //                skillList.Add(997201);
-        //                skillList.Add(997211);
-        //                skillList.Add(997221);
-        //            }
-        //            break;
-        //        case "WuLi":
-        //            {
-        //                skillList.Add(997231);
-        //                skillList.Add(997241);
-        //                skillList.Add(997251);
-        //            }
-        //            break;
-        //        case "GaoChao":
-        //            {
-        //                skillList.Add(997261);
-        //                skillList.Add(997271);
-        //                skillList.Add(997281);
-        //            }
-        //            break;
-        //    }
-
-        //    // 清空技能
-        //    player.FightClearSkill(0, 10);
-
-        //    // 赋予技能
-        //    foreach (var skillId in skillList)
-        //    {
-        //        var skillItem = player.skill.Find(delegate (GUIPackage.Skill s) { return s.skill_ID == skillId; });
-        //        if (skillItem == null)
-        //        {
-        //            skillItem = new GUIPackage.Skill(skillId, 0, 10);
-        //        }
-        //        player.skill.Add(skillItem);
-        //        int num = 0;
-        //        foreach (UIFightSkillItem fightSkill in UIFightPanel.Inst.FightSkills)
-        //        {
-        //            if (num >= 0 && num < 10 && !fightSkill.HasSkill)
-        //            {
-        //                fightSkill.SetSkill(skillItem);
-        //                break;
-        //            }
-        //            num++;
-        //        }
-        //    }
-        //}
+        #endregion
 
 
         public void FightExitHMode()
@@ -1272,6 +1277,92 @@ namespace FirstBepinPlugin
         #region 工具
 
         /// <summary>
+        /// 获取对应组的技能
+        /// </summary>
+        /// <returns></returns>
+        public List<int> HSkillListGetByGroup(int skillGroup)
+        {
+            m_skillIdCache.Clear();
+            // skil list
+            switch (skillGroup)
+            {
+                case (int)HSkillGroupType.Common: // 通用技能
+                    {
+                        m_skillIdCache.Add(99720);
+                        m_skillIdCache.Add(99721);
+                        m_skillIdCache.Add(99722);
+                    }
+                    break;
+                case (int)HSkillGroupType.TiWeiNone: // 无体位 非接触技能
+                    {
+                        m_skillIdCache.Add(99723);
+                    }
+                    break;
+                case (int)HSkillGroupType.Function: // 功能技能
+                    {
+                        m_skillIdCache.Add(99799);
+                    }
+                    break;
+                case (int)HSkillGroupType.TiWeiShou: // 手技能
+                    {
+                        m_skillIdCache.Add(99730);
+                    }
+                    break;
+                case (int)HSkillGroupType.Wuli: // 体力归零技能组 复活
+                    {
+                        m_skillIdCache.Add(99730);
+                    }
+                    break;
+                case (int)HSkillGroupType.JueDing: // 绝顶后 技能组 复活
+                    {
+                        m_skillIdCache.Add(99730);
+                    }
+                    break;
+            }
+            return m_skillIdCache;
+        }
+
+        /// <summary>
+        /// 获取当前state 技能组id
+        /// </summary>
+        public int GetCurrStateSkillGroupId()
+        {
+            switch (m_ctx.m_hState)
+            {
+                case HModeState.Normal:
+                    return (int)HSkillGroupType.Common;
+                case HModeState.JueDing:
+                    return (int)HSkillGroupType.JueDing;
+            }
+            return -1;
+        }
+
+
+        /// <summary>
+        /// 获取当前pose 技能组id
+        /// </summary>
+        public int GetCurrTiWeiSkillGroupId()
+        {
+            switch (m_ctx.m_hTiWei)
+            {
+                case HModeTiWei.None:
+                    return (int)HSkillGroupType.TiWeiNone;
+                case HModeTiWei.Shou:
+                    return (int)HSkillGroupType.TiWeiShou;
+                case HModeTiWei.Kou:
+                    return (int)HSkillGroupType.TiWeiKou;
+                case HModeTiWei.Ru:
+                    return (int)HSkillGroupType.TiWeiRu;
+                case HModeTiWei.Xue:
+                    return (int)HSkillGroupType.TiWeiXue;
+                case HModeTiWei.Gang:
+                    return (int)HSkillGroupType.TiWeiGang;
+            }
+            return -1;
+        }
+
+
+        /// <summary>
         /// 通过weight获取id
         /// </summary>
         /// <param name="weights"></param>
@@ -1300,14 +1391,136 @@ namespace FirstBepinPlugin
             return 0;
         }
 
-        #endregion
-        /// <summary>
-        /// 回调
-        /// </summary>
-        public void ShowHAnim(string animState)
+        protected float GetMaxPartXingFen(int part)
         {
-            var newProcess = new FightProcessWaitAnimation(this, animState);
-            m_runningProcessList.Enqueue(newProcess);
+            var partInfo = PluginMain.Main.ConfigDataLoader.GetConfigDataHPartFightInfo(part);
+            if (partInfo == null) return 0;
+            long modXingFen = 0;
+            switch(part)
+            {
+                case 1:
+                {
+                    modXingFen = GetAttributeValue(HModeAttributeType.HMaxXingFen_1);
+                }
+                break;
+                case 2:
+                {
+                    modXingFen = GetAttributeValue(HModeAttributeType.HMaxXingFen_2);
+                }
+                break;
+                case 3:
+                {
+                    modXingFen = GetAttributeValue(HModeAttributeType.HMaxXingFen_3);
+                }
+                break;
+                case 4:
+                {
+                    modXingFen = GetAttributeValue(HModeAttributeType.HMaxXingFen_4);
+                }
+                break;
+            }
+            
+            int ret = partInfo.MaxXingFen + (int)(modXingFen / 100);
+
+            return ret;
+        }
+
+        /// <summary>
+        /// 计算自身高潮伤害
+        /// </summary>
+        /// <returns></returns>
+        protected long CalculateSelfGaoChaoDamage()
+        {
+            return (long)(m_player.HP_Max * 0.3f);
+        }
+
+        /// <summary>
+        /// 计算自身高潮伤害
+        /// </summary>
+        /// <returns></returns>
+        protected float CalculateEnemyGaoChaoDamage(int enemyId)
+        {
+            int suoJing = 0;
+            switch(m_ctx.m_hTiWei)
+            {
+                case HModeTiWei.Shou:
+                    {
+                        suoJing = 1;
+                    }
+                    break;
+                case HModeTiWei.Kou:
+                    {
+                        suoJing = PluginMain.Main.ConfigDataLoader.GetConfigDataHPartFightInfo((int)EnumPartType.Mouse).SuoJing;
+                    }
+                    break;
+                case HModeTiWei.Ru:
+                    {
+                        suoJing = PluginMain.Main.ConfigDataLoader.GetConfigDataHPartFightInfo((int)EnumPartType.Breast).SuoJing;
+                    }
+                    break;
+                case HModeTiWei.Xue:
+                    {
+                        suoJing = PluginMain.Main.ConfigDataLoader.GetConfigDataHPartFightInfo((int)EnumPartType.Pussy).SuoJing;
+                    }
+                    break;
+                case HModeTiWei.Gang:
+                    {
+                        suoJing = PluginMain.Main.ConfigDataLoader.GetConfigDataHPartFightInfo((int)EnumPartType.Anal).SuoJing;
+                    }
+                    break;
+            }
+            int damage = (suoJing + StaticConfigContainer.GetJingLiangByJingjie(m_ctx.Enemy.JingJie)) * 5;
+
+            return damage;
+        }
+
+
+        /// <summary>
+        /// 对单个部位实施h攻击
+        /// </summary>
+        /// <param name="hAtkId"></param>
+        /// <param name="part"></param>
+        /// <param name="hAtk"></param>
+        /// <returns></returns>
+        protected void ApplyPartAttack(ConfigDataHAttackInfo hAtkInfo, int part, int hAtk)
+        {
+            var partInfo = PluginMain.Main.ConfigDataLoader.GetConfigDataHPartFightInfo(part);
+
+            if (partInfo == null) return;
+
+            float conterKuaigan = partInfo.CounterKuaiGan * 0.01f;
+            float hitKuaigan = partInfo.HitKuaiGan * 0.01f * hAtkInfo.KuaiGanRate * 0.01f;
+
+
+            m_runningProcessList.Enqueue(new FightProcessWaitAnimation(this, hAtkInfo.ID + ""));
+
+            float damage = hAtk * hAtkInfo.DamageRate * 0.01f;
+            float reduceRae = (partInfo.Armar * 0.06f) / (1 + partInfo.Armar * 0.06f);
+            float xingfenRate = StaticConfigContainer.GetKuaiGanRateByXingFen((int)(m_ctx.Xingfen[part] / 100)) * 0.01f;
+
+            // 进行结算
+            m_runningProcessList.Enqueue(new FightProcessImmediate(this, delegate ()
+            {
+                ModKuaiGan(1, hitKuaigan);
+                ModKuaiGan(2, conterKuaigan);
+                ModTiLi(damage * reduceRae * xingfenRate);
+                ModXingFen(part, 1.0f);
+            }));
+
+            // 显示跳字
+            m_runningProcessList.Enqueue(new FightProcessWaitHHint(this, 0.5f, hAtkInfo.HintContent));
+            // 结算
+            m_runningProcessList.Enqueue(new FightProcessBalance(this));
+        }
+
+
+        #endregion
+        
+
+
+        public void ShowProcessApplyDamage()
+        {
+
         }
 
         /// <summary>
@@ -1315,7 +1528,6 @@ namespace FirstBepinPlugin
         /// </summary>
         public void ShowHHint(string hHintContent)
         {
-            m_runningProcessList.Enqueue(new FightProcessApplyEffect(this, 500, 200));
             var newProcess = new FightProcessWaitHHint(this, 0.5f, hHintContent);
             m_runningProcessList.Enqueue(newProcess);
         }
@@ -1345,7 +1557,7 @@ namespace FirstBepinPlugin
         #endregion
     }
 
-    #region 表现
+    #region process
 
     public abstract class FightProcessBase
     {
@@ -1447,22 +1659,33 @@ namespace FirstBepinPlugin
         }
     }
 
-    public class FightProcessApplyEffect : FightProcessBase
+    public class FightProcessImmediate: FightProcessBase
     {
-        public int m_damageSelf;
-        public int m_damageEnemy;
-
-        public FightProcessApplyEffect(HModeFightManager owner, int damageSelf, int damageEnemy) : base(owner)
+        public FightProcessImmediate(HModeFightManager owner, Action onEnd = null) : base(owner)
         {
-            m_damageSelf = damageSelf;
-            m_damageEnemy = damageEnemy;
+            this.EventOnEnd += onEnd;
         }
 
         public override void OnStart()
         {
             base.OnStart();
-            Owner.ModKuaiGan(1, m_damageSelf);
-            Owner.ModKuaiGan(2, m_damageEnemy);
+        }
+
+        public override void Tick(float dt)
+        {
+            m_isEnd = true;
+        }
+    }
+
+    public class FightProcessBalance : FightProcessBase
+    {
+        public FightProcessBalance(HModeFightManager owner) : base(owner)
+        {
+        }
+
+        public override void OnStart()
+        {
+            base.OnStart();
         }
 
         public override void Tick(float dt)

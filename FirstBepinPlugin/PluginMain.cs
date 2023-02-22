@@ -35,7 +35,7 @@ namespace FirstBepinPlugin
 
 			m_GoDict = new Dictionary<string, GameObject>();
 
-			LoadConfig();
+            ConfigDataLoader.LoadConfig(Path + "/Config/");
 
 			StartCoroutine(LoadAssetAsync());
 		}
@@ -62,41 +62,7 @@ namespace FirstBepinPlugin
 
         public SecretsConfig config;
 
-		public Dictionary<int, ConfigDataHAttackShowInfo> ConfigDataHAttackShowInfo = new Dictionary<int, ConfigDataHAttackShowInfo>();
-		public void LoadConfig()
-		{
-
-			try
-			{
-				{
-                    var fileName = Path + "/Config/SecretsConfig.json";
-                    if (!File.Exists(fileName))
-                    {
-                        Logger.LogError($"load config Error");
-                        return;
-                    }
-                    var json = File.ReadAllText(fileName);
-                    config = JsonConvert.DeserializeObject<SecretsConfig>(json);
-                    if (config == null)
-                        throw new JsonException("json data is invalid.");
-                }
-
-				{
-                    var hInfoConfigName = Path + "/Config/HAttackShowInfo.json";
-                    if (!File.Exists(hInfoConfigName))
-                    {
-                        Logger.LogError($"load hInfoConfigName Error");
-                        return;
-                    }
-                    var json = File.ReadAllText(hInfoConfigName);
-                    ConfigDataHAttackShowInfo = JsonConvert.DeserializeObject<Dictionary<int, ConfigDataHAttackShowInfo>>(json);
-                }
-            }
-			catch (Exception e)
-			{
-				Logger.LogError($"load config Error");
-			}
-		}
+		public ConfigDataLoader ConfigDataLoader = new ConfigDataLoader();
 
 
 		public static string ABName = "allneed";
