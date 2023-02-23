@@ -405,4 +405,23 @@ namespace FirstBepinPlugin.Patch
             icons[12] = PluginMain.Main.LoadAsset<Sprite>("Icons/icon_lianqi_tab_sex.png");
         }
     }
+
+    #region 提示相关
+
+    /// <summary>
+    /// 增加自定义的描述字
+    /// </summary>
+    [HarmonyPatch(typeof(ActiveSkill), "GetDesc1")]
+    public class ActiveSkillPatcher_GetDesc1
+    {
+        public static void Postfix(ActiveSkill __instance, ref string __result)
+        {
+            if(__result.Contains("(JiLv)"))
+            {
+            }
+        }
+    }
+    
+    
+    #endregion
 }

@@ -38,7 +38,7 @@ namespace FirstBepinPlugin
             ret.Exp = 0;
             ret.Status = 0;
 
-            for(int i=(int)EnumPartType.Invalid+1; i< (int)EnumPartType.Max;i++)
+            for(int i=(int)EPartType.Invalid+1; i< (int)EPartType.Max;i++)
             {
                 ret.PartsList.Add(new SecretsPlayerPartInfo()
                 {
@@ -122,7 +122,7 @@ namespace FirstBepinPlugin
         }
 
 
-        public bool AddJingYuan(EnumPartType partType, int jingyuan)
+        public bool AddJingYuan(EPartType partType, int jingyuan)
         {
             if (!IsSecretOpen())
             {

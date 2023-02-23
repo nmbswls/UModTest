@@ -1,7 +1,9 @@
 ﻿using BehaviorDesigner.Runtime;
+using BehaviorDesigner.Runtime.Tasks.Basic.UnityPlayerPrefs;
 using DebuggingEssentials;
 using FirstBepinPlugin.Config;
 using FirstBepinPlugin.Patch;
+using Fungus;
 using GUIPackage;
 using HarmonyLib;
 using JSONClass;
@@ -15,6 +17,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
+using System.Runtime.Remoting.Contexts;
 using System.Text;
 using System.Threading.Tasks;
 using UltimateSurvival;
@@ -48,8 +51,21 @@ namespace FirstBepinPlugin
     public class FightUISkillTabController : MonoBehaviour
     {
         public HModeFightManager Owner;
-        public List<Toggle> m_toggleList = new List<Toggle>();
-        public List<Text> m_toggleText = new List<Text>();
+        public UnityEngine.Transform TabRoot;
+        public UnityEngine.GameObject ToggleTemplate;
+
+        private class ToggleWrapper
+        {
+            public int TabIdx;
+            public int SkillGroupId;
+            public UnityEngine.GameObject Go;
+            public Toggle CompToggle;
+            public Text CompText;
+        }
+
+        private List<ToggleWrapper> m_currToggleList = new List<ToggleWrapper>();
+        private Queue<ToggleWrapper> m_cachedToggles = new Queue<ToggleWrapper>();
+
 
         public int m_currSelectIdx = -1;
 
@@ -57,132 +73,101 @@ namespace FirstBepinPlugin
         public void Init(HModeFightManager owner)
         {
             this.Owner = owner;
-
-            m_toggleList.Clear();
-            var tabRoot = gameObject.transform.GetChild(0);
-            for(int i=0;i<tabRoot.childCount;i++)
-            {
-                var tab = tabRoot.GetChild(i).GetComponent<UnityEngine.UI.Toggle>();
-                tab.gameObject.SetActive(false);
-                m_toggleList.Add(tab);
-                int tabIdx = i;
-                var listener = tab.gameObject.AddComponent<FightUIPointerListener>();
-                listener.EventOnPointerEnter += delegate ()
-                {
-                    OnTogglePointerEnter(tabIdx);
-                };
-
-                listener.EventOnPointerExit += delegate ()
-                {
-                    OnTogglePointerExit(tabIdx);
-                };
-
-                tab.onValueChanged.AddListener(delegate(bool isOn)
-                {
-                    OnToggleValueChange(tabIdx);
-                });
-
-                var textComp = tab.GetComponentInChildren<Text>();
-                m_toggleText.Add(textComp);
-                textComp.font = PluginMain.Main.font_YaHei;
-            }
-
+            TabRoot = gameObject.transform.GetChild(0);
+            ToggleTemplate = gameObject.transform.Find("TabTemplate").gameObject;
             RefreshUI();
         }
 
         public void RefreshUI()
         {
-            m_toggleList[0].gameObject.SetActive(true);
-            m_toggleList[1].gameObject.SetActive(true);
-            m_toggleList[2].gameObject.SetActive(true);
 
-            switch(Owner.m_ctx.m_hTiWei)
+            while (m_currToggleList.Count > 0)
             {
-                case HModeTiWei.None:
-                    {
-                        m_toggleText[1].text = "体位:无";
-                    }
-                    break;
-                case HModeTiWei.Shou:
-                    {
-                        m_toggleText[1].text = "体位:手";
-                    }
-                    break;
-                case HModeTiWei.Ru:
-                    {
-                        m_toggleText[1].text = "体位:乳";
-                    }
-                    break;
-                case HModeTiWei.Kou:
-                    {
-                        m_toggleText[1].text = "体位:口";
-                    }
-                    break;
-                case HModeTiWei.Gang:
-                    {
-                        m_toggleText[1].text = "体位:尻";
-                    }
-                    break;
-                case HModeTiWei.Xue:
-                    {
-                        m_toggleText[1].text = "体位:穴";
-                    }
-                    break;
+                var firstWrapper = m_currToggleList[0];
+                firstWrapper.Go.SetActive(false);
+                m_cachedToggles.Enqueue(firstWrapper);
+                m_currToggleList.RemoveAt(0);
             }
 
-            if (m_currSelectIdx == -1)
+            var skillGroupList = Owner.GetCurrSkillGroupList();
+            for (int i = 0; i < skillGroupList.Count; i++)
             {
-                m_currSelectIdx = 0;
+                ToggleWrapper toggleWrapper;
+                if (m_cachedToggles.Count > 0)
+                {
+                    toggleWrapper = m_cachedToggles.Dequeue();
+                }
+                else
+                {
+                    var newGo = UnityEngine.GameObject.Instantiate(ToggleTemplate, TabRoot);
+                    var toggle = newGo.GetComponent<Toggle>();
+                    var textComp = newGo.GetComponentInChildren<Text>();
+                    textComp.font = PluginMain.Main.font_YaHei;
+                    toggleWrapper = new ToggleWrapper()
+                    {
+                        SkillGroupId = 0,
+                        CompToggle = toggle,
+                        CompText = textComp,
+                        Go = newGo,
+                    };
+                    var listener = newGo.AddComponent<FightUIPointerListener>();
+                    listener.EventOnPointerEnter += delegate ()
+                    {
+                        OnTogglePointerEnter(toggleWrapper);
+                    };
+
+                    listener.EventOnPointerExit += delegate ()
+                    {
+                        OnTogglePointerExit(toggleWrapper);
+                    };
+
+                    toggle.onValueChanged.AddListener(delegate (bool isOn)
+                    {
+                        OnToggleValueChange(toggleWrapper);
+                    });
+                }
+                toggleWrapper.TabIdx = i;
+                toggleWrapper.SkillGroupId = skillGroupList[i];
+                toggleWrapper.CompText.text = skillGroupList[i] + "技能组";
+                toggleWrapper.CompToggle.isOn = false;
+                toggleWrapper.Go.SetActive(true);
+                m_currToggleList.Add(toggleWrapper);
             }
 
-            m_toggleList[m_currSelectIdx].isOn = true;
+            m_currSelectIdx = 0;
+
+            m_currToggleList[m_currSelectIdx].CompToggle.isOn = true;
         }
 
-        public void OnToggleValueChange(int idx)
+        private void OnToggleValueChange(ToggleWrapper toggleWrapper)
         {
-            if (!m_toggleList[idx].isOn)
+            if (!toggleWrapper.CompToggle.isOn)
             {
                 return;
             }
-            m_currSelectIdx = idx;
-            SwitchSkillGroup();
+            m_currSelectIdx = toggleWrapper.TabIdx;
+            SwitchSkillGroup(toggleWrapper.SkillGroupId);
         }
 
-        public void SwitchSkillGroup()
+        private void SwitchSkillGroup(int skillGroupId)
         {
-            PluginMain.Main.LogError($"SwitchSkillGroup m_currSelectIdx {m_currSelectIdx}");
-            int skillGroupId = -1;
-
-            if (m_currSelectIdx == 0)
-            {
-                skillGroupId = Owner.GetCurrStateSkillGroupId();
-            }
-            else if (m_currSelectIdx == 1)
-            {
-                skillGroupId = Owner.GetCurrTiWeiSkillGroupId();
-            }
-            else if (m_currSelectIdx == 2)
-            {
-                skillGroupId = (int)HModeFightManager.HSkillGroupType.Function;
-            }
-
             if (skillGroupId == -1)
             {
                 return;
             }
-            var newSkill = SecretsSystem.FightManager.HSkillListGetByGroup(skillGroupId);
+            var newSkills = SecretsSystem.FightManager.HSkillListGetByGroup(skillGroupId);
 
-            SecretsSystem.FightManager.SwitchSkill(newSkill);
+            SecretsSystem.FightManager.SwitchSkill(newSkills);
         }
 
-        public void OnTogglePointerEnter(int idx)
+        private void OnTogglePointerEnter(ToggleWrapper toggleWrapper)
         {
             var hintStr = "";
-            hintStr = "切换技能组：通用\r\n通用技能";
-            UToolTip.Show("收起天赋", 150f);
+            hintStr = $"切换技能组：{toggleWrapper.SkillGroupId}技能";
+            UToolTip.Show(hintStr, 150f);
         }
 
-        public void OnTogglePointerExit(int idx)
+        private void OnTogglePointerExit(ToggleWrapper toggleWrapper)
         {
             UToolTip.Close();
         }
@@ -239,7 +224,7 @@ namespace FirstBepinPlugin
         // 动态数值
         public long Tili;
         public long YiZhuang;
-        public long[] Xingfen = new long[(int)EnumPartType.Max];
+        public long[] Xingfen = new long[(int)EPartType.Max];
         public long YuWang;
         public long KuaiGan;
 
@@ -250,6 +235,8 @@ namespace FirstBepinPlugin
 
         public HModeState m_hState = HModeState.Invalid;
         public HModeTiWei m_hTiWei = HModeTiWei.None;
+
+        public bool m_isJueDing;
 
         public Dictionary<int, GUIPackage.Skill> m_stateSkillCache = new Dictionary<int, GUIPackage.Skill>();
         public List<int> m_nonHSkillCache = new List<int>();
@@ -267,8 +254,6 @@ namespace FirstBepinPlugin
 
     public class HModeFightManager
     {
-        
-
         public enum HSkillGroupType
         {
             Invalid,
@@ -283,8 +268,6 @@ namespace FirstBepinPlugin
             TiWeiGang,
             Function,
         }
-
-
 
         public KBEngine.Avatar m_player;
         public HFightCtx m_ctx = new HFightCtx();
@@ -364,7 +347,6 @@ namespace FirstBepinPlugin
                 // 计算兴奋度
                 ApplyTurnXingFen();
             }
-                
         }
 
         public void FightOnRoungStartPost(KBEngine.Avatar avatar)
@@ -372,6 +354,7 @@ namespace FirstBepinPlugin
             // 玩家回合开始
             if(avatar == m_player)
             {
+                TryFinishJueDing();
                 CheckKuaiGanReachMax(1);
             }
             else
@@ -464,6 +447,19 @@ namespace FirstBepinPlugin
         }
 
         /// <summary>
+        /// 决定状态平复
+        /// </summary>
+        /// <param name="target"></param>
+        protected void TryFinishJueDing()
+        {
+            if (!m_ctx.m_isJueDing)
+                return;
+
+            // 基础平复效率
+            ModKuaiGan(1, -60);
+        }
+
+        /// <summary>
         /// 检查快感满
         /// </summary>
         /// <param name="target"></param>
@@ -493,7 +489,6 @@ namespace FirstBepinPlugin
                 m_ctx.KuaiGan = 0;
                 var damage = CalculateSelfGaoChaoDamage();
                 m_player.recvDamage(m_player, m_player, 10000, (int)damage);
-                SwitchTiWei((int)HModeState.JueDing);
 
                 OnJueDing();
             }
@@ -821,7 +816,6 @@ namespace FirstBepinPlugin
             {
                 return;
             }
-            
 
             m_ctx.Xingfen[realPart] += (long)(modVal * Consts.Float2Int100);
             long maxVal = (long)(GetMaxPartXingFen(realPart) * Consts.Float2Int100);
@@ -836,6 +830,13 @@ namespace FirstBepinPlugin
                 m_ctx.Xingfen[realPart] = maxVal;
             }
 
+            StringBuilder sb = new StringBuilder("ModXingFen result:");
+            foreach(var val in m_ctx.Xingfen)
+            {
+                sb.Append(val);
+                sb.Append("  ");
+            }
+            PluginMain.Main.LogInfo(sb.ToString());
             UpdateAllStateBuff();
         }
 
@@ -858,6 +859,16 @@ namespace FirstBepinPlugin
             }
 
             UpdateAllStateBuff();
+
+            // 决定态下 改变时需要检查状态
+            if (m_ctx.m_isJueDing)
+            {
+                if(m_ctx.KuaiGan <= 0)
+                {
+                    m_ctx.m_isJueDing = false;
+                    m_cachedSkillTab.RefreshUI();
+                }
+            }
         }
 
         public void TriggerYinYi()
@@ -886,6 +897,7 @@ namespace FirstBepinPlugin
         public void OnJueDing()
         {
             //trigger
+            m_ctx.m_isJueDing = true;
         }
 
         /// <summary>
@@ -1175,12 +1187,9 @@ namespace FirstBepinPlugin
             foreach (var attackId in poolInfo.AttackIdList)
             {
                 var atkInfo = PluginMain.Main.ConfigDataLoader.GetConfigDataHAttackInfo(attackId);
-                bool checkFail = false;
-                foreach (var condId in atkInfo.Conditions)
-                {
-                    var condInfo = PluginMain.Main.ConfigDataLoader.GetConfigDataHAttackConditionInfo(condId);
-                }
-                if (checkFail)
+                
+                // 校验失败 不可使用
+                if (!CheckHConditions(atkInfo.Conditions))
                 {
                     continue;
                 }
@@ -1210,28 +1219,56 @@ namespace FirstBepinPlugin
         /// </summary>
         protected void CheckEnemySwitchTiWei()
         {
-            int valRate = UnityEngine.Random.Range(0, 100);
-            int totalRate = m_ctx.Enemy.TiWeiAccRate;
-            // 计算魅力
+            // 衣装要求
+            if(m_ctx.YiZhuang >= 50 * Consts.Float2Int100)
             {
-                long meiLiVal = GetAttributeValue(HModeAttributeType.HMeiLi);
-                int meiLiLevel = (int)(meiLiVal / 2000);
-                if (meiLiLevel > 5) meiLiLevel = 5;
-                totalRate += 5 * meiLiLevel;
+                return;
             }
+
+            if(m_ctx.Enemy.YuWang <= 50)
             {
-                int yuwangLevel = (int)(m_ctx.Enemy.YuWang / 2000);
-                totalRate += 5 * yuwangLevel;
+                return;
             }
-            if (valRate < totalRate)
+
+            var processDialog = new FightProcessWaitDialog(this, "fightH_chooose_dikang");
+
+            processDialog.EventOnEnd += delegate ()
             {
-                // 进体位 todo 计算权重
-                SwitchTiWei((int)HModeTiWei.Shou);
-            }
-            else
-            {
-                m_ctx.Enemy.TiWeiAccRate += 10;
-            }
+                int v = processDialog.Ret1;
+
+                if(v == 0)
+                {
+                    SwitchTiWei((int)HModeTiWei.Shou);
+                }
+                else
+                {
+                    PluginMain.Main.LogError("zhengtuo not in tiwei");
+                }
+
+                //int valRate = UnityEngine.Random.Range(0, 100);
+                //int totalRate = m_ctx.Enemy.TiWeiAccRate;
+                //// 计算魅力
+                //{
+                //    long meiLiVal = GetAttributeValue(HModeAttributeType.HMeiLi);
+                //    int meiLiLevel = (int)(meiLiVal / 2000);
+                //    if (meiLiLevel > 5) meiLiLevel = 5;
+                //    totalRate += 5 * meiLiLevel;
+                //}
+                //{
+                //    int yuwangLevel = (int)(m_ctx.Enemy.YuWang / 2000);
+                //    totalRate += 5 * yuwangLevel;
+                //}
+                //if (valRate < totalRate)
+                //{
+                //    // 进体位 todo 计算权重
+                //    SwitchTiWei((int)HModeTiWei.Shou);
+                //}
+                //else
+                //{
+                //    m_ctx.Enemy.TiWeiAccRate += 10;
+                //}
+            };
+            m_runningProcessList.Enqueue(processDialog);
         }
 
         #endregion
@@ -1283,44 +1320,69 @@ namespace FirstBepinPlugin
         public List<int> HSkillListGetByGroup(int skillGroup)
         {
             m_skillIdCache.Clear();
-            // skil list
-            switch (skillGroup)
-            {
-                case (int)HSkillGroupType.Common: // 通用技能
-                    {
-                        m_skillIdCache.Add(99720);
-                        m_skillIdCache.Add(99721);
-                        m_skillIdCache.Add(99722);
-                    }
-                    break;
-                case (int)HSkillGroupType.TiWeiNone: // 无体位 非接触技能
-                    {
-                        m_skillIdCache.Add(99723);
-                    }
-                    break;
-                case (int)HSkillGroupType.Function: // 功能技能
-                    {
-                        m_skillIdCache.Add(99799);
-                    }
-                    break;
-                case (int)HSkillGroupType.TiWeiShou: // 手技能
-                    {
-                        m_skillIdCache.Add(99730);
-                    }
-                    break;
-                case (int)HSkillGroupType.Wuli: // 体力归零技能组 复活
-                    {
-                        m_skillIdCache.Add(99730);
-                    }
-                    break;
-                case (int)HSkillGroupType.JueDing: // 绝顶后 技能组 复活
-                    {
-                        m_skillIdCache.Add(99730);
-                    }
-                    break;
-            }
-            return m_skillIdCache;
+            var groupConf = PluginMain.Main.ConfigDataLoader.GetConfigDataHSkillGroupInfo(skillGroup);
+
+            // 裁剪已装备
+            return groupConf.SkillList;
+            //// skil list
+            //switch (skillGroup)
+            //{
+            //    case (int)HSkillGroupType.Common: // 通用技能
+            //        {
+            //            m_skillIdCache.Add(99720);
+            //            m_skillIdCache.Add(99721);
+            //            m_skillIdCache.Add(99722);
+            //        }
+            //        break;
+            //    case (int)HSkillGroupType.TiWeiNone: // 无体位 非接触技能
+            //        {
+            //            m_skillIdCache.Add(99723);
+            //        }
+            //        break;
+            //    case (int)HSkillGroupType.Function: // 功能技能
+            //        {
+            //            m_skillIdCache.Add(99799);
+            //        }
+            //        break;
+            //    case (int)HSkillGroupType.TiWeiShou: // 手技能
+            //        {
+            //            m_skillIdCache.Add(99730);
+            //        }
+            //        break;
+            //    case (int)HSkillGroupType.Wuli: // 体力归零技能组 复活
+            //        {
+            //            m_skillIdCache.Add(99730);
+            //        }
+            //        break;
+            //    case (int)HSkillGroupType.JueDing: // 绝顶后 技能组 复活
+            //        {
+            //            m_skillIdCache.Add(99730);
+            //        }
+            //        break;
+            //}
+            //return m_skillIdCache;
         }
+
+        /// <summary>
+        /// 获取技能组列表
+        /// </summary>
+        /// <returns></returns>
+        public List<int> GetCurrSkillGroupList()
+        {
+            var retList = new List<int>();
+            var allSkillGroups = PluginMain.Main.ConfigDataLoader.GetAllConfigDataHSkillGroupInfo();
+            foreach(var pair in allSkillGroups)
+            {
+                if(!CheckHConditions(pair.Value.ShowCondition))
+                {
+                    continue;
+                }
+                retList.Add(pair.Key);
+            }
+            retList.Sort((a,b)=>a.CompareTo(b));
+            return retList;
+        }
+
 
         /// <summary>
         /// 获取当前state 技能组id
@@ -1391,6 +1453,97 @@ namespace FirstBepinPlugin
             return 0;
         }
 
+        /// <summary>
+        /// 检查条件列表
+        /// </summary>
+        /// <param name="conditionList"></param>
+        /// <returns></returns>
+        protected bool CheckHConditions(List<Tuple4> conditionList)
+        {
+            foreach(var cond in conditionList)
+            {
+                if(!CheckHCondition(cond))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// 检查条件
+        /// </summary>
+        /// <param name="condition"></param>
+        /// <returns></returns>
+        protected bool CheckHCondition(Tuple4 condition)
+        {
+            switch(condition.P1)
+            {
+                case (int)EConditionType.YiZhuang:
+                    {
+                        if(condition.P2 == (int)EConditionCompareType.Gte)
+                        {
+                            return m_ctx.YiZhuang >= condition.P3 * Consts.Float2Int100;
+                        }
+                        else if (condition.P2 == (int)EConditionCompareType.Lte)
+                        {
+                            return m_ctx.YiZhuang <= condition.P3 * Consts.Float2Int100;
+                        }
+                    }
+                    break;
+                case (int)EConditionType.SelfYuWang:
+                    {
+                        if (condition.P2 == (int)EConditionCompareType.Gte)
+                        {
+                            return m_ctx.YuWang >= condition.P3 * Consts.Float2Int100;
+                        }
+                        else if (condition.P2 == (int)EConditionCompareType.Lte)
+                        {
+                            return m_ctx.YuWang <= condition.P3 * Consts.Float2Int100;
+                        }
+                    }
+                    break;
+                case (int)EConditionType.EnemyYuWang:
+                    {
+                        if (condition.P2 == (int)EConditionCompareType.Gte)
+                        {
+                            return m_ctx.Enemy.YuWang >= condition.P3 * Consts.Float2Int100;
+                        }
+                        else if (condition.P2 == (int)EConditionCompareType.Lte)
+                        {
+                            return m_ctx.Enemy.YuWang <= condition.P3 * Consts.Float2Int100;
+                        }
+                    }
+                    break;
+                case (int)EConditionType.TiWei:
+                    {
+                        if(condition.P2 == (int)EConditionCompareType.Equal)
+                        {
+                            return m_ctx.m_hTiWei == (HModeTiWei)condition.P3;
+                        }
+                        else if (condition.P2 == (int)EConditionCompareType.NotEqual)
+                        {
+                            return m_ctx.m_hTiWei != (HModeTiWei)condition.P3;
+                        }
+                    }
+                    break;
+                case (int)EConditionType.IsJueDing:
+                    {
+                        if (condition.P2 == (int)EConditionCompareType.Equal)
+                        {
+                            return m_ctx.m_isJueDing;
+                        }
+                        else if (condition.P2 == (int)EConditionCompareType.NotEqual)
+                        {
+                            return !m_ctx.m_isJueDing;
+                        }
+                    }
+                    break;
+            }
+            return false;
+        }
+
+
         protected float GetMaxPartXingFen(int part)
         {
             var partInfo = PluginMain.Main.ConfigDataLoader.GetConfigDataHPartFightInfo(part);
@@ -1450,22 +1603,22 @@ namespace FirstBepinPlugin
                     break;
                 case HModeTiWei.Kou:
                     {
-                        suoJing = PluginMain.Main.ConfigDataLoader.GetConfigDataHPartFightInfo((int)EnumPartType.Mouse).SuoJing;
+                        suoJing = PluginMain.Main.ConfigDataLoader.GetConfigDataHPartFightInfo((int)EPartType.Mouse).SuoJing;
                     }
                     break;
                 case HModeTiWei.Ru:
                     {
-                        suoJing = PluginMain.Main.ConfigDataLoader.GetConfigDataHPartFightInfo((int)EnumPartType.Breast).SuoJing;
+                        suoJing = PluginMain.Main.ConfigDataLoader.GetConfigDataHPartFightInfo((int)EPartType.Breast).SuoJing;
                     }
                     break;
                 case HModeTiWei.Xue:
                     {
-                        suoJing = PluginMain.Main.ConfigDataLoader.GetConfigDataHPartFightInfo((int)EnumPartType.Pussy).SuoJing;
+                        suoJing = PluginMain.Main.ConfigDataLoader.GetConfigDataHPartFightInfo((int)EPartType.Pussy).SuoJing;
                     }
                     break;
                 case HModeTiWei.Gang:
                     {
-                        suoJing = PluginMain.Main.ConfigDataLoader.GetConfigDataHPartFightInfo((int)EnumPartType.Anal).SuoJing;
+                        suoJing = PluginMain.Main.ConfigDataLoader.GetConfigDataHPartFightInfo((int)EPartType.Anal).SuoJing;
                     }
                     break;
             }
@@ -1510,7 +1663,7 @@ namespace FirstBepinPlugin
             // 显示跳字
             m_runningProcessList.Enqueue(new FightProcessWaitHHint(this, 0.5f, hAtkInfo.HintContent));
             // 结算
-            m_runningProcessList.Enqueue(new FightProcessBalance(this));
+            //m_runningProcessList.Enqueue(new FightProcessBalance(this));
         }
 
 
@@ -1677,20 +1830,30 @@ namespace FirstBepinPlugin
         }
     }
 
-    public class FightProcessBalance : FightProcessBase
+    public class FightProcessWaitDialog : FightProcessBase
     {
-        public FightProcessBalance(HModeFightManager owner) : base(owner)
+        protected string m_eventId;
+
+        public int Ret1;
+        public FightProcessWaitDialog(HModeFightManager owner, string eventId) : base(owner)
         {
+            m_eventId = eventId;
         }
 
         public override void OnStart()
         {
             base.OnStart();
+            var dialogEnv = new DialogEnvironmentEx();
+            DialogAnalysis.OnDialogComplete += delegate {
+                Ret1 = dialogEnv.GetInt("Ret1");
+                m_isEnd = true;
+            };
+            DialogAnalysis.StartDialogEvent(m_eventId, dialogEnv);
         }
 
         public override void Tick(float dt)
         {
-            m_isEnd = true;
+
         }
     }
 
@@ -1760,6 +1923,19 @@ namespace FirstBepinPlugin
         public void OnDestroy()
         {
             SecretsSystem.FightManager.m_cachedHAnimController = null;
+        }
+    }
+
+    public class DialogEnvironmentEx : DialogEnvironment
+    {
+        public int GetCost()
+        {
+            return 10;
+        }
+
+        public int GetSelfYuWang()
+        {
+            return (int)(SecretsSystem.FightManager.m_ctx.YuWang / Consts.Float2Int100);
         }
     }
 }

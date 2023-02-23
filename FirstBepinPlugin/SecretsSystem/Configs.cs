@@ -10,7 +10,7 @@ using static WXB.TextParser;
 namespace FirstBepinPlugin.Config
 {
 
-    public enum EnumPartType
+    public enum EPartType
     {
         Invalid,
         Mouse,
@@ -18,6 +18,27 @@ namespace FirstBepinPlugin.Config
         Pussy,
         Anal,
         Max,
+    }
+
+    public enum EConditionType
+    {
+        Invalid,
+        YiZhuang,
+        SelfYuWang,
+        EnemyYuWang,
+        TiWei,
+        IsJueDing,
+        Max,
+    }
+
+    public enum EConditionCompareType
+    {
+        Equal,
+        Gte,
+        Gt,
+        Lte,
+        Le,
+        NotEqual,
     }
 
     #region 静态配置
@@ -173,7 +194,7 @@ namespace FirstBepinPlugin.Config
 
     public partial class ConfigDataSecretsPartInfo
     {
-        public EnumPartType PartType;
+        public EPartType PartType;
 
         public List<ConfigDataSecretsPartLevelInfo> LevelInfos = new List<ConfigDataSecretsPartLevelInfo>();
 
@@ -223,78 +244,7 @@ namespace FirstBepinPlugin.Config
 
     }
 
-
-    public partial class ConfigDataHAttackPoolInfo
-    {
-
-        public Int32 ID; // 池ID
-
-        public List<int> AttackIdList = new List<int>(); // 攻击Id列表
-
-    }
-
-
-    public partial class ConfigDataHAttackInfo
-    {
-
-        public Int32 ID; // 主键
-
-        public String Name; // 名称
-
-        public List<int> TargetPart = new List<int>(); // 部位 1口 2乳 3穴 4尻
-
-        public Int32 AttackType; // 攻击类型 1 轻 2 重 3 淫
-
-        public List<int> Conditions = new List<int>(); // 使用条件列表
-
-        public Int32 DamageRate; // 伤害率
-
-        public Int32 KuaiGanRate; // 快感率
-
-        public List<int> Tags = new List<int>(); // Tags
-
-        public Int32 DefaultWeight; // 基础权重
-
-        public String HintContent; // 提示语
-
-        public String AnimName; // 动画名
-
-    }
-
-
-    public partial class ConfigDataHAttackConditionInfo
-    {
-
-        public Int32 ID; // 主键
-
-        public Int32 Type; // 条件类型 1 衣装 2 自身欲望 3 主角欲望
-
-        public List<int> Params = new List<int>(); // 参数列表
-
-    }
-
-
-    public partial class ConfigDataHPartFightInfo
-    {
-
-        public Int32 ID; // 主键
-
-        public String Name; // 名称
-
-        public Int32 Armar; // 护甲
-
-        public Int32 HitKuaiGan; // 受击快感
-
-        public Int32 CounterKuaiGan; // 反馈快感
-
-        public Int32 MaxXingFen; // 兴奋上限
-
-        public Int32 MinXingFen; // 兴奋下限
-
-        public Int32 SuoJing; // 基础索精
-
-    }
-
+    
     public class ConfigDataLoader
     {
 
@@ -310,7 +260,7 @@ namespace FirstBepinPlugin.Config
                         return;
                     }
                     var json = File.ReadAllText(hInfoConfigName);
-                    m_ConfigDataHAttackPoolInfoDict = JsonConvert.DeserializeObject<Dictionary<int, ConfigDataHAttackPoolInfo>>(json);
+                    m_ConfigDataHAttackPoolInfoData = JsonConvert.DeserializeObject<Dictionary<int, ConfigDataHAttackPoolInfo>>(json);
                 }
                 {
                     var hInfoConfigName = pathPrefix + "HAttackInfo.json";
@@ -320,7 +270,7 @@ namespace FirstBepinPlugin.Config
                         return;
                     }
                     var json = File.ReadAllText(hInfoConfigName);
-                    m_ConfigDataHAttackInfoDict = JsonConvert.DeserializeObject<Dictionary<int, ConfigDataHAttackInfo>>(json);
+                    m_ConfigDataHAttackInfoData = JsonConvert.DeserializeObject<Dictionary<int, ConfigDataHAttackInfo>>(json);
                 }
                 {
                     var hInfoConfigName = pathPrefix + "HAttackConditionInfo.json";
@@ -330,7 +280,7 @@ namespace FirstBepinPlugin.Config
                         return;
                     }
                     var json = File.ReadAllText(hInfoConfigName);
-                    m_ConfigDataHAttackConditionInfoDict = JsonConvert.DeserializeObject<Dictionary<int, ConfigDataHAttackConditionInfo>>(json);
+                    m_ConfigDataHAttackConditionInfoData = JsonConvert.DeserializeObject<Dictionary<int, ConfigDataHAttackConditionInfo>>(json);
                 }
                 {
                     var hInfoConfigName = pathPrefix + "HPartFightInfo.json";
@@ -340,7 +290,17 @@ namespace FirstBepinPlugin.Config
                         return;
                     }
                     var json = File.ReadAllText(hInfoConfigName);
-                    m_ConfigDataHPartFightInfoDict = JsonConvert.DeserializeObject<Dictionary<int, ConfigDataHPartFightInfo>>(json);
+                    m_ConfigDataHPartFightInfoData = JsonConvert.DeserializeObject<Dictionary<int, ConfigDataHPartFightInfo>>(json);
+                }
+                {
+                    var hInfoConfigName = pathPrefix + "HSkillGroupInfo.json";
+                    if (!File.Exists(hInfoConfigName))
+                    {
+                        PluginMain.Main.LogError($"load ConfigDataHSkillGroupInfo Error");
+                        return;
+                    }
+                    var json = File.ReadAllText(hInfoConfigName);
+                    m_ConfigDataHSkillGroupInfoData = JsonConvert.DeserializeObject<Dictionary<int, ConfigDataHSkillGroupInfo>>(json);
                 }
             }
             catch (Exception e)
@@ -350,49 +310,140 @@ namespace FirstBepinPlugin.Config
         }
 
 
-        public Dictionary<int, ConfigDataHAttackPoolInfo> m_ConfigDataHAttackPoolInfoDict = new Dictionary<int, ConfigDataHAttackPoolInfo>();
+        #region 获取方法
 
-        public Dictionary<int, ConfigDataHAttackInfo> m_ConfigDataHAttackInfoDict = new Dictionary<int, ConfigDataHAttackInfo>();
-
-        public Dictionary<int, ConfigDataHAttackConditionInfo> m_ConfigDataHAttackConditionInfoDict = new Dictionary<int, ConfigDataHAttackConditionInfo>();
-
-        public Dictionary<int, ConfigDataHPartFightInfo> m_ConfigDataHPartFightInfoDict = new Dictionary<int, ConfigDataHPartFightInfo>();
 
         public ConfigDataHAttackPoolInfo GetConfigDataHAttackPoolInfo(int key)
         {
-            if(m_ConfigDataHAttackPoolInfoDict.TryGetValue(key, out var ret))
+            ConfigDataHAttackPoolInfo data;
+            if (m_ConfigDataHAttackPoolInfoData.TryGetValue(key, out data))
             {
-                return ret;
+                return data;
             }
             return null;
         }
+
+
+        public Dictionary<int, ConfigDataHAttackPoolInfo> GetAllConfigDataHAttackPoolInfo()
+        {
+            return m_ConfigDataHAttackPoolInfoData;
+        }
+
+
+        public void ClearConfigDataHAttackPoolInfo()
+        {
+            m_ConfigDataHAttackPoolInfoData.Clear();
+        }
+
 
         public ConfigDataHAttackInfo GetConfigDataHAttackInfo(int key)
         {
-            if (m_ConfigDataHAttackInfoDict.TryGetValue(key, out var ret))
+            ConfigDataHAttackInfo data;
+            if (m_ConfigDataHAttackInfoData.TryGetValue(key, out data))
             {
-                return ret;
+                return data;
             }
             return null;
         }
+
+
+        public Dictionary<int, ConfigDataHAttackInfo> GetAllConfigDataHAttackInfo()
+        {
+            return m_ConfigDataHAttackInfoData;
+        }
+
+
+        public void ClearConfigDataHAttackInfo()
+        {
+            m_ConfigDataHAttackInfoData.Clear();
+        }
+
 
         public ConfigDataHAttackConditionInfo GetConfigDataHAttackConditionInfo(int key)
         {
-            if (m_ConfigDataHAttackConditionInfoDict.TryGetValue(key, out var ret))
+            ConfigDataHAttackConditionInfo data;
+            if (m_ConfigDataHAttackConditionInfoData.TryGetValue(key, out data))
             {
-                return ret;
+                return data;
             }
             return null;
         }
 
+
+        public Dictionary<int, ConfigDataHAttackConditionInfo> GetAllConfigDataHAttackConditionInfo()
+        {
+            return m_ConfigDataHAttackConditionInfoData;
+        }
+
+
+        public void ClearConfigDataHAttackConditionInfo()
+        {
+            m_ConfigDataHAttackConditionInfoData.Clear();
+        }
+
+
         public ConfigDataHPartFightInfo GetConfigDataHPartFightInfo(int key)
         {
-            if (m_ConfigDataHPartFightInfoDict.TryGetValue(key, out var ret))
+            ConfigDataHPartFightInfo data;
+            if (m_ConfigDataHPartFightInfoData.TryGetValue(key, out data))
             {
-                return ret;
+                return data;
             }
             return null;
         }
+
+
+        public Dictionary<int, ConfigDataHPartFightInfo> GetAllConfigDataHPartFightInfo()
+        {
+            return m_ConfigDataHPartFightInfoData;
+        }
+
+
+        public void ClearConfigDataHPartFightInfo()
+        {
+            m_ConfigDataHPartFightInfoData.Clear();
+        }
+
+
+        public ConfigDataHSkillGroupInfo GetConfigDataHSkillGroupInfo(int key)
+        {
+            ConfigDataHSkillGroupInfo data;
+            if (m_ConfigDataHSkillGroupInfoData.TryGetValue(key, out data))
+            {
+                return data;
+            }
+            return null;
+        }
+
+
+        public Dictionary<int, ConfigDataHSkillGroupInfo> GetAllConfigDataHSkillGroupInfo()
+        {
+            return m_ConfigDataHSkillGroupInfoData;
+        }
+
+
+        public void ClearConfigDataHSkillGroupInfo()
+        {
+            m_ConfigDataHSkillGroupInfoData.Clear();
+        }
+
+
+        #endregion
+
+
+        #region 数据定义
+
+        private Dictionary<int, ConfigDataHAttackPoolInfo> m_ConfigDataHAttackPoolInfoData = new Dictionary<int, ConfigDataHAttackPoolInfo>();
+
+        private Dictionary<int, ConfigDataHAttackInfo> m_ConfigDataHAttackInfoData = new Dictionary<int, ConfigDataHAttackInfo>();
+
+        private Dictionary<int, ConfigDataHAttackConditionInfo> m_ConfigDataHAttackConditionInfoData = new Dictionary<int, ConfigDataHAttackConditionInfo>();
+
+        private Dictionary<int, ConfigDataHPartFightInfo> m_ConfigDataHPartFightInfoData = new Dictionary<int, ConfigDataHPartFightInfo>();
+
+        private Dictionary<int, ConfigDataHSkillGroupInfo> m_ConfigDataHSkillGroupInfoData = new Dictionary<int, ConfigDataHSkillGroupInfo>();
+
+        #endregion
 
     }
 }

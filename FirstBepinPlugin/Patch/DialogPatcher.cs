@@ -32,19 +32,18 @@ namespace FirstBepinPlugin.Patch
             int partType = command.GetInt(0);
             int addNum = command.GetInt(1);
 
-            SecretsSystem.Instance.AddJingYuan((EnumPartType)partType, addNum);
+            SecretsSystem.Instance.AddJingYuan((EPartType)partType, addNum);
 
             callback?.Invoke();
         }
     }
 
 
-    [DialogEvent("FightEndCallback")]
-    public class FightEndCallback : IDialogEvent
+    [DialogEvent("FightDialogEndCallback")]
+    public class FightDialogEndCallback : IDialogEvent
     {
         public void Execute(DialogCommand command, DialogEnvironment env, Action callback)
         {
-
             env.tmpArgs.TryGetValue("callbackParam", out var callbackParam);
             if(SecretsSystem.FightManager.IsInBattle)
             {
@@ -66,7 +65,7 @@ namespace FirstBepinPlugin.Patch
             Main.LogInfo("InitExInitExInitExInitExInitExInitExInitExInitExInitExInitExInitExInitExInitExInitExInitExInitExInitExInitExInitExInitExInitExInitExInitEx");
             DialogAnalysis.RegisterCommand("MyCustom", Activator.CreateInstance(typeof(MyCustom)) as IDialogEvent);
             DialogAnalysis.RegisterCommand("SecretJieSuan", Activator.CreateInstance(typeof(SecretJieSuan)) as IDialogEvent);
-            DialogAnalysis.RegisterCommand("FightEndCallback", Activator.CreateInstance(typeof(FightEndCallback)) as IDialogEvent);
+            DialogAnalysis.RegisterCommand("FightDialogEndCallback", Activator.CreateInstance(typeof(FightDialogEndCallback)) as IDialogEvent);
             
         }
     }
