@@ -256,6 +256,7 @@
 		],
 		"Affix":[],
 		"Affix2":[
+			66
 		],
 		"descr":"基础诱惑神通，敌方获得【欲望】*4 多次使用效果下降 最少增加1层",
 		"TuJiandescr":"基础诱惑神通，敌方获得【欲望】*4 多次使用效果下降 最少增加1层",
@@ -451,21 +452,21 @@
 		"canUseDistMax":30,
 		"CD":10000
 	},
-	"997251":{
-		"id":997251,
+	"99725":{
+		"id":99725,
 		"Skill_ID":99725,
 		"Skill_Lv":1,
 		"skillEffect":"312",
 		"Skill_Type":3,
-		"name":"Test普通攻击6",
+		"name":"刺穴",
 		"qingjiaotype":7,
 		"seid":[
 		],
 		"Affix":[],
 		"Affix2":[
 		],
-		"descr":"Test普通攻击3",
-		"TuJiandescr":"Test普通攻击3",
+		"descr":"基础紫薇 增加淫气",
+		"TuJiandescr":"基础紫薇 增加淫气",
 		"AttackType":[
 			5
 		],
@@ -475,11 +476,12 @@
 		"icon":0,
 		"Skill_DisplayType":0,
 		"skill_SameCastNum":[
-			1
 		],
 		"skill_CastType":[
+			5
 		],
 		"skill_Cast":[
+			2
 		],
 		"Skill_LV":1,
 		"typePinJie":2,
@@ -649,6 +651,46 @@
 		"canUseDistMax":30,
 		"CD":10000
 	},
+	"99798":{
+		"id":99798,
+		"Skill_ID":99798,
+		"Skill_Lv":1,
+		"skillEffect":"312",
+		"Skill_Type":3,
+		"name":"平复",
+		"qingjiaotype":7,
+		"seid":[
+			561
+		],
+		"Affix":[],
+		"Affix2":[
+			66
+		],
+		"descr":"决定状态下使用，更快平复心境",
+		"TuJiandescr":"决定状态下使用，更快平复心境",
+		"AttackType":[
+			0
+		],
+		"script":"SkillSelf",
+		"HP":0,
+		"speed":0,
+		"icon":0,
+		"Skill_DisplayType":0,
+		"skill_SameCastNum":[
+		],
+		"skill_CastType":[
+		],
+		"skill_Cast":[
+		],
+		"Skill_LV":1,
+		"typePinJie":2,
+		"DF":1,
+		"TuJianType":0,
+		"Skill_Open":1,
+		"Skill_castTime":1,
+		"canUseDistMax":30,
+		"CD":10000
+	},
 	"99799":{
 		"id":99799,
 		"Skill_ID":99799,
@@ -658,7 +700,7 @@
 		"name":"进手",
 		"qingjiaotype":7,
 		"seid":[
-			147,560
+			560
 		],
 		"Affix":[],
 		"Affix2":[
@@ -690,4 +732,5 @@
 		"canUseDistMax":30,
 		"CD":10000
 	},
+
 }

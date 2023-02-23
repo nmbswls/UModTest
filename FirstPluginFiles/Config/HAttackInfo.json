@@ -7,7 +7,12 @@
     ],
     "AttackType": 1,
     "Conditions": [
-      100
+      {
+        "P1": 100,
+        "P2": 0,
+        "P3": 0,
+        "P4": 0
+      }
     ],
     "DamageRate": 100,
     "KuaiGanRate": 100,
@@ -24,7 +29,12 @@
     ],
     "AttackType": 1,
     "Conditions": [
-      101
+      {
+        "P1": 100,
+        "P2": 0,
+        "P3": 0,
+        "P4": 0
+      }
     ],
     "DamageRate": 100,
     "KuaiGanRate": 100,
@@ -41,7 +51,12 @@
     ],
     "AttackType": 2,
     "Conditions": [
-      102
+      {
+        "P1": 100,
+        "P2": 0,
+        "P3": 0,
+        "P4": 0
+      }
     ],
     "DamageRate": 100,
     "KuaiGanRate": 100,
@@ -58,7 +73,12 @@
     ],
     "AttackType": 2,
     "Conditions": [
-      103
+      {
+        "P1": 100,
+        "P2": 0,
+        "P3": 0,
+        "P4": 0
+      }
     ],
     "DamageRate": 100,
     "KuaiGanRate": 100,
@@ -75,7 +95,12 @@
     ],
     "AttackType": 1,
     "Conditions": [
-      201
+      {
+        "P1": 100,
+        "P2": 0,
+        "P3": 0,
+        "P4": 0
+      }
     ],
     "DamageRate": 100,
     "KuaiGanRate": 100,
@@ -92,7 +117,12 @@
     ],
     "AttackType": 2,
     "Conditions": [
-      202
+      {
+        "P1": 100,
+        "P2": 0,
+        "P3": 0,
+        "P4": 0
+      }
     ],
     "DamageRate": 100,
     "KuaiGanRate": 100,
@@ -109,7 +139,12 @@
     ],
     "AttackType": 2,
     "Conditions": [
-      203
+      {
+        "P1": 100,
+        "P2": 0,
+        "P3": 0,
+        "P4": 0
+      }
     ],
     "DamageRate": 100,
     "KuaiGanRate": 100,
@@ -126,7 +161,12 @@
     ],
     "AttackType": 1,
     "Conditions": [
-      301
+      {
+        "P1": 100,
+        "P2": 0,
+        "P3": 0,
+        "P4": 0
+      }
     ],
     "DamageRate": 100,
     "KuaiGanRate": 100,
@@ -143,7 +183,12 @@
     ],
     "AttackType": 2,
     "Conditions": [
-      302
+      {
+        "P1": 100,
+        "P2": 0,
+        "P3": 0,
+        "P4": 0
+      }
     ],
     "DamageRate": 100,
     "KuaiGanRate": 100,
@@ -160,7 +205,12 @@
     ],
     "AttackType": 1,
     "Conditions": [
-      401
+      {
+        "P1": 100,
+        "P2": 0,
+        "P3": 0,
+        "P4": 0
+      }
     ],
     "DamageRate": 100,
     "KuaiGanRate": 100,
@@ -177,7 +227,12 @@
     ],
     "AttackType": 2,
     "Conditions": [
-      402
+      {
+        "P1": 100,
+        "P2": 0,
+        "P3": 0,
+        "P4": 0
+      }
     ],
     "DamageRate": 100,
     "KuaiGanRate": 100,
@@ -196,7 +251,12 @@
     ],
     "AttackType": 1,
     "Conditions": [
-      999
+      {
+        "P1": 100,
+        "P2": 0,
+        "P3": 0,
+        "P4": 0
+      }
     ],
     "DamageRate": 100,
     "KuaiGanRate": 100,
