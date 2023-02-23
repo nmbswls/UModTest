@@ -202,7 +202,8 @@ namespace FirstBepinPlugin.Patch
                 && seid != Consts.SkillSeId_SwitchTiWei
                 && seid != Consts.SkillSeId_ModKuaiGan
                 && seid != Consts.SkillSeId_MultiTriggerByUsedTimee
-                && seid != Consts.SkillSeId_YinYi)
+                && seid != Consts.SkillSeId_YinYi
+                && seid != Consts.SkillSeId_DiscardNonYinQiAddBuff)
             {
                 return true;
             }
@@ -263,7 +264,13 @@ namespace FirstBepinPlugin.Patch
 
                     }
                     break;
+                case Consts.SkillSeId_DiscardNonYinQiAddBuff:
+                    {
+                        PluginMain.Main.LogInfo("Skill realizeSeid Handle realizeSeid_YinYi ");
+                        __instance.realizeSeid_DiscardNonYinQiAddBuff(seid, damage, (KBEngine.Avatar)_attaker, (KBEngine.Avatar)_receiver, type);
 
+                    }
+                    break;
 
             }
 

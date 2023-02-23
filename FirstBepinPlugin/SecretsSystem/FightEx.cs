@@ -139,5 +139,26 @@ namespace FirstBepinPlugin
         {
             SecretsSystem.FightManager.TriggerYinYi();
         }
+
+        public static void realizeSeid_DiscardNonYinQiAddBuff(this GUIPackage.Skill skill, int seid, List<int> damage, KBEngine.Avatar attaker, KBEngine.Avatar receiver, int type)
+        {
+            PluginMain.Main.LogError(attaker.name);
+            int maxDiscardNum = skill.getSeidJson(seid)["value1"].I;
+            int discardNum = 0;
+            while (discardNum < maxDiscardNum)
+            {
+                var card = attaker.cardMag.getRandomCard();
+                if(card == null)
+                {
+                    break;
+                }
+                RoundManager.instance.removeCard(attaker, 1, card.cardType);
+                discardNum++;
+            }
+            int countPerCard = skill.getSeidJson(seid)["value2"].I;
+            int buffId = skill.getSeidJson(seid)["value3"].I;
+            attaker.spell.addBuff(buffId, countPerCard * discardNum);
+        }
+        
     }
 }

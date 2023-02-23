@@ -52,9 +52,13 @@ namespace FirstBepinPlugin
 
         #endregion
 
-        #region 非技能状态
+        #region 非技能状态 9971600 - 9971800
         public const int BuffId_BasicYinLingen = 9971005; //进战后的基础淫灵根比率
         public const int BuffId_TurnModYuWang = 9971007; // 回合开始改变欲望
+        #endregion
+        #region 一次性效果 9971800 - 9972000
+        public const int BuffId_AddYinLingQi = 9971800; // 一次性效果 增加等同于层数的淫灵气
+        public const int BuffId_AddCertainWuXingLingQi = 9971801; // 一次性效果 增加等同于层数的自选灵气
         #endregion
 
         //public const int BuffTriggerId_CheckLayerBetween = 9971; // 检查层数要求 其具体参数定义在seid 9971文件中
@@ -86,6 +90,7 @@ namespace FirstBepinPlugin
         public const int SkillSeId_SwitchTiWei = 560; // 切换体味 p1 体位id
         public const int SkillSeId_ModKuaiGan = 561; // 改变对象 p1:1自身2敌方 p2:数值
         public const int SkillSeId_YinYi = 562; // 淫意
+        public const int SkillSeId_DiscardNonYinQiAddBuff = 563; // 弃置X点非淫灵气 给予X*Y层Zbuff
 
         public const int SkillSeId_MultiTriggerByUsedTimee = 598; // 根据本回合使用次数改变后续触发次数 初始触发p1次 每次连续使用效果减少触发p2次 最低触发p3次 最高触发p4次
         public const int SkillSeId_CheckNotWuLi = 597; // 特殊seid 检查退出HMode的条件

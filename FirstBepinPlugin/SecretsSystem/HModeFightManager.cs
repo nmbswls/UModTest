@@ -75,7 +75,6 @@ namespace FirstBepinPlugin
             this.Owner = owner;
             TabRoot = gameObject.transform.GetChild(0);
             ToggleTemplate = gameObject.transform.Find("TabTemplate").gameObject;
-            RefreshUI();
         }
 
         public void RefreshUI()
@@ -406,6 +405,12 @@ namespace FirstBepinPlugin
             m_ctx.Enemy.KuaiGan = 0;
             m_ctx.Enemy.YuWang = 0;
 
+            // init 敌人属性
+            // 通过境界 心境 和主角h过的次数计算获得
+            {
+                m_ctx.Enemy.MaxKuaiGan = 100 * Consts.Float2Int100;
+            }
+
             UpdateAllStateBuff();
 
             //    player.OtherAvatar.spell.addBuff(9971009, 1);
@@ -434,6 +439,8 @@ namespace FirstBepinPlugin
 
             // 每回合增加欲望
             SetBuffLayer(player, Consts.BuffId_TurnModYuWang, 10);
+
+            m_cachedSkillTab.RefreshUI();
         }
 
 
@@ -665,7 +672,6 @@ namespace FirstBepinPlugin
             var skillTab = UnityEngine.GameObject.Instantiate(PluginMain.Main.LoadGameObjectFromAB("FightSkillGroupTab"), UIFightPanel.Inst.transform);
             m_cachedSkillTab = skillTab.AddComponent<FightUISkillTabController>();
             m_cachedSkillTab.Init(this);
-
             m_cachedSkillTab.transform.SetAsFirstSibling();
 
             var HShowPanel = UnityEngine.GameObject.Instantiate(PluginMain.Main.LoadGameObjectFromAB("HShowPanel"), UIFightPanel.Inst.transform);
@@ -698,8 +704,7 @@ namespace FirstBepinPlugin
             go.transform.SetParent(newChild.transform);
 
             damagePrefab.transform.LogAll();
-            PluginMain.Main.LogError("newChild parent:" + newChild.transform.parent.name);
-            
+            //PluginMain.Main.LogError("newChild parent:" + newChild.transform.parent.name);
         }
 
 
@@ -1103,12 +1108,12 @@ namespace FirstBepinPlugin
                 return;
             }
 
-            List<List<int>> buffByID = target.buffmag.getBuffByID(buffId);
+            var buffByID = target.buffmag.GetBuffById(buffId);
             int oldLayer = 0;
-            if (buffByID.Count > 0)
+            if (buffByID != null)
             {
-                oldLayer = buffByID.Count;
-                buffByID[0][1] = newLayer;
+                oldLayer = buffByID[1];
+                buffByID[1] = newLayer;
             }
             else
             {
@@ -1127,7 +1132,7 @@ namespace FirstBepinPlugin
                     target.SkillSeidFlag[13] = new Dictionary<int, int>();
                 }
 
-                PluginMain.Main.LogError($"seid64 check v1 {v1} v2 {v2} newLayer {newLayer} oldLayer {oldLayer}");
+                PluginMain.Main.LogError($"seid64 check type {v1} weight {v2} newLayer {newLayer} oldLayer {oldLayer}");
 
                 if (target.SkillSeidFlag[13].ContainsKey(v1))
                 {
@@ -1151,9 +1156,9 @@ namespace FirstBepinPlugin
         /// <param name="buffId"></param>
         public void SetHasBuff(KBEngine.Avatar target, int buffId)
         {
-            var buffInfo = _BuffJsonData.DataDict[buffId];
-            if (buffInfo == null)
+            if(!_BuffJsonData.DataDict.TryGetValue(buffId, out var buffInfo))
             {
+                PluginMain.Main.LogError($"Buff Not Found {buffId}");
                 return;
             }
             if (buffInfo.BuffType != 1)
@@ -1230,13 +1235,14 @@ namespace FirstBepinPlugin
                 return;
             }
 
-            var processDialog = new FightProcessWaitDialog(this, "fightH_chooose_dikang");
+            var processDialog = new FightProcessWaitDialog(this, "fightH_PassiveEnterTiwei_choice");
 
             processDialog.EventOnEnd += delegate ()
             {
                 int v = processDialog.Ret1;
 
-                if(v == 0)
+                // 1 躲闪失败
+                if(v == 1)
                 {
                     SwitchTiWei((int)HModeTiWei.Shou);
                 }
@@ -1375,6 +1381,7 @@ namespace FirstBepinPlugin
             {
                 if(!CheckHConditions(pair.Value.ShowCondition))
                 {
+                    PluginMain.Main.LogInfo("Cond Check Fail " + pair.Value.ID);
                     continue;
                 }
                 retList.Add(pair.Key);
@@ -1481,8 +1488,10 @@ namespace FirstBepinPlugin
             {
                 case (int)EConditionType.YiZhuang:
                     {
-                        if(condition.P2 == (int)EConditionCompareType.Gte)
+                        PluginMain.Main.LogError($"check cond curr {m_ctx.YiZhuang} conf {condition.P3}");
+                        if (condition.P2 == (int)EConditionCompareType.Gte)
                         {
+                            PluginMain.Main.LogError($"check cond curr {m_ctx.YiZhuang} conf {condition.P3}");
                             return m_ctx.YiZhuang >= condition.P3 * Consts.Float2Int100;
                         }
                         else if (condition.P2 == (int)EConditionCompareType.Lte)
