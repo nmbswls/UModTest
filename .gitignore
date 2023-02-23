@@ -5,4 +5,5 @@ ResourceProj/Library/*
 ResourceProj/.vs/*
 ResourceProj/obj/*
 ResourceProj/Logs/*
+ResourceProj/Temp/*
 *.vsconfig
