@@ -27,6 +27,8 @@ namespace My.ConfigData {
 
             set.Add($"HPartFightInfo");
 
+            set.Add($"HSkillGroupInfo");
+
             return set;
         }
         protected override void InitDeserializFunc4ConfigData()
@@ -39,6 +41,8 @@ namespace My.ConfigData {
             m_deserializFuncDict["HAttackConditionInfo"] = DeserializFunc4ConfigDataHAttackConditionInfo;
 
             m_deserializFuncDict["HPartFightInfo"] = DeserializFunc4ConfigDataHPartFightInfo;
+
+            m_deserializFuncDict["HSkillGroupInfo"] = DeserializFunc4ConfigDataHSkillGroupInfo;
 
             m_deserializFuncDict["MultiLangInfo_CN"] = DeserializFunc4ConfigDataMultiLangInfo_CN;
 
@@ -70,6 +74,11 @@ namespace My.ConfigData {
             assetInfo.m_configAssetName = $"HPartFightInfo";
             assetInfo.m_state = LazyLoadConfigAsssetState.Unload;
             assetInfoDict.Add("HPartFightInfo", assetInfo);
+
+            assetInfo = new LazyLoadConfigAssetInfo();
+            assetInfo.m_configAssetName = $"HSkillGroupInfo";
+            assetInfo.m_state = LazyLoadConfigAsssetState.Unload;
+            assetInfoDict.Add("HSkillGroupInfo", assetInfo);
 
             assetInfo = new LazyLoadConfigAssetInfo();
             assetInfo.m_configAssetName = $"MultiLangInfo_CN";
@@ -124,6 +133,17 @@ namespace My.ConfigData {
                 foreach(var pair in data)
                 {
                     m_ConfigDataHPartFightInfoData[pair.Key] = pair.Value;
+                }
+            }
+        }
+        public void DeserializFunc4ConfigDataHSkillGroupInfo(string content)
+        {
+            var data = JsonConvert.DeserializeObject<Dictionary<int, ConfigDataHSkillGroupInfo>>(content);
+            if(data != null)
+            {
+                foreach(var pair in data)
+                {
+                    m_ConfigDataHSkillGroupInfoData[pair.Key] = pair.Value;
                 }
             }
         }
@@ -246,6 +266,29 @@ namespace My.ConfigData {
         }
 
 
+        public ConfigDataHSkillGroupInfo GetConfigDataHSkillGroupInfo(int key)
+        {
+            ConfigDataHSkillGroupInfo data;
+            if(m_ConfigDataHSkillGroupInfoData.TryGetValue(key, out data))
+            {
+                return data;
+            }
+            return null;
+        }
+
+
+        public Dictionary<int,ConfigDataHSkillGroupInfo> GetAllConfigDataHSkillGroupInfo()
+        {
+            return m_ConfigDataHSkillGroupInfoData;
+        }
+
+
+        public void ClearConfigDataHSkillGroupInfo()
+        {
+            m_ConfigDataHSkillGroupInfoData.Clear();
+        }
+
+
         public ConfigDataMultiLangInfo_CN GetConfigDataMultiLangInfo_CN(int key)
         {
             ConfigDataMultiLangInfo_CN data;
@@ -305,6 +348,8 @@ namespace My.ConfigData {
         private Dictionary<int, ConfigDataHAttackConditionInfo> m_ConfigDataHAttackConditionInfoData = new Dictionary<int, ConfigDataHAttackConditionInfo>();
 
         private Dictionary<int, ConfigDataHPartFightInfo> m_ConfigDataHPartFightInfoData = new Dictionary<int, ConfigDataHPartFightInfo>();
+
+        private Dictionary<int, ConfigDataHSkillGroupInfo> m_ConfigDataHSkillGroupInfoData = new Dictionary<int, ConfigDataHSkillGroupInfo>();
 
         private Dictionary<int, ConfigDataMultiLangInfo_CN> m_ConfigDataMultiLangInfo_CNData = new Dictionary<int, ConfigDataMultiLangInfo_CN>();
 

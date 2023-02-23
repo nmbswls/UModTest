@@ -11,6 +11,30 @@ namespace My.ConfigData {
 
 #region subtypes
 
+    public class Tuple2
+    {
+        public Int32 P1; // 
+        public Int32 P2; // 
+    }
+
+
+    public class Tuple3
+    {
+        public Int32 P1; // 
+        public Int32 P2; // 
+        public Int32 P3; // 
+    }
+
+
+    public class Tuple4
+    {
+        public Int32 P1; // 
+        public Int32 P2; // 
+        public Int32 P3; // 
+        public Int32 P4; // 
+    }
+
+
     public class Sample
     {
         public Int32 SampleField; // This is a int field
@@ -55,7 +79,7 @@ namespace My.ConfigData {
 
         public Int32 AttackType; // 攻击类型 1 轻 2 重 3 淫
 
-        public List<int> Conditions= new List<int>(); // 使用条件列表
+        public List<Tuple4> Conditions= new List<Tuple4>(); // 使用条件列表
 
         public Int32 DamageRate; // 伤害率
 
@@ -102,6 +126,20 @@ namespace My.ConfigData {
         public Int32 MinXingFen; // 兴奋下限
 
         public Int32 SuoJing; // 基础索精
+
+    }
+
+
+    public partial class ConfigDataHSkillGroupInfo
+    {
+
+        public Int32 ID; // 主键
+
+        public List<Tuple4> ShowCondition= new List<Tuple4>(); // 条件列表
+
+        public Int32 Priority; // 优先级（越低越靠前）
+
+        public List<int> SkillList= new List<int>(); // 技能列表
 
     }
 
