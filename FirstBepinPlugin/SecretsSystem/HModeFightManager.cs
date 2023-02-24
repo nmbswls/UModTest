@@ -1,4 +1,5 @@
-﻿using BehaviorDesigner.Runtime;
+﻿using Bag;
+using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks.Basic.UnityPlayerPrefs;
 using DebuggingEssentials;
 using FirstBepinPlugin.Config;
@@ -11,6 +12,7 @@ using KBEngine;
 using Newtonsoft.Json;
 using SkySwordKill.Next;
 using SkySwordKill.Next.DialogSystem;
+using SuperScrollView;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -178,6 +180,69 @@ namespace FirstBepinPlugin
         }
     }
 
+    public class FightUIHRecordController : MonoBehaviour
+    {
+        public LoopListView2 MLoopListView;
+        public int MRecordCount = 5;
+        public UnityEngine.GameObject TextTemplage;
+        public List<string> m_records = new List<string>() { "<color=#FF1493>im record 0.</color>", "im record 1." , "im record 2." , "im record 3." , "im record 4." };
+        public void Init()
+        {
+            TextTemplage = transform.Find("TextTemplate").gameObject;
+            var loopListViewGo = transform.Find("ContentScroll").gameObject;
+            MLoopListView = loopListViewGo.AddComponent<LoopListView2>();
+            MLoopListView.ItemPrefabDataList.Add(new ItemPrefabConfData() { mItemPrefab = TextTemplage, mInitCreateCount = 6, mStartPosOffset = 10});
+            MLoopListView.ArrangeType = ListItemArrangeType.BottomToTop;
+            MLoopListView.InitListView(MRecordCount, OnGetItemByIndex);
+
+        }
+        protected LoopListViewItem2 OnGetItemByIndex(LoopListView2 listView, int rowIndex)
+        {
+            if (rowIndex < 0)
+            {
+                return null;
+            }
+            LoopListViewItem2 loopListViewItem = listView.NewListViewItem("TextTemplate");
+            Text component = loopListViewItem.GetComponent<Text>();
+            loopListViewItem.gameObject.SetActive(true);
+            PluginMain.Main.LogInfo("virtual list OnGetItemByIndex " + rowIndex + "val " + m_records[rowIndex] + " sibling indx " + loopListViewItem.CachedRectTransform.localPosition);
+            if (!loopListViewItem.IsInitHandlerCalled)
+            {
+                loopListViewItem.IsInitHandlerCalled = true;
+                //component.Init();
+            }
+            
+            //for (int i = 0; i < mItemCountPerRow; i++)
+            //{
+            //    int num = rowIndex * mItemCountPerRow + i;
+            //    component.mItemList[i].SetAccptType(CanSlotType.全部物品);
+            //    if (num >= MItemTotalCount)
+            //    {
+            //        component.mItemList[i].SetNull();
+            //        continue;
+            //    }
+            //    BaseItem slotData = BaseItem.Create(ItemList[num].itemId, (int)ItemList[num].itemCount, ItemList[num].uuid, ItemList[num].Seid);
+            //    component.mItemList[i].SetSlotData(slotData);
+            //}
+            component.text = m_records[rowIndex];
+            return loopListViewItem;
+        }
+    
+        public void AddRecord(string record)
+        {
+            m_records.Insert(0, "<color=#FF1493>" + record + "</color>");
+            MLoopListView.SetListItemCount(m_records.Count);
+            MLoopListView.RefreshAllShownItemWithFirstIndex(0);
+        }
+
+        /// <summary>
+        /// 移除战斗记录
+        /// </summary>
+        public void RemoveOldRecords()
+        {
+
+        }
+    }
     public class HModeEnemyInfo
     {
         public int Id;
@@ -375,7 +440,7 @@ namespace FirstBepinPlugin
 
         public void FightOnRoungEndPost(KBEngine.Avatar avatar)
         {
-
+            m_cachedHRecordController?.AddRecord("回合结束了.");
         }
 
         /// <summary>
@@ -627,6 +692,7 @@ namespace FirstBepinPlugin
 
         public FightUISkillTabController m_cachedSkillTab;
         public FightHShowController m_cachedHAnimController;
+        public FightUIHRecordController m_cachedHRecordController;
 
         private UILingQiImageData m_cachedNormalUI;
         private Sprite m_cachedNormalUI2;
@@ -680,6 +746,10 @@ namespace FirstBepinPlugin
 
             ExtendAvatarShowDamageUI(m_player);
             ExtendAvatarShowDamageUI(m_player.OtherAvatar);
+
+            var HRecordPanel = UnityEngine.GameObject.Instantiate(PluginMain.Main.LoadGameObjectFromAB("FightHRecordPanel"), UIFightPanel.Inst.transform);
+            m_cachedHRecordController = HRecordPanel.AddComponent<FightUIHRecordController>();
+            m_cachedHRecordController.Init();
         }
 
         public void ExtendAvatarShowDamageUI(KBEngine.Avatar avatar)
@@ -690,20 +760,20 @@ namespace FirstBepinPlugin
                 return;
             }
 
-            var damagePrefab = compShow.DamageTemp;
-            damagePrefab.name = "nmbbbbbbbbbbbbb";
-            Transform child0 = damagePrefab.transform.GetChild(0);
-            var newChild = UnityEngine.GameObject.Instantiate(child0.gameObject, child0.parent);
-            newChild.transform.SetAsLastSibling();
+            //var damagePrefab = compShow.DamageTemp;
+            //damagePrefab.name = "nmbbbbbbbbbbbbb";
+            //Transform child0 = damagePrefab.transform.GetChild(0);
+            //var newChild = UnityEngine.GameObject.Instantiate(child0.gameObject, child0.parent);
+            //newChild.transform.SetAsLastSibling();
 
 
 
-            var go = new UnityEngine.GameObject();
-            var image = go.AddComponent<Image>();
-            image.color = new Color(1, 0, 0);
-            go.transform.SetParent(newChild.transform);
+            //var go = new UnityEngine.GameObject();
+            //var image = go.AddComponent<Image>();
+            //image.color = new Color(1, 0, 0);
+            //go.transform.SetParent(newChild.transform);
 
-            damagePrefab.transform.LogAll();
+            //damagePrefab.transform.LogAll();
             //PluginMain.Main.LogError("newChild parent:" + newChild.transform.parent.name);
         }
 
@@ -1648,16 +1718,24 @@ namespace FirstBepinPlugin
         {
             var partInfo = PluginMain.Main.ConfigDataLoader.GetConfigDataHPartFightInfo(part);
 
-            if (partInfo == null) return;
+            int armar = 0;
+            int counterKuaiGan = 0;
+            int hitKuaigan = 0;
+            if (partInfo != null)
+            {
+                armar = partInfo.Armar;
+                counterKuaiGan = partInfo.CounterKuaiGan;
+                hitKuaigan = partInfo.HitKuaiGan;
+            }
 
             float conterKuaigan = partInfo.CounterKuaiGan * 0.01f;
-            float hitKuaigan = partInfo.HitKuaiGan * 0.01f * hAtkInfo.KuaiGanRate * 0.01f;
+            float hitKuaigan2 = hitKuaigan * 0.01f * hAtkInfo.KuaiGanRate * 0.01f;
 
 
             m_runningProcessList.Enqueue(new FightProcessWaitAnimation(this, hAtkInfo.ID + ""));
 
             float damage = hAtk * hAtkInfo.DamageRate * 0.01f;
-            float reduceRae = (partInfo.Armar * 0.06f) / (1 + partInfo.Armar * 0.06f);
+            float reduceRae = (armar * 0.06f) / (1 + armar * 0.06f);
             float xingfenRate = StaticConfigContainer.GetKuaiGanRateByXingFen((int)(m_ctx.Xingfen[part] / 100)) * 0.01f;
 
             // 进行结算
