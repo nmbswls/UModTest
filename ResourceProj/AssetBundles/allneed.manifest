@@ -1,15 +1,17 @@
 ManifestFileVersion: 0
-CRC: 3083502472
+CRC: 3622812438
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 17a83b27c0bb90512143002a8e8e1f99
+    Hash: 014f1edb99b7752714f4ea51eb9b3fdb
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 51d3e36d0cb198712c4c4948ffe98e7a
+    Hash: 58b40f01d8227b60d74fbe044f65ad54
 HashAppended: 0
 ClassTypes:
 - Class: 1
+  Script: {instanceID: 0}
+- Class: 4
   Script: {instanceID: 0}
 - Class: 21
   Script: {instanceID: 0}
@@ -26,9 +28,15 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 1392445389, guid: f70555f144d8491a825f0804e09c671c, type: 3}
 - Class: 114
+  Script: {fileID: 1741964061, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+- Class: 114
   Script: {fileID: -405508275, guid: f70555f144d8491a825f0804e09c671c, type: 3}
 - Class: 114
   Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+- Class: 114
+  Script: {fileID: -1200242548, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+- Class: 114
+  Script: {fileID: 1367256648, guid: f70555f144d8491a825f0804e09c671c, type: 3}
 - Class: 114
   Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
 - Class: 114
@@ -52,6 +60,7 @@ Assets:
 - Assets/Res/allneed/Icons/Lingqi_yin/MCS_ZD_linqi_yinduo_hlg.png
 - Assets/Res/allneed/Animation/h/202.anim
 - Assets/Res/allneed/Animation/h/401.anim
+- Assets/Res/allneed/MCS_WPXQ__bg.png
 - Assets/Res/allneed/secret_part_kou.png
 - Assets/Res/allneed/Animation/h/testconvert.png
 - Assets/Res/allneed/secret_part_ru.png
@@ -64,6 +73,7 @@ Assets:
 - Assets/Res/allneed/Animation/h/203.anim
 - Assets/Res/allneed/Icons/icon_lianqi_tab_sex.png
 - Assets/Res/allneed/NpcSecretDetailPanel.prefab
+- Assets/Res/allneed/FightHRecordPanel.prefab
 - Assets/Res/allneed/Icons/Cast/cast_type_9.png
 - Assets/Res/allneed/PlayerSecretDetailPanel.prefab
 - Assets/Res/allneed/Animation/h/101.anim

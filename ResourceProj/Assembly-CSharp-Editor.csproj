@@ -9,7 +9,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{3C4E1453-8806-B298-AEE2-61D6EBBCB4C3}</ProjectGuid>
+    <ProjectGuid>{5EB8845A-B31B-7397-6A6F-844B141EB4B6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp-Editor</AssemblyName>
@@ -66,25 +66,25 @@
   <ItemGroup>
     <Compile Include="Assets\BuildManager\Editor\BuildManager.cs" />
     <Reference Include="UnityEngine.Purchasing">
-      <HintPath>D:/Misc/MiChangShengModProj/Library/ScriptAssemblies/UnityEngine.Purchasing.dll</HintPath>
+      <HintPath>D:/Misc/MiChangShengMods/FirstBepinPlugin/FirstBepinPlugin/ResourceProj/Library/ScriptAssemblies/UnityEngine.Purchasing.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.Purchasing">
-      <HintPath>D:/Misc/MiChangShengModProj/Library/ScriptAssemblies/UnityEditor.Purchasing.dll</HintPath>
+      <HintPath>D:/Misc/MiChangShengMods/FirstBepinPlugin/FirstBepinPlugin/ResourceProj/Library/ScriptAssemblies/UnityEditor.Purchasing.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
-      <HintPath>D:/Misc/MiChangShengModProj/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+      <HintPath>D:/Misc/MiChangShengMods/FirstBepinPlugin/FirstBepinPlugin/ResourceProj/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.PackageManagerUI.Editor">
-      <HintPath>D:/Misc/MiChangShengModProj/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
+      <HintPath>D:/Misc/MiChangShengMods/FirstBepinPlugin/FirstBepinPlugin/ResourceProj/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.CollabProxy.Editor">
-      <HintPath>D:/Misc/MiChangShengModProj/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
+      <HintPath>D:/Misc/MiChangShengMods/FirstBepinPlugin/FirstBepinPlugin/ResourceProj/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
-      <HintPath>D:/Misc/MiChangShengModProj/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+      <HintPath>D:/Misc/MiChangShengMods/FirstBepinPlugin/FirstBepinPlugin/ResourceProj/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.DataPrivacy">
-      <HintPath>D:/Misc/MiChangShengModProj/Library/ScriptAssemblies/Unity.Analytics.DataPrivacy.dll</HintPath>
+      <HintPath>D:/Misc/MiChangShengMods/FirstBepinPlugin/FirstBepinPlugin/ResourceProj/Library/ScriptAssemblies/Unity.Analytics.DataPrivacy.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>D:/UnityHub/Editors/2018.4.36f1/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
@@ -321,19 +321,19 @@
       <HintPath>C:/Program Files (x86)/Microsoft Visual Studio Tools for Unity/16.0/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
     </Reference>
     <Reference Include="ModMonoLib">
-      <HintPath>D:/Misc/MiChangShengModProj/Assets/Plugins/ModMonoLib.dll</HintPath>
+      <HintPath>D:/Misc/MiChangShengMods/FirstBepinPlugin/FirstBepinPlugin/ResourceProj/Assets/Plugins/ModMonoLib.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.Advertisements">
-      <HintPath>D:/Misc/MiChangShengModProj/Library/PackageCache/com.unity.ads@2.0.8/Editor/UnityEditor.Advertisements.dll</HintPath>
+      <HintPath>D:/Misc/MiChangShengMods/FirstBepinPlugin/FirstBepinPlugin/ResourceProj/Library/PackageCache/com.unity.ads@2.0.8/Editor/UnityEditor.Advertisements.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.Editor">
-      <HintPath>D:/Misc/MiChangShengModProj/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Editor.dll</HintPath>
+      <HintPath>D:/Misc/MiChangShengMods/FirstBepinPlugin/FirstBepinPlugin/ResourceProj/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.StandardEvents">
-      <HintPath>D:/Misc/MiChangShengModProj/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.StandardEvents.dll</HintPath>
+      <HintPath>D:/Misc/MiChangShengMods/FirstBepinPlugin/FirstBepinPlugin/ResourceProj/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.StandardEvents.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.Tracker">
-      <HintPath>D:/Misc/MiChangShengModProj/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Tracker.dll</HintPath>
+      <HintPath>D:/Misc/MiChangShengMods/FirstBepinPlugin/FirstBepinPlugin/ResourceProj/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Tracker.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
       <HintPath>D:/UnityHub/Editors/2018.4.36f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>
@@ -692,7 +692,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp.csproj">
-      <Project>{32F4DEF7-1835-74FF-D177-0001C4AFA515}</Project>
+      <Project>{827672CA-3DF7-1FAB-84D5-C5D32E316E7F}</Project>
       <Name>Assembly-CSharp</Name>
     </ProjectReference>
   </ItemGroup>
