@@ -676,7 +676,7 @@
 		"script":"SkillSelf",
 		"HP":0,
 		"speed":0,
-		"icon":0,
+		"icon":535,
 		"Skill_DisplayType":0,
 		"skill_SameCastNum":[
 		],
