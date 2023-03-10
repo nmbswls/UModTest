@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 3622812438
+CRC: 912341754
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 014f1edb99b7752714f4ea51eb9b3fdb
+    Hash: f8d35657997bdfde5e84ad9650206fc1
   TypeTreeHash:
     serializedVersion: 2
     Hash: 58b40f01d8227b60d74fbe044f65ad54
@@ -58,10 +58,11 @@ ClassTypes:
 Assets:
 - Assets/Res/allneed/Icons/Lingqi_yin/MCS_ZD_linqi_yinduo2_bk.png
 - Assets/Res/allneed/Icons/Lingqi_yin/MCS_ZD_linqi_yinduo_hlg.png
+- Assets/Res/allneed/Hud/Head_HP.png
 - Assets/Res/allneed/Animation/h/202.anim
 - Assets/Res/allneed/Animation/h/401.anim
 - Assets/Res/allneed/MCS_WPXQ__bg.png
-- Assets/Res/allneed/secret_part_kou.png
+- Assets/Res/allneed/Icons/secret_part_kou.png
 - Assets/Res/allneed/Animation/h/testconvert.png
 - Assets/Res/allneed/secret_part_ru.png
 - Assets/Res/allneed/secrets_girl.png
@@ -73,6 +74,7 @@ Assets:
 - Assets/Res/allneed/Animation/h/203.anim
 - Assets/Res/allneed/Icons/icon_lianqi_tab_sex.png
 - Assets/Res/allneed/NpcSecretDetailPanel.prefab
+- Assets/Res/allneed/FightHud.prefab
 - Assets/Res/allneed/FightHRecordPanel.prefab
 - Assets/Res/allneed/Icons/Cast/cast_type_9.png
 - Assets/Res/allneed/PlayerSecretDetailPanel.prefab
@@ -89,6 +91,7 @@ Assets:
 - Assets/Res/allneed/Icons/Lingqi_yin/MCS_ZD_linqi_yin_hlg.png
 - Assets/Res/allneed/Icons/Lingqi_yin/MCS_ZD_linqi_yinduo.png
 - Assets/Res/allneed/Icons/Fight/fight_skill_tab_on.png
+- Assets/Res/allneed/Hud/Head_HP_BG.png
 - Assets/Res/allneed/MCS_TAB_shuxin_bg2.png
 - Assets/Res/allneed/Icons/Lingqi_yin/MCS_ZD_linqi_yin_bk.png
 - Assets/Res/allneed/Icons/Lingqi_yin/MCS_ZD_linqi_yin.png
