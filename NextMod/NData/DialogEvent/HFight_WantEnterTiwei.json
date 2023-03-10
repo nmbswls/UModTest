@@ -1,0 +1,56 @@
+[
+    {
+        "id":"HFight_WantEnterTiwei",
+        "character":{
+            "旁白" : 0,
+			},
+        "dialog":[
+            "旁白#对方似乎想强迫你进行强迫手交。",
+			"ShowOption*1:快速躲闪:[&GetSelfYuWang()<=40&]#2:奋起抵抗:[&GetSelfYuWang()<=50&]#3:束手以待",
+            "If*[&optionID == 1 &]#Event*HFight_WantEnterTiwei_React_Dodge",
+            "If*[&optionID == 2 &]#Event*HFight_WantEnterTiwei_React_Resist",
+			"If*[&optionID == 3 &]#Event*HFight_WantEnterTiwei_React_None",
+           ],
+        "option":[
+	         ]
+    },
+	{
+        "id":"HFight_WantEnterTiwei_React_Dodge",
+        "character":{
+            "旁白" : 0,
+            "主角" : 1,
+			},
+        "dialog":[
+           "旁白#躲闪成功。",
+		   "SetInt*Ret1#1",
+           ],
+        "option":[
+	         ]
+    },
+	{
+        "id":"HFight_WantEnterTiwei_React_Resist",
+        "character":{
+            "旁白" : 0,
+            "主角" : 1,
+			},
+        "dialog":[
+           "旁白#抵抗成功。",
+		   "SetInt*Ret1#2",
+           ],
+        "option":[
+	         ]
+    },
+	{
+        "id":"HFight_WantEnterTiwei_React_None",
+        "character":{
+            "旁白" : 0,
+            "主角" : 1,
+			},
+        "dialog":[
+           "旁白#你被束缚了。",
+		   "SetInt*Ret1#0",
+           ],
+        "option":[
+	         ]
+    },
+]

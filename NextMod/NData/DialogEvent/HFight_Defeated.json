@@ -1,0 +1,66 @@
+[
+    {
+        "id":"HFight_Defeated",
+        "character":{
+            "旁白" : 0,
+			},
+        "dialog":[
+            "旁白#一番鏖战，你终于体力不支。",
+			"Event*HFight_Defeated_Branch",
+           ],
+        "option":[
+	         ]
+    },
+	{
+        "id":"HFight_Defeated_Branch",
+        "character":{
+            "旁白" : 0,
+            "主角" : 1,
+			},
+        "dialog":[
+           "SetInt*branch#[&GetArg(\"branch\")&]",
+            "If*[&GetInt(\"branch\")==1&]#Event*HFight_Defeated_Type_01",
+			"If*[&GetInt(\"branch\")==2&]#Event*HFight_Defeated_Type_02",
+           ],
+        "option":[
+	         ]
+    },
+	{
+        "id":"HFight_Defeated_Type_01",
+        "character":{
+            "旁白" : 0,
+            "主角" : 1,
+			},
+        "dialog":[
+           "旁白#进入第一战败分支。",
+		   "Event*HFight_Defeated_End",
+           ],
+        "option":[
+	         ]
+    },
+	{
+        "id":"HFight_Defeated_Type_02",
+        "character":{
+            "旁白" : 0,
+            "主角" : 1,
+			},
+        "dialog":[
+           "旁白#进入第二战败分支。",
+		   "Event*HFight_Defeated_End",
+           ],
+        "option":[
+	         ]
+    },
+	{
+        "id":"HFight_Defeated_End",
+        "character":{
+            "旁白" : 0,
+			},
+        "dialog":[
+           "旁白#躲闪成功。",
+		   "ShowTip*结束战败演出#0",
+           ],
+        "option":[
+	         ]
+    },
+]

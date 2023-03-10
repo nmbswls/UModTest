@@ -1,0 +1,66 @@
+[
+    {
+        "id":"HFight_EnterTiwei",
+        "character":{
+            "旁白" : 0,
+			},
+        "dialog":[
+            "旁白#切换体位。",
+			"Event*HFight_EnterTiwei_Branch",
+           ],
+        "option":[
+	         ]
+    },
+	{
+        "id":"HFight_EnterTiwei_Branch",
+        "character":{
+            "旁白" : 0,
+            "主角" : 1,
+			},
+        "dialog":[
+           "SetInt*branch#[&GetArg(\"branch\")&]",
+            "If*[&GetInt(\"branch\")==1&]#Event*HFight_EnterTiwei_Type_01",
+			"If*[&GetInt(\"branch\")==2&]#Event*HFight_EnterTiwei_Type_02",
+           ],
+        "option":[
+	         ]
+    },
+	{
+        "id":"HFight_EnterTiwei_Type_01",
+        "character":{
+            "旁白" : 0,
+            "主角" : 1,
+			},
+        "dialog":[
+           "旁白#进入第一分支。",
+		   "Event*HFight_EnterTiwei_End",
+           ],
+        "option":[
+	         ]
+    },
+	{
+        "id":"HFight_EnterTiwei_Type_02",
+        "character":{
+            "旁白" : 0,
+            "主角" : 1,
+			},
+        "dialog":[
+           "旁白#进入第二分支。",
+		   "Event*HFight_EnterTiwei_End",
+           ],
+        "option":[
+	         ]
+    },
+	{
+        "id":"HFight_EnterTiwei_End",
+        "character":{
+            "旁白" : 0,
+			},
+        "dialog":[
+           "旁白#进入体位。",
+		   "ShowTip*结束进入体位演出#0",
+           ],
+        "option":[
+	         ]
+    },
+]
