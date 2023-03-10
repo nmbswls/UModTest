@@ -1,4 +1,76 @@
 {
+  "1": {
+    "ID": 1,
+    "Name": "淫视",
+    "TargetPart": [
+      0
+    ],
+    "AttackType": 1,
+    "Conditions": [
+      {
+        "P1": 2,
+        "P2": 1,
+        "P3": 50,
+        "P4": 0
+      },
+      {
+        "P1": 4,
+        "P2": 0,
+        "P3": 0,
+        "P4": 0
+      }
+    ],
+    "Damage": [
+      0,
+      0
+    ],
+    "ApplyKuaiGan": [
+      5,
+      0
+    ],
+    "SelfKuaiGan": 2,
+    "Tags": [],
+    "DefaultWeight": 100,
+    "Effects": [],
+    "HintContent": "触发敌方H行为显示 100",
+    "AnimName": ""
+  },
+  "10": {
+    "ID": 10,
+    "Name": "撸",
+    "TargetPart": [
+      0
+    ],
+    "AttackType": 1,
+    "Conditions": [
+      {
+        "P1": 2,
+        "P2": 1,
+        "P3": 50,
+        "P4": 0
+      },
+      {
+        "P1": 4,
+        "P2": 0,
+        "P3": 0,
+        "P4": 0
+      }
+    ],
+    "Damage": [
+      0,
+      0
+    ],
+    "ApplyKuaiGan": [
+      5,
+      0
+    ],
+    "SelfKuaiGan": 5,
+    "Tags": [],
+    "DefaultWeight": 100,
+    "Effects": [],
+    "HintContent": "触发敌方H行为显示 100",
+    "AnimName": ""
+  },
   "100": {
     "ID": 100,
     "Name": "吮指",
@@ -14,10 +86,18 @@
         "P4": 0
       }
     ],
-    "DamageRate": 100,
-    "KuaiGanRate": 100,
+    "Damage": [
+      0,
+      100
+    ],
+    "ApplyKuaiGan": [
+      0,
+      100
+    ],
+    "SelfKuaiGan": 5,
     "Tags": [],
     "DefaultWeight": 100,
+    "Effects": [],
     "HintContent": "触发敌方H行为显示 100",
     "AnimName": ""
   },
@@ -36,10 +116,18 @@
         "P4": 0
       }
     ],
-    "DamageRate": 100,
-    "KuaiGanRate": 100,
+    "Damage": [
+      0,
+      100
+    ],
+    "ApplyKuaiGan": [
+      0,
+      100
+    ],
+    "SelfKuaiGan": 5,
     "Tags": [],
     "DefaultWeight": 100,
+    "Effects": [],
     "HintContent": "触发敌方H行为显示 101",
     "AnimName": ""
   },
@@ -58,10 +146,18 @@
         "P4": 0
       }
     ],
-    "DamageRate": 100,
-    "KuaiGanRate": 100,
+    "Damage": [
+      0,
+      100
+    ],
+    "ApplyKuaiGan": [
+      0,
+      100
+    ],
+    "SelfKuaiGan": 5,
     "Tags": [],
     "DefaultWeight": 100,
+    "Effects": [],
     "HintContent": "触发敌方H行为显示 102",
     "AnimName": ""
   },
@@ -80,10 +176,18 @@
         "P4": 0
       }
     ],
-    "DamageRate": 100,
-    "KuaiGanRate": 100,
+    "Damage": [
+      0,
+      100
+    ],
+    "ApplyKuaiGan": [
+      0,
+      100
+    ],
+    "SelfKuaiGan": 5,
     "Tags": [],
     "DefaultWeight": 100,
+    "Effects": [],
     "HintContent": "触发敌方H行为显示 102",
     "AnimName": ""
   },
@@ -102,10 +206,18 @@
         "P4": 0
       }
     ],
-    "DamageRate": 100,
-    "KuaiGanRate": 100,
+    "Damage": [
+      0,
+      100
+    ],
+    "ApplyKuaiGan": [
+      0,
+      100
+    ],
+    "SelfKuaiGan": 5,
     "Tags": [],
     "DefaultWeight": 100,
+    "Effects": [],
     "HintContent": "触发敌方H行为显示 201",
     "AnimName": ""
   },
@@ -124,10 +236,18 @@
         "P4": 0
       }
     ],
-    "DamageRate": 100,
-    "KuaiGanRate": 100,
+    "Damage": [
+      0,
+      100
+    ],
+    "ApplyKuaiGan": [
+      0,
+      100
+    ],
+    "SelfKuaiGan": 5,
     "Tags": [],
     "DefaultWeight": 100,
+    "Effects": [],
     "HintContent": "触发敌方H行为显示 202",
     "AnimName": ""
   },
@@ -146,10 +266,18 @@
         "P4": 0
       }
     ],
-    "DamageRate": 100,
-    "KuaiGanRate": 100,
+    "Damage": [
+      0,
+      100
+    ],
+    "ApplyKuaiGan": [
+      0,
+      100
+    ],
+    "SelfKuaiGan": 5,
     "Tags": [],
     "DefaultWeight": 100,
+    "Effects": [],
     "HintContent": "触发敌方H行为显示 203",
     "AnimName": ""
   },
@@ -168,10 +296,18 @@
         "P4": 0
       }
     ],
-    "DamageRate": 100,
-    "KuaiGanRate": 100,
+    "Damage": [
+      0,
+      100
+    ],
+    "ApplyKuaiGan": [
+      0,
+      100
+    ],
+    "SelfKuaiGan": 5,
     "Tags": [],
     "DefaultWeight": 100,
+    "Effects": [],
     "HintContent": "触发敌方H行为显示 301",
     "AnimName": ""
   },
@@ -190,10 +326,18 @@
         "P4": 0
       }
     ],
-    "DamageRate": 100,
-    "KuaiGanRate": 100,
+    "Damage": [
+      0,
+      100
+    ],
+    "ApplyKuaiGan": [
+      0,
+      100
+    ],
+    "SelfKuaiGan": 5,
     "Tags": [],
     "DefaultWeight": 100,
+    "Effects": [],
     "HintContent": "触发敌方H行为显示 302",
     "AnimName": ""
   },
@@ -212,10 +356,18 @@
         "P4": 0
       }
     ],
-    "DamageRate": 100,
-    "KuaiGanRate": 100,
+    "Damage": [
+      0,
+      100
+    ],
+    "ApplyKuaiGan": [
+      0,
+      100
+    ],
+    "SelfKuaiGan": 5,
     "Tags": [],
     "DefaultWeight": 100,
+    "Effects": [],
     "HintContent": "触发敌方H行为显示 401",
     "AnimName": ""
   },
@@ -234,10 +386,18 @@
         "P4": 0
       }
     ],
-    "DamageRate": 100,
-    "KuaiGanRate": 100,
+    "Damage": [
+      0,
+      100
+    ],
+    "ApplyKuaiGan": [
+      0,
+      100
+    ],
+    "SelfKuaiGan": 5,
     "Tags": [],
     "DefaultWeight": 100,
+    "Effects": [],
     "HintContent": "触发敌方H行为显示 402",
     "AnimName": ""
   },
@@ -258,12 +418,22 @@
         "P4": 0
       }
     ],
-    "DamageRate": 100,
-    "KuaiGanRate": 100,
+    "Damage": [
+      0,
+      100
+    ],
+    "ApplyKuaiGan": [
+      0,
+      100
+    ],
+    "SelfKuaiGan": 5,
     "Tags": [
       999
     ],
     "DefaultWeight": 100,
+    "Effects": [
+      999
+    ],
     "HintContent": "触发敌方H行为显示 999",
     "AnimName": ""
   }

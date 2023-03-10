@@ -75,19 +75,23 @@ namespace My.ConfigData {
 
         public String Name; // 名称
 
-        public List<int> TargetPart= new List<int>(); // 部位 1口 2乳 3穴 4尻
+        public List<int> TargetPart= new List<int>(); // 部位 0无接触 1口 2乳 3穴 4尻
 
         public Int32 AttackType; // 攻击类型 1 轻 2 重 3 淫
 
         public List<Tuple4> Conditions= new List<Tuple4>(); // 使用条件列表
 
-        public Int32 DamageRate; // 伤害率
+        public List<int> Damage= new List<int>(); // 伤害(p1+p2*hAtk)
 
-        public Int32 KuaiGanRate; // 快感率
+        public List<int> ApplyKuaiGan= new List<int>(); // 造成快感(p1+p2*hAtk)
+
+        public Int32 SelfKuaiGan; // 获得快感
 
         public List<int> Tags= new List<int>(); // Tags
 
         public Int32 DefaultWeight; // 基础权重
+
+        public List<int> Effects= new List<int>(); // 基础效果
 
         public String HintContent; // 提示语
 
