@@ -56,6 +56,22 @@ namespace FirstBepinPlugin.Patch
     }
 
     /// <summary>
+    /// RoundManager扩展 结束后清理现场
+    /// </summary>
+    [HarmonyPatch(typeof(RoundManager), "OnDestroy")]
+    public class RoundManagerPatcher_OnDestroy
+    {
+        public static void Postfix(RoundManager __instance)
+        {
+            PluginMain.Main.LogInfo("RoundManagerPatcher_OnDestroy Postfix ");
+
+            SecretsSystem.FightManager.Ctx.Clear();
+            SecretsSystem.FightManager.IsInBattle = false;
+        }
+    }
+    
+
+    /// <summary>
     /// 回合开始扩展事件
     /// </summary>
     [HarmonyPatch(typeof(RoundManager), "startRound")]
@@ -64,13 +80,13 @@ namespace FirstBepinPlugin.Patch
         public static void Prefix(RoundManager __instance, Entity _avater)
         {
             PluginMain.Main.LogInfo("RoundManagerPatcher_startRound Prefix ");
-            SecretsSystem.FightManager.FightOnRoungStartPre((KBEngine.Avatar)_avater);
+            SecretsSystem.FightManager.FightOnRoundStartPre((KBEngine.Avatar)_avater);
         }
 
         public static void Postfix(RoundManager __instance, Entity _avater)
         {
             PluginMain.Main.LogInfo("RoundManagerPatcher_startRound Postfix ");
-            SecretsSystem.FightManager.FightOnRoungStartPost((KBEngine.Avatar)_avater);
+            SecretsSystem.FightManager.FightOnRoundStartPost((KBEngine.Avatar)_avater);
         }
     }
 
@@ -83,13 +99,13 @@ namespace FirstBepinPlugin.Patch
         public static void Prefix(RoundManager __instance, Entity _avater)
         {
             PluginMain.Main.LogInfo("RoundManagerPatcher_endRound Prefix ");
-            SecretsSystem.FightManager.FightOnRoungEndPre((KBEngine.Avatar)_avater);
+            SecretsSystem.FightManager.FightOnRoundEndPre((KBEngine.Avatar)_avater);
         }
 
         public static void Postfix(RoundManager __instance, Entity _avater)
         {
             PluginMain.Main.LogInfo("RoundManagerPatcher_endRound Postfix ");
-            SecretsSystem.FightManager.FightOnRoungEndPost((KBEngine.Avatar)_avater);
+            SecretsSystem.FightManager.FightOnRoundEndPost((KBEngine.Avatar)_avater);
         }
     }
 
@@ -132,14 +148,15 @@ namespace FirstBepinPlugin.Patch
     }
 
     /// <summary>
-    /// 技能扩展 支持更多的seid 实现
+    /// buff扩展 支持更多的seid 实现
     /// </summary>
     [HarmonyPatch(typeof(KBEngine.Buff), "loopRealizeSeid")]
     public class BuffPatcher_loopRealizeSeid
     {
         public static bool Prefix(KBEngine.Buff __instance, int seid, Entity _avatar, List<int> buffInfo, List<int> flag)
         {
-            if (seid != Consts.BuffSeId_ModYuWang)
+            if (seid != Consts.BuffSeId_ModYuWang
+                && seid != Consts.BuffSeId_ModYiZhuang)
             {
                 return true;
             }
@@ -152,7 +169,54 @@ namespace FirstBepinPlugin.Patch
                         __instance.ListRealizeSeid_ModYuWang(seid, (KBEngine.Avatar)_avatar, buffInfo, flag);
                     }
                     break;
+                case Consts.BuffSeId_ModYiZhuang:
+                    {
+                        PluginMain.Main.LogInfo("Buff loopRealizeSeid Handle ListRealizeSeid_ModYiZhuang ");
+                        __instance.ListRealizeSeid_ModYiZhuang(seid, (KBEngine.Avatar)_avatar, buffInfo, flag);
+                    }
+                    break;
             }
+
+            return false;
+        }
+    }
+
+
+
+    /// <summary>
+    /// buff扩展 支持更多的seid attach
+    /// </summary>
+    [HarmonyPatch(typeof(KBEngine.Buff), "onAttachRealizeSeid")]
+    public class BuffPatcher_onAttachRealizeSeid
+    {
+        public static bool Prefix(KBEngine.Buff __instance, int seid, Entity _avatar, List<int> buffInfo)
+        {
+            if (seid != Consts.BuffSeId_ModMeiLi
+                )
+            {
+                return true;
+            }
+            PluginMain.Main.LogInfo($"onAttachRealizeSeid activate seid:{seid}");
+            SecretsSystem.FightManager.OnBonusBuffUpdate(seid);
+
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// buff扩展 支持更多的seid detach
+    /// </summary>
+    [HarmonyPatch(typeof(KBEngine.Buff), "onDetachRealizeSeid")]
+    public class BuffPatcher_onDetachRealizeSeid
+    {
+        public static bool Prefix(KBEngine.Buff __instance, int seid, Entity _avatar, List<int> buffInfo)
+        {
+            if (seid != Consts.BuffSeId_ModMeiLi
+                )
+            {
+                return true;
+            }
+            SecretsSystem.FightManager.OnBonusBuffUpdate(seid);
 
             return false;
         }
@@ -164,27 +228,30 @@ namespace FirstBepinPlugin.Patch
     [HarmonyPatch(typeof(KBEngine.Buff), "CanRealizeSeid")]
     public class BuffPatcher_CanRealizeSeid
     {
-        //public static bool Prefix(KBEngine.Buff __instance, ref bool __result, KBEngine.Avatar _avatar, List<int> flag, int nowSeid, BuffLoopData buffLoopData = null, List<int> buffInfo = null)
-        //{
-        //    if (nowSeid != Consts.BuffSeId_ModYuWang
-        //        )
-        //    {
-        //        return true;
-        //    }
+        public static bool Prefix(KBEngine.Buff __instance, ref bool __result, KBEngine.Avatar _avatar, List<int> flag, int nowSeid, BuffLoopData buffLoopData = null, List<int> buffInfo = null)
+        {
+            if (nowSeid != Consts.BuffSeId_CheckYiZhuang
+                )
+            {
+                return true;
+            }
 
-        //    __result = false;
+            __result = false;
 
-        //    //switch (nowSeid)
-        //    //{
-        //    //    case Consts.BuffSeId_CheckIntoHMode:
-        //    //        {
-        //    //            __result = SecretsSystem.Instance.CheckFightEnterHMode(_avatar);
-        //    //        }
-        //    //        break;
-        //    //}
+            switch (nowSeid)
+            {
+                case Consts.BuffSeId_CheckYiZhuang:
+                    {
+                        var targetVal = __instance.getSeidJson(nowSeid)["value1"].f;
+                        var cmpType = __instance.getSeidJson(nowSeid)["value2"].I;
+                        var val = SecretsSystem.FightManager.Ctx.YiZhuang;
+                        __result = HFightUtils.CustomCompare(val, cmpType, targetVal);
+                    }
+                    break;
+            }
 
-        //    return false;
-        //}
+            return false;
+        }
     }
 
     /// <summary>
@@ -203,7 +270,8 @@ namespace FirstBepinPlugin.Patch
                 && seid != Consts.SkillSeId_ModKuaiGan
                 && seid != Consts.SkillSeId_MultiTriggerByUsedTimee
                 && seid != Consts.SkillSeId_YinYi
-                && seid != Consts.SkillSeId_DiscardNonYinQiAddBuff)
+                && seid != Consts.SkillSeId_DiscardNonYinQiAddBuff
+                && seid != Consts.SkillSeId_ApplyHAttack)
             {
                 return true;
             }
@@ -271,7 +339,13 @@ namespace FirstBepinPlugin.Patch
 
                     }
                     break;
+                case Consts.SkillSeId_ApplyHAttack:
+                    {
+                        PluginMain.Main.LogInfo("Skill realizeSeid Handle realizeSeid_ApplyHAttack ");
+                        __instance.realizeSeid_ApplyHAttack(seid, damage, (KBEngine.Avatar)_attaker, (KBEngine.Avatar)_receiver, type);
 
+                    }
+                    break;
             }
 
             return false;
@@ -297,7 +371,7 @@ namespace FirstBepinPlugin.Patch
             {
                 if (item == Consts.SkillSeId_CheckNotWuLi)
                 {
-                    if(SecretsSystem.FightManager.m_ctx.Tili <= 0)
+                    if(SecretsSystem.FightManager.Ctx.Tili <= 0)
                     {
                         if (_attaker.isPlayer() && showError)
                         {
@@ -329,7 +403,7 @@ namespace FirstBepinPlugin.Patch
                 _costIconDict["5_mod"] = PluginMain.Main.LoadAsset<Sprite>("Icons/Cast/cast_type_9.png");
             }
 
-            if (SecretsSystem.FightManager.m_ctx.m_isInHMode)
+            if (SecretsSystem.FightManager.Ctx.IsFaQing)
             {
                 _costIconDict["5"] = _costIconDict["5_mod"];
             }
@@ -377,7 +451,8 @@ namespace FirstBepinPlugin.Patch
     {
         public static void Postfix(BehaviorDesigner.Runtime.Tasks.Basic.UnityAnimation.EndRound __instance)
         {
-            SecretsSystem.FightManager.ApplyEnemyHAction();
+            // 检查敌人进入体位
+            SecretsSystem.FightManager.CheckEnemySwitchTiWei();
         }
     }
 
@@ -412,6 +487,11 @@ namespace FirstBepinPlugin.Patch
             icons[12] = PluginMain.Main.LoadAsset<Sprite>("Icons/icon_lianqi_tab_sex.png");
         }
     }
+
+
+    
+    
+    
 
     #region 提示相关
 

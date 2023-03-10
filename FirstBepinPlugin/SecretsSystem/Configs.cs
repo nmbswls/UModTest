@@ -17,6 +17,7 @@ namespace FirstBepinPlugin.Config
         Breast,
         Pussy,
         Anal,
+        Body,
         Max,
     }
 
@@ -56,20 +57,17 @@ namespace FirstBepinPlugin.Config
         Shou,
         Ru,
         Kou,
-        Gang,
         Xue,
+        Gang,
         Max,
     }
 
     public class ConfigTiWeiSwitchInfo
     {
         public int Id; // id
-        public List<int> NeedYiZhuang;
-        public List<int> NeedYuWang;
+        public List<Tuple4> Conditions = new List<Tuple4>();
         public int TargetTiWei;
     }
-
-    
 
 
     public static class StaticConfigContainer
@@ -84,6 +82,36 @@ namespace FirstBepinPlugin.Config
                 return s_Jingjie2HAtk[s_Jingjie2HAtk.Length - 1];
             }
             return s_Jingjie2HAtk[jingjie];
+        }
+
+        public static int[] s_YizhuangLevelThreshold = new int[] { 1, 30, 60, 100 };
+
+        public static int GetYiZhuangLevel(float yizhuang)
+        {
+            if (s_YizhuangLevelThreshold.Length == 0) return 0;
+            for(int i=0 ; i < s_YizhuangLevelThreshold.Length;i++)
+            {
+                if(yizhuang < s_YizhuangLevelThreshold[i])
+                {
+                    return i;
+                }
+            }
+            return s_YizhuangLevelThreshold.Length - 1;
+        }
+
+        public static int[] s_MeiLiLevelThreshold = new int[] { 25, 50, 75, 100, 9999};
+
+        public static int GetMeiLiLevel(float meili)
+        {
+            if (s_MeiLiLevelThreshold.Length == 0) return 0;
+            for (int i = 0; i < s_MeiLiLevelThreshold.Length; i++)
+            {
+                if (meili < s_MeiLiLevelThreshold[i])
+                {
+                    return i;
+                }
+            }
+            return s_MeiLiLevelThreshold.Length - 1;
         }
 
         public static int[] s_Jingjie2HActionTimes = new int[] { 3,4,5,6,6,6 };
@@ -161,17 +189,33 @@ namespace FirstBepinPlugin.Config
         {
             new ConfigTiWeiSwitchInfo()
             {
-                Id = 1,
-                NeedYiZhuang = new List<int>(),
-                NeedYuWang = new List<int>(),
+                Id = 0,
+                Conditions = new List<Tuple4>(){ new Tuple4() { P1 = 1, P2 = 3, P3 = 3}},
                 TargetTiWei = (int)HModeTiWei.Shou,
             },
             new ConfigTiWeiSwitchInfo()
             {
-                Id = 2,
-                NeedYiZhuang = new List<int>(),
-                NeedYuWang = new List<int>(),
+                Id = 1,
+                Conditions = new List<Tuple4>(),
                 TargetTiWei = (int)HModeTiWei.Ru,
+            },
+            new ConfigTiWeiSwitchInfo()
+            {
+                Id = 2,
+                Conditions = new List<Tuple4>(),
+                TargetTiWei = (int)HModeTiWei.Kou,
+            },
+            new ConfigTiWeiSwitchInfo()
+            {
+                Id = 3,
+                Conditions = new List<Tuple4>(),
+                TargetTiWei = (int)HModeTiWei.Gang,
+            },
+            new ConfigTiWeiSwitchInfo()
+            {
+                Id = 4,
+                Conditions = new List<Tuple4>(),
+                TargetTiWei = (int)HModeTiWei.Xue,
             },
         };
     }
