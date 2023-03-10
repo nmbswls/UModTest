@@ -1,17 +1,17 @@
 {
 	"99722":{
 		"skillid":99722,
-		"value1":1,
-		"value2":-20,
+		"target":1,
+		"value1":-20,
 	},
 	"99720":{
 		"skillid":99720,
-		"value1":2,
-		"value2":1,
+		"target":2,
+		"value1":1,
 	},
 	"99723":{
 		"skillid":99723,
-		"value1":2,
-		"value2":10,
+		"target":2,
+		"value1":10,
 	},
 }
