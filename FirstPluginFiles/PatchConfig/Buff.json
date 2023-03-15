@@ -620,6 +620,29 @@
 		"isHide":0,
 		"ShowOnlyOne":0
 	},
+	
+	"9971271":{
+		"buffid":9971271,
+		"BuffIcon":0,
+		"skillEffect":"fx_Summoner_o",
+		"name":"引导-口",
+		"Affix":[
+			
+		],
+		"bufftype":3,
+		"seid":[],
+		"descr":"增加对口的倾向，持续（attack）回合",
+		"trigger":1,
+		"removeTrigger":1,
+		"script":"Buff",
+		"looptime":1,
+		"totaltime":1,
+		"BuffType":0,
+		"isHide":0,
+		"ShowOnlyOne":1
+	},
+	
+	
 	"9971605":{
 		"buffid":9971605,
 		"BuffIcon":0,
@@ -741,6 +764,28 @@
 		"ShowOnlyOne":0
 	},
 	
+	"9971612":{
+		"buffid":9971612,
+		"BuffIcon":0,
+		"skillEffect":"fx_Summoner_o",
+		"name":"淫息",
+		"Affix":[
+			
+		],
+		"bufftype":3,
+		"seid":[5, 315],
+		"descr":"荒淫气息弥漫于整个空间，双方每回合上升层数*1点快感",
+		"trigger":1,
+		"removeTrigger":1,
+		"script":"Buff",
+		"looptime":1,
+		"totaltime":1,
+		"BuffType":0,
+		"isHide":0,
+		"ShowOnlyOne":0
+	},
+	
+	
 	"9971800":{
 		"buffid":9971800,
 		"BuffIcon":0,
@@ -781,6 +826,7 @@
 		"isHide":0,
 		"ShowOnlyOne":0
 	},
+	
 	"9971802":{
 		"buffid":9971802,
 		"BuffIcon":0,
@@ -801,7 +847,26 @@
 		"isHide":0,
 		"ShowOnlyOne":0
 	},
-	
+	"9971803":{
+		"buffid":9971803,
+		"BuffIcon":0,
+		"skillEffect":"fx_Summoner_o",
+		"name":"立即偷取层数点灵气并移除自身",
+		"Affix":[
+			
+		],
+		"bufftype":3,
+		"seid":[73,79],
+		"descr":"",
+		"trigger":12,
+		"removeTrigger":2,
+		"script":"Buff",
+		"looptime":1,
+		"totaltime":1,
+		"BuffType":0,
+		"isHide":0,
+		"ShowOnlyOne":0
+	},
 	"9972002":{
 		"buffid":9972002,
 		"BuffIcon":0,
@@ -840,6 +905,66 @@
 		"looptime":1,
 		"totaltime":1,
 		"BuffType":0,
+		"isHide":0,
+		"ShowOnlyOne":0
+	},
+	"9972004":{
+		"buffid":9972004,
+		"BuffIcon":0,
+		"skillEffect":"fx_Summoner_o",
+		"name":"玉臂香肩",
+		"Affix":[
+			
+		],
+		"bufftype":3,
+		"seid":[541],
+		"descr":"增加魅力 10点",
+		"trigger":1,
+		"removeTrigger":1,
+		"script":"Buff",
+		"looptime":1,
+		"totaltime":1,
+		"BuffType":0,
+		"isHide":0,
+		"ShowOnlyOne":0
+	},
+	"9972005":{
+		"buffid":9972005,
+		"BuffIcon":0,
+		"skillEffect":"fx_Summoner_o",
+		"name":"酥手兰胸",
+		"Affix":[
+			
+		],
+		"bufftype":3,
+		"seid":[541],
+		"descr":"增加魅力 10点",
+		"trigger":1,
+		"removeTrigger":1,
+		"script":"Buff",
+		"looptime":1,
+		"totaltime":1,
+		"BuffType":0,
+		"isHide":0,
+		"ShowOnlyOne":0
+	},
+	"9972006":{
+		"buffid":9972006,
+		"BuffIcon":0,
+		"skillEffect":"fx_Summoner_o",
+		"name":"百媚生",
+		"Affix":[
+			
+		],
+		"bufftype":3,
+		"seid":[541],
+		"descr":"增加魅力 40点",
+		"trigger":5,
+		"removeTrigger":7,
+		"script":"Buff",
+		"looptime":1,
+		"totaltime":1,
+		"BuffType":1,
 		"isHide":0,
 		"ShowOnlyOne":0
 	},

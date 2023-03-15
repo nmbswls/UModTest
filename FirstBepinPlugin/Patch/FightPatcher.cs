@@ -254,6 +254,19 @@ namespace FirstBepinPlugin.Patch
         }
     }
 
+    ///// <summary>
+    ///// 技能扩展 支持更多的trigger判断条件
+    ///// </summary>
+    //[HarmonyPatch(typeof(GUIPackage.Skill), "CanRealizeSeid")]
+    //public class SkillPatcher_CanRealizeSeid
+    //{
+    //    public static void Postfix(GUIPackage.Skill __instance, ref bool __result, KBEngine.Avatar attaker, KBEngine.Avatar receiver)
+    //    {
+            
+
+    //    }
+    //}
+
     /// <summary>
     /// 技能扩展 支持更多的技能特性支持
     /// </summary>
@@ -271,7 +284,8 @@ namespace FirstBepinPlugin.Patch
                 && seid != Consts.SkillSeId_MultiTriggerByUsedTimee
                 && seid != Consts.SkillSeId_YinYi
                 && seid != Consts.SkillSeId_DiscardNonYinQiAddBuff
-                && seid != Consts.SkillSeId_ApplyHAttack)
+                && seid != Consts.SkillSeId_ApplyHAttack
+                && seid != Consts.SkillSeId_CheckFirstUse)
             {
                 return true;
             }
@@ -346,6 +360,16 @@ namespace FirstBepinPlugin.Patch
 
                     }
                     break;
+                #region check类
+
+                case Consts.SkillSeId_CheckFirstUse:
+                    {
+                        PluginMain.Main.LogInfo("Skill realizeSeid Handle realizeSeid_ApplyHAttack ");
+                        __instance.realizeSeid_CheckFirstUse(seid, damage, (KBEngine.Avatar)_attaker, (KBEngine.Avatar)_receiver, type);
+
+                    }
+                    break;
+                #endregion
             }
 
             return false;

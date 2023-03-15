@@ -299,8 +299,8 @@
 		"Affix":[],
 		"Affix2":[
 		],
-		"descr":"【后继无力】吸收8点灵气，消散其中所有的非金系灵气",
-		"TuJiandescr":"【后继无力】吸收8点灵气，消散其中所有的非金系灵气",
+		"descr":"【后继无力】吸收8点灵气，消散其中所有的非淫系灵气",
+		"TuJiandescr":"【后继无力】吸收8点灵气，消散其中所有的非淫系灵气",
 		"AttackType":[
 			0
 		],
@@ -329,90 +329,6 @@
 	},
 	"99722":{
 		"id":99722,
-		"Skill_ID":99722,
-		"Skill_Lv":1,
-		"skillEffect":"6",
-		"Skill_Type":3,
-		"name":"敛容术",
-		"qingjiaotype":7,
-		"seid":[
-			550,59,551
-		],
-		"Affix":[],
-		"Affix2":[
-		],
-		"descr":"好了，不闹了...\r\n恢复衣装、生命值，降低欲望",
-		"TuJiandescr":"好了，不闹了",
-		"AttackType":[
-			0
-		],
-		"script":"SkillSelf",
-		"HP":1,
-		"speed":0,
-		"icon":0,
-		"Skill_DisplayType":0,
-		"skill_SameCastNum":[
-			
-		],
-		"skill_CastType":[
-			5,
-		],
-		"skill_Cast":[
-			2,
-		],
-		"Skill_LV":1,
-		"typePinJie":2,
-		"DF":1,
-		"TuJianType":0,
-		"Skill_Open":1,
-		"Skill_castTime":1,
-		"canUseDistMax":30,
-		"CD":10000
-	},
-	"99723":{
-		"id":99723,
-		"Skill_ID":99723,
-		"Skill_Lv":1,
-		"skillEffect":"312",
-		"Skill_Type":3,
-		"name":"振衣诀",
-		"qingjiaotype":7,
-		"seid":[
-			550,551
-		],
-		"Affix":[],
-		"Affix2":[
-		],
-		"descr":"哎呀，全都被掀起来了",
-		"TuJiandescr":"Test普通攻击2",
-		"AttackType":[
-			0
-		],
-		"script":"SkillAttack",
-		"HP":0,
-		"speed":0,
-		"icon":0,
-		"Skill_DisplayType":0,
-		"skill_SameCastNum":[
-			
-		],
-		"skill_CastType":[
-			5,
-		],
-		"skill_Cast":[
-			2,
-		],
-		"Skill_LV":1,
-		"typePinJie":2,
-		"DF":1,
-		"TuJianType":0,
-		"Skill_Open":1,
-		"Skill_castTime":1,
-		"canUseDistMax":30,
-		"CD":10000
-	},
-	"99724":{
-		"id":99724,
 		"Skill_ID":99724,
 		"Skill_Lv":1,
 		"skillEffect":"312",
@@ -452,9 +368,9 @@
 		"canUseDistMax":30,
 		"CD":10000
 	},
-	"99725":{
-		"id":99725,
-		"Skill_ID":99725,
+	"99723":{
+		"id":99723,
+		"Skill_ID":99723,
 		"Skill_Lv":1,
 		"skillEffect":"312",
 		"Skill_Type":3,
@@ -465,13 +381,13 @@
 		"Affix":[],
 		"Affix2":[
 		],
-		"descr":"基础紫薇 增加淫气",
-		"TuJiandescr":"基础紫薇 增加淫气",
+		"descr":"提高自身6点穴兴奋度，施加3层穴引导。",
+		"TuJiandescr":"提高自身6点穴兴奋度，施加3层穴引导。",
 		"AttackType":[
 			5
 		],
 		"script":"SkillSelf",
-		"HP":1,
+		"HP":0,
 		"speed":0,
 		"icon":0,
 		"Skill_DisplayType":0,
@@ -695,6 +611,596 @@
 		"canUseDistMax":30,
 		"CD":10000
 	},
+	"99732":{
+		"id":99732,
+		"Skill_ID":99732,
+		"Skill_Lv":1,
+		"skillEffect":"300",
+		"Skill_Type":3,
+		"name":"玉臂香肩",
+		"qingjiaotype":7,
+		"seid":[
+			6,4
+		],
+		"Affix":[],
+		"Affix2":[
+		],
+		"descr":"增加魅力10点,持续三回合，效果不可叠加",
+		"TuJiandescr":"增加魅力10点,持续三回合，效果不可叠加",
+		"AttackType":[
+			5
+		],
+		"script":"SkillSelf",
+		"HP":0,
+		"speed":0,
+		"icon":0,
+		"Skill_DisplayType":0,
+		"skill_SameCastNum":[
+			2, 2
+		],
+		"skill_CastType":[
+			
+		],
+		"skill_Cast":[
+			
+		],
+		"Skill_LV":1,
+		"typePinJie":2,
+		"DF":1,
+		"TuJianType":0,
+		"Skill_Open":1,
+		"Skill_castTime":1,
+		"canUseDistMax":30,
+		"CD":10000
+	},
+	"99733":{
+		"id":99733,
+		"Skill_ID":99733,
+		"Skill_Lv":1,
+		"skillEffect":"300",
+		"Skill_Type":3,
+		"name":"酥手兰胸",
+		"qingjiaotype":7,
+		"seid":[
+			6,4
+		],
+		"Affix":[],
+		"Affix2":[
+		],
+		"descr":"增加魅力10点,持续三回合，效果不可叠加",
+		"TuJiandescr":"增加魅力10点,持续三回合，效果不可叠加",
+		"AttackType":[
+			5
+		],
+		"script":"SkillSelf",
+		"HP":0,
+		"speed":0,
+		"icon":0,
+		"Skill_DisplayType":0,
+		"skill_SameCastNum":[
+			2, 2
+		],
+		"skill_CastType":[
+			
+		],
+		"skill_Cast":[
+			
+		],
+		"Skill_LV":1,
+		"typePinJie":2,
+		"DF":1,
+		"TuJianType":0,
+		"Skill_Open":1,
+		"Skill_castTime":1,
+		"canUseDistMax":30,
+		"CD":10000
+	},
+	"99734":{
+		"id":99734,
+		"Skill_ID":99734,
+		"Skill_Lv":1,
+		"skillEffect":"300",
+		"Skill_Type":3,
+		"name":"百媚生",
+		"qingjiaotype":7,
+		"seid":[
+			6,4
+		],
+		"Affix":[],
+		"Affix2":[
+		],
+		"descr":"增加魅力40点, 效果不可叠加",
+		"TuJiandescr":"增加魅力40点, 效果不可叠加",
+		"AttackType":[
+			5
+		],
+		"script":"SkillSelf",
+		"HP":0,
+		"speed":0,
+		"icon":0,
+		"Skill_DisplayType":0,
+		"skill_SameCastNum":[
+			2, 2
+		],
+		"skill_CastType":[
+			
+		],
+		"skill_Cast":[
+			
+		],
+		"Skill_LV":1,
+		"typePinJie":2,
+		"DF":1,
+		"TuJianType":0,
+		"Skill_Open":1,
+		"Skill_castTime":1,
+		"canUseDistMax":30,
+		"CD":10000
+	},
+	"99735":{
+		"id":99735,
+		"Skill_ID":99735,
+		"Skill_Lv":1,
+		"skillEffect":"300",
+		"Skill_Type":3,
+		"name":"迷心",
+		"qingjiaotype":7,
+		"seid":[
+			6,147,4
+		],
+		"Affix":[],
+		"Affix2":[
+		],
+		"descr":"【百媚】状态下才能使用，跳过目标下个回合。",
+		"TuJiandescr":"【百媚】状态下才能使用，跳过目标下个回合。",
+		"AttackType":[
+			5
+		],
+		"script":"SkillAttack",
+		"HP":0,
+		"speed":0,
+		"icon":0,
+		"Skill_DisplayType":0,
+		"skill_SameCastNum":[
+			2,1
+		],
+		"skill_CastType":[
+			
+		],
+		"skill_Cast":[
+			
+		],
+		"Skill_LV":1,
+		"typePinJie":2,
+		"DF":1,
+		"TuJianType":0,
+		"Skill_Open":1,
+		"Skill_castTime":1,
+		"canUseDistMax":30,
+		"CD":10000
+	},
+	"99736":{
+		"id":99736,
+		"Skill_ID":99736,
+		"Skill_Lv":1,
+		"skillEffect":"300",
+		"Skill_Type":3,
+		"name":"索魂",
+		"qingjiaotype":7,
+		"seid":[
+			6,147,4
+		],
+		"Affix":[],
+		"Affix2":[
+		],
+		"descr":"【百媚】状态下才能使用。吸取目标4点灵气。",
+		"TuJiandescr":"【百媚】状态下才能使用。吸取目标4点灵气。",
+		"AttackType":[
+			5
+		],
+		"script":"SkillAttack",
+		"HP":0,
+		"speed":0,
+		"icon":0,
+		"Skill_DisplayType":0,
+		"skill_SameCastNum":[
+			2
+		],
+		"skill_CastType":[
+			
+		],
+		"skill_Cast":[
+			
+		],
+		"Skill_LV":1,
+		"typePinJie":2,
+		"DF":1,
+		"TuJianType":0,
+		"Skill_Open":1,
+		"Skill_castTime":1,
+		"canUseDistMax":30,
+		"CD":10000
+	},
+	
+	"99740":{
+		"id":99740,
+		"Skill_ID":99740,
+		"Skill_Lv":1,
+		"skillEffect":"300",
+		"Skill_Type":3,
+		"name":"翻花露蒂",
+		"qingjiaotype":7,
+		"seid":[
+			5
+		],
+		"Affix":[],
+		"Affix2":[
+		],
+		"descr":"双方欲望上升20点。【衣装】衣装低于50时才可使用",
+		"TuJiandescr":"双方欲望上升20点。【衣装】衣装低于50时才可使用",
+		"AttackType":[
+			5
+		],
+		"script":"SkillSelf",
+		"HP":0,
+		"speed":0,
+		"icon":0,
+		"Skill_DisplayType":0,
+		"skill_SameCastNum":[
+			2, 1
+		],
+		"skill_CastType":[
+			
+		],
+		"skill_Cast":[
+			
+		],
+		"Skill_LV":1,
+		"typePinJie":2,
+		"DF":1,
+		"TuJianType":0,
+		"Skill_Open":1,
+		"Skill_castTime":1,
+		"canUseDistMax":30,
+		"CD":10000
+	},
+	"99741":{
+		"id":99741,
+		"Skill_ID":99741,
+		"Skill_Lv":1,
+		"skillEffect":"300",
+		"Skill_Type":3,
+		"name":"春水泛波",
+		"qingjiaotype":7,
+		"seid":[
+			6,4
+		],
+		"Affix":[],
+		"Affix2":[
+		],
+		"descr":"获得2点淫息。",
+		"TuJiandescr":"获得2点淫息。",
+		"AttackType":[
+			5
+		],
+		"script":"SkillSelf",
+		"HP":0,
+		"speed":0,
+		"icon":0,
+		"Skill_DisplayType":0,
+		"skill_SameCastNum":[
+			
+		],
+		"skill_CastType":[
+			5
+		],
+		"skill_Cast":[
+			3
+		],
+		"Skill_LV":1,
+		"typePinJie":2,
+		"DF":1,
+		"TuJianType":0,
+		"Skill_Open":1,
+		"Skill_castTime":1,
+		"canUseDistMax":30,
+		"CD":10000
+	},
+	"99743":{
+		"id":99743,
+		"Skill_ID":99743,
+		"Skill_Lv":1,
+		"skillEffect":"300",
+		"Skill_Type":3,
+		"name":"兰息术",
+		"qingjiaotype":7,
+		"seid":[
+			6,4
+		],
+		"Affix":[],
+		"Affix2":[
+		],
+		"descr":"使目标吸收1点淫灵气",
+		"TuJiandescr":"使目标吸收1点淫灵气",
+		"AttackType":[
+			5
+		],
+		"script":"SkillAttack",
+		"HP":0,
+		"speed":0,
+		"icon":0,
+		"Skill_DisplayType":0,
+		"skill_SameCastNum":[
+			2
+		],
+		"skill_CastType":[
+			
+		],
+		"skill_Cast":[
+			
+		],
+		"Skill_LV":1,
+		"typePinJie":2,
+		"DF":1,
+		"TuJianType":0,
+		"Skill_Open":1,
+		"Skill_castTime":1,
+		"canUseDistMax":30,
+		"CD":10000
+	},
+	"99744":{
+		"id":99744,
+		"Skill_ID":99744,
+		"Skill_Lv":1,
+		"skillEffect":"300",
+		"Skill_Type":3,
+		"name":"吻耳",
+		"qingjiaotype":7,
+		"seid":[
+			6,4
+		],
+		"Affix":[],
+		"Affix2":[
+		],
+		"descr":"施加【痒】*2",
+		"TuJiandescr":"施加【痒】*2",
+		"AttackType":[
+			5
+		],
+		"script":"SkillAttack",
+		"HP":0,
+		"speed":0,
+		"icon":0,
+		"Skill_DisplayType":0,
+		"skill_SameCastNum":[
+			2
+		],
+		"skill_CastType":[
+			
+		],
+		"skill_Cast":[
+			
+		],
+		"Skill_LV":1,
+		"typePinJie":2,
+		"DF":1,
+		"TuJianType":0,
+		"Skill_Open":1,
+		"Skill_castTime":1,
+		"canUseDistMax":30,
+		"CD":10000
+	},
+	"99745":{
+		"id":99745,
+		"Skill_ID":99745,
+		"Skill_Lv":1,
+		"skillEffect":"300",
+		"Skill_Type":3,
+		"name":"濡湿耳语",
+		"qingjiaotype":7,
+		"seid":[
+			6,4
+		],
+		"Affix":[],
+		"Affix2":[
+		],
+		"descr":"欲望上升5点，施加【痒】*2，目标吸收1点淫灵气",
+		"TuJiandescr":"欲望上升5点，施加【痒】*2，目标吸收1点淫灵气",
+		"AttackType":[
+			5
+		],
+		"script":"SkillSelf",
+		"HP":0,
+		"speed":0,
+		"icon":0,
+		"Skill_DisplayType":0,
+		"skill_SameCastNum":[
+			2, 2
+		],
+		"skill_CastType":[
+			
+		],
+		"skill_Cast":[
+			
+		],
+		"Skill_LV":1,
+		"typePinJie":2,
+		"DF":1,
+		"TuJianType":0,
+		"Skill_Open":1,
+		"Skill_castTime":1,
+		"canUseDistMax":30,
+		"CD":10000
+	},
+	"99746":{
+		"id":99746,
+		"Skill_ID":99746,
+		"Skill_Lv":1,
+		"skillEffect":"300",
+		"Skill_Type":3,
+		"name":"褪衣",
+		"qingjiaotype":7,
+		"seid":[
+			6,4
+		],
+		"Affix":[],
+		"Affix2":[
+		],
+		"descr":"消耗50层衣装，增加12点欲望，只能在衣装高于50时使用。",
+		"TuJiandescr":"消耗50层衣装，增加12点欲望，只能在衣装高于50时使用。",
+		"AttackType":[
+			5
+		],
+		"script":"SkillSelf",
+		"HP":0,
+		"speed":0,
+		"icon":0,
+		"Skill_DisplayType":0,
+		"skill_SameCastNum":[
+			2, 2
+		],
+		"skill_CastType":[
+			
+		],
+		"skill_Cast":[
+			
+		],
+		"Skill_LV":1,
+		"typePinJie":2,
+		"DF":1,
+		"TuJianType":0,
+		"Skill_Open":1,
+		"Skill_castTime":1,
+		"canUseDistMax":30,
+		"CD":10000
+	},
+	"99747":{
+		"id":99747,
+		"Skill_ID":99747,
+		"Skill_Lv":1,
+		"skillEffect":"300",
+		"Skill_Type":3,
+		"name":"点绛唇",
+		"qingjiaotype":7,
+		"seid":[
+			6,4,31
+		],
+		"Affix":[],
+		"Affix2":[
+		],
+		"descr":"施加5点欲望。增加自身口兴奋度6点。",
+		"TuJiandescr":"施加5点欲望。增加自身口兴奋度6点。",
+		"AttackType":[
+			5
+		],
+		"script":"SkillSelf",
+		"HP":0,
+		"speed":0,
+		"icon":0,
+		"Skill_DisplayType":0,
+		"skill_SameCastNum":[
+			2, 2
+		],
+		"skill_CastType":[
+			
+		],
+		"skill_Cast":[
+			
+		],
+		"Skill_LV":1,
+		"typePinJie":2,
+		"DF":1,
+		"TuJianType":0,
+		"Skill_Open":1,
+		"Skill_castTime":1,
+		"canUseDistMax":30,
+		"CD":10000
+	},
+	"99748":{
+		"id":99748,
+		"Skill_ID":99748,
+		"Skill_Lv":1,
+		"skillEffect":"300",
+		"Skill_Type":3,
+		"name":"点荷尖",
+		"qingjiaotype":7,
+		"seid":[
+			6,4,31
+		],
+		"Affix":[],
+		"Affix2":[
+		],
+		"descr":"施加5点欲望。增加自身乳兴奋度6点。",
+		"TuJiandescr":"施加5点欲望。增加自身乳兴奋度6点。",
+		"AttackType":[
+			5
+		],
+		"script":"SkillSelf",
+		"HP":0,
+		"speed":0,
+		"icon":0,
+		"Skill_DisplayType":0,
+		"skill_SameCastNum":[
+			2, 2
+		],
+		"skill_CastType":[
+			
+		],
+		"skill_Cast":[
+			
+		],
+		"Skill_LV":1,
+		"typePinJie":2,
+		"DF":1,
+		"TuJianType":0,
+		"Skill_Open":1,
+		"Skill_castTime":1,
+		"canUseDistMax":30,
+		"CD":10000
+	},
+	
+	"99761":{
+		"id":99761,
+		"Skill_ID":99761,
+		"Skill_Lv":1,
+		"skillEffect":"300",
+		"Skill_Type":3,
+		"name":"点荷尖",
+		"qingjiaotype":7,
+		"seid":[
+			6,4,31
+		],
+		"Affix":[],
+		"Affix2":[
+		],
+		"descr":"施加5点欲望。增加自身乳兴奋度6点。",
+		"TuJiandescr":"施加5点欲望。增加自身乳兴奋度6点。",
+		"AttackType":[
+			5
+		],
+		"script":"SkillSelf",
+		"HP":0,
+		"speed":0,
+		"icon":0,
+		"Skill_DisplayType":0,
+		"skill_SameCastNum":[
+			2, 2
+		],
+		"skill_CastType":[
+			
+		],
+		"skill_Cast":[
+			
+		],
+		"Skill_LV":1,
+		"typePinJie":2,
+		"DF":1,
+		"TuJianType":0,
+		"Skill_Open":1,
+		"Skill_castTime":1,
+		"canUseDistMax":30,
+		"CD":10000
+	}
 	"99798":{
 		"id":99798,
 		"Skill_ID":99798,

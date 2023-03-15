@@ -76,7 +76,9 @@ namespace FirstBepinPlugin
         public const int BuffId_FlagMeiLi1 = 9971262; // flag 魅力等级 2
         public const int BuffId_FlagMeiLi2 = 9971263; // flag 魅力等级 3
         public const int BuffId_FlagMeiLi3 = 9971264; // flag 魅力等级 4
-        public const int BuffId_FlagMeiLi4 = 9971264; // flag 魅力等级 5
+        public const int BuffId_FlagMeiLi4 = 9971265; // flag 魅力等级 5
+
+        public const int BuffId_GuideXue = 9971261; // flag 魅力等级 1
 
         #endregion
 
@@ -146,6 +148,7 @@ namespace FirstBepinPlugin
 
         public const int SkillSeId_MultiTriggerByUsedTimee = 598; // 根据本回合使用次数改变后续触发次数 初始触发p1次 每次连续使用效果减少触发p2次 最低触发p3次 最高触发p4次
         public const int SkillSeId_CheckNotWuLi = 597; // 特殊seid 检查退出HMode的条件
+        public const int SkillSeId_CheckFirstUse = 596; // 检查 是否第一次使用
 
         public const int SkillSeId_EnterHMode = 599;
     }

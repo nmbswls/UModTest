@@ -181,6 +181,15 @@ namespace FirstBepinPlugin
         {
             SecretsSystem.FightManager.ApplyHAttack(skill.skill_ID);
         }
+
+        public static void realizeSeid_CheckFirstUse(this GUIPackage.Skill skill, int seid, List<int> damage, KBEngine.Avatar attaker, KBEngine.Avatar receiver, int type)
+        {
+            // 使用过就截断
+            if(attaker.UsedSkills.Contains(skill.skill_ID))
+            {
+                damage[2] = 1;
+            }
+        }
     }
 
     public static class AvatarEx
@@ -297,7 +306,7 @@ namespace FirstBepinPlugin
                     }
 
                     var configInfo = jSONObject[buffId.ToString()];
-                    // 与层数相关的魅力加成
+                    // 与层数相关的加成
                     if(configInfo.HasField("value1"))
                     {
                         addVal += (long)configInfo["value1"].f * Consts.Float2Int100 * buffLayer;

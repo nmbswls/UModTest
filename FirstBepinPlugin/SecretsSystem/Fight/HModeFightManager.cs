@@ -1249,6 +1249,11 @@ namespace FirstBepinPlugin
             return "";
         }
 
+        public int GetResistYinLingQiCost()
+        {
+            return 4;
+        }
+
         #endregion
     }
 
@@ -1263,6 +1268,15 @@ namespace FirstBepinPlugin
         public int GetSelfYuWang()
         {
             return (int)(SecretsSystem.FightManager.Ctx.YuWang / Consts.Float2Int100);
+        }
+
+        public int GetYinLingQiCount()
+        {
+            return SecretsSystem.FightManager.Player.cardMag.getCardTypeNum(5);
+        }
+        public int GetResistYinLingQiCost()
+        {
+            return SecretsSystem.FightManager.GetResistYinLingQiCost();
         }
     }
 }

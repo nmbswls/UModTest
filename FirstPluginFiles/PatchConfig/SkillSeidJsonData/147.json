@@ -6,4 +6,20 @@
 		"panduan":">",
 		"value2":0
 	},
+	"99735":{
+		"skillid":99735,
+		"target":1,
+		"value1":9972006,
+		"panduan":">",
+		"value2":0,
+		"comment":"检查只有百媚状态下可以使用"
+	},
+	"99736":{
+		"skillid":99736,
+		"target":1,
+		"value1":9972006,
+		"panduan":">",
+		"value2":0,
+		"comment":"检查只有百媚状态下可以使用"
+	},
 }
