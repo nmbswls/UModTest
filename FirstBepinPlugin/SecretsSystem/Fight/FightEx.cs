@@ -47,9 +47,18 @@ namespace FirstBepinPlugin
         }
         public static void ListRealizeSeid_ModXingFen(this KBEngine.Buff buff, int seid, KBEngine.Avatar avatar, List<int> buffInfo, List<int> flag)
         {
-            int targetPart = buff.getSeidJson(seid)["value1"].I;
-            float val = buff.getSeidJson(seid)["value2"].f * buffInfo[1];
-            SecretsSystem.FightManager.Ctx.ModXingFen(1, val);
+            var config = buff.getSeidJson(seid);
+            int targetPart = config["part"].I;
+            float val = 0;
+            if (config.HasField("value1"))
+            {
+                val = config["value1"].f * buffInfo[1];
+            }
+            if(config.HasField("value2"))
+            {
+                val = config["value2"].f ;
+            }
+            SecretsSystem.FightManager.Ctx.ModXingFen(targetPart, val);
         }
         //public void ListRealizeSeid9(int seid, Avatar avatar, List<int> buffInfo, List<int> flag)
         //{

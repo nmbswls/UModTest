@@ -418,6 +418,106 @@
 		"isHide":0,
 		"ShowOnlyOne":0
 	},
+	"9971236":{
+		"buffid":9971236,
+		"BuffIcon":0,
+		"skillEffect":"fx_Summoner_o",
+		"name":"倾向-体",
+		"Affix":[
+			
+		],
+		"bufftype":3,
+		"seid":[],
+		"descr":"积累达到6层后，将切换体位。",
+		"trigger":5,
+		"removeTrigger":7,
+		"script":"Buff",
+		"looptime":1,
+		"totaltime":1,
+		"BuffType":0,
+		"isHide":0,
+		"ShowOnlyOne":0
+	},
+	"9971237":{
+		"buffid":9971237,
+		"BuffIcon":0,
+		"skillEffect":"fx_Summoner_o",
+		"name":"倾向-口",
+		"Affix":[
+			
+		],
+		"bufftype":3,
+		"seid":[],
+		"descr":"积累达到6层后，将切换体位。",
+		"trigger":5,
+		"removeTrigger":7,
+		"script":"Buff",
+		"looptime":1,
+		"totaltime":1,
+		"BuffType":0,
+		"isHide":0,
+		"ShowOnlyOne":0
+	},
+	"9971238":{
+		"buffid":9971238,
+		"BuffIcon":0,
+		"skillEffect":"fx_Summoner_o",
+		"name":"倾向-乳",
+		"Affix":[
+			
+		],
+		"bufftype":3,
+		"seid":[],
+		"descr":"积累达到6层后，将切换体位。",
+		"trigger":5,
+		"removeTrigger":7,
+		"script":"Buff",
+		"looptime":1,
+		"totaltime":1,
+		"BuffType":0,
+		"isHide":0,
+		"ShowOnlyOne":0
+	},
+	"9971239":{
+		"buffid":9971239,
+		"BuffIcon":0,
+		"skillEffect":"fx_Summoner_o",
+		"name":"倾向-穴",
+		"Affix":[
+			
+		],
+		"bufftype":3,
+		"seid":[],
+		"descr":"积累达到6层后，将切换体位。",
+		"trigger":5,
+		"removeTrigger":7,
+		"script":"Buff",
+		"looptime":1,
+		"totaltime":1,
+		"BuffType":0,
+		"isHide":0,
+		"ShowOnlyOne":0
+	},
+	"9971240":{
+		"buffid":9971240,
+		"BuffIcon":0,
+		"skillEffect":"fx_Summoner_o",
+		"name":"倾向-肛",
+		"Affix":[
+			
+		],
+		"bufftype":3,
+		"seid":[],
+		"descr":"积累达到6层后，将切换体位。",
+		"trigger":5,
+		"removeTrigger":7,
+		"script":"Buff",
+		"looptime":1,
+		"totaltime":1,
+		"BuffType":0,
+		"isHide":0,
+		"ShowOnlyOne":0
+	},
 	
 	"9971241":{
 		"buffid":9971241,
@@ -867,6 +967,88 @@
 		"isHide":0,
 		"ShowOnlyOne":0
 	},
+	"9971804":{
+		"buffid":9971804,
+		"BuffIcon":0,
+		"skillEffect":"fx_Summoner_o",
+		"name":"立即增加口兴奋并移除自身",
+		"Affix":[
+			
+		],
+		"bufftype":3,
+		"seid":[596],
+		"descr":"",
+		"trigger":12,
+		"removeTrigger":2,
+		"script":"Buff",
+		"looptime":1,
+		"totaltime":1,
+		"BuffType":0,
+		"isHide":0,
+		"ShowOnlyOne":0
+	},
+	"9971805":{
+		"buffid":9971805,
+		"BuffIcon":0,
+		"skillEffect":"fx_Summoner_o",
+		"name":"立即增加口兴奋并移除自身",
+		"Affix":[
+			
+		],
+		"bufftype":3,
+		"seid":[596],
+		"descr":"",
+		"trigger":12,
+		"removeTrigger":2,
+		"script":"Buff",
+		"looptime":1,
+		"totaltime":1,
+		"BuffType":0,
+		"isHide":0,
+		"ShowOnlyOne":0
+	},
+	"9971806":{
+		"buffid":9971806,
+		"BuffIcon":0,
+		"skillEffect":"fx_Summoner_o",
+		"name":"立即增加口兴奋并移除自身",
+		"Affix":[
+			
+		],
+		"bufftype":3,
+		"seid":[596],
+		"descr":"",
+		"trigger":12,
+		"removeTrigger":2,
+		"script":"Buff",
+		"looptime":1,
+		"totaltime":1,
+		"BuffType":0,
+		"isHide":0,
+		"ShowOnlyOne":0
+	},
+	"9971807":{
+		"buffid":9971807,
+		"BuffIcon":0,
+		"skillEffect":"fx_Summoner_o",
+		"name":"立即增加口兴奋并移除自身",
+		"Affix":[
+			
+		],
+		"bufftype":3,
+		"seid":[596],
+		"descr":"",
+		"trigger":12,
+		"removeTrigger":2,
+		"script":"Buff",
+		"looptime":1,
+		"totaltime":1,
+		"BuffType":0,
+		"isHide":0,
+		"ShowOnlyOne":0
+	},
+	
+	
 	"9972002":{
 		"buffid":9972002,
 		"BuffIcon":0,

@@ -65,6 +65,12 @@ namespace FirstBepinPlugin
         public const int BuffId_FlagWantXue   = 9971234; // flag 准备进入 Xue
         public const int BuffId_FlagWantGang  = 9971235; // flag 准备进入 Gang
 
+        public const int BuffId_GuideShou     = 9971236; // flag 准备进入 Shou 2
+        public const int BuffId_GuideKou      = 9971237; // flag 准备进入 Kou 2
+        public const int BuffId_GuideRu       = 9971238; // flag 准备进入 Ru 2
+        public const int BuffId_GuideXue      = 9971239; // flag 准备进入 Xue 2
+        public const int BuffId_GuideGang     = 9971240; // flag 准备进入 Gang 2
+
         public const int BuffId_FlagYiZhuang0 = 9971241; // flag 衣装0
         public const int BuffId_FlagYiZhuang1 = 9971242; // flag 衣装1
         public const int BuffId_FlagYiZhuang2 = 9971243; // flag 衣装2
@@ -78,13 +84,13 @@ namespace FirstBepinPlugin
         public const int BuffId_FlagMeiLi3 = 9971264; // flag 魅力等级 4
         public const int BuffId_FlagMeiLi4 = 9971265; // flag 魅力等级 5
 
-        public const int BuffId_GuideXue = 9971261; // flag 魅力等级 1
-
+        
         #endregion
 
         #region 机制 9971400 - 9971600
 
         public const int BuffId_JiaoHe = 9971400; // 交合类技能 减少行动点
+        public const int BuffId_JingYu = 9971401; // 精浴覆盖
 
         #endregion
 
@@ -101,6 +107,12 @@ namespace FirstBepinPlugin
         public const int BuffId_AddYinLingQi = 9971800; // 一次性效果 增加等同于层数的淫灵气
         public const int BuffId_AddCertainWuXingLingQi = 9971801; // 一次性效果 增加等同于层数的自选灵气
         public const int BuffId_AddYuWang = 9971802; // 一次性效果 增加等同于层数的欲望
+        public const int BuffId_StealLingQi = 9971803; // 一次性效果 偷取层数的灵气
+        
+        public const int BuffId_AddXingFen_Kou = 9971804; // 一次性效果 增加等同于层数的兴奋 口
+        public const int BuffId_AddXingFen_Ru = 9971805; // 一次性效果 增加等同于层数的兴奋 口
+        public const int BuffId_AddXingFen_Xue = 9971806; // 一次性效果 增加等同于层数的兴奋 口
+        public const int BuffId_AddXingFen_Gang = 9971807; // 一次性效果 增加等同于层数的兴奋 口
         #endregion
 
 
@@ -118,13 +130,11 @@ namespace FirstBepinPlugin
         //public const int BuffSeId_SwitchOutHMode = 596; // 特殊效果 进入Hmode
         public const int BuffSeId_ModYiZhuang = 594; // 改变衣装 p1 每层加多少 p2 非0时固定增加 无关层数
         public const int BuffSeId_ModYuWang = 595; // 增加欲望 p1 每层加多少 p2 非0时固定增加 无关层数
-
+        public const int BuffSeId_ModXingFen = 596; // 增加欲望 part 部位 value1 每层加多少 value2 非0时固定增加 无关层数
 
         //public const int BuffSeId_CheckIntoYinNormal = 901; // 特殊seid 检查进入yinzhan的条件
         //public const int BuffSeId_CheckIntoYinShou = 902; // 特殊seid 检查进入yinzhan手的条件
 
-        
-        public const int SkillSeId_SwitchOutHMode = 596; // 特殊效果 脱离Hmode
 
         // bonus
         public const int BuffSeId_ModMaxYizhuang = 540; // 改变衣装最大值

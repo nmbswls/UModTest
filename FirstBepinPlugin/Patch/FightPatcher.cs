@@ -156,7 +156,8 @@ namespace FirstBepinPlugin.Patch
         public static bool Prefix(KBEngine.Buff __instance, int seid, Entity _avatar, List<int> buffInfo, List<int> flag)
         {
             if (seid != Consts.BuffSeId_ModYuWang
-                && seid != Consts.BuffSeId_ModYiZhuang)
+                && seid != Consts.BuffSeId_ModYiZhuang
+                && seid != Consts.BuffSeId_ModXingFen)
             {
                 return true;
             }
@@ -175,7 +176,14 @@ namespace FirstBepinPlugin.Patch
                         __instance.ListRealizeSeid_ModYiZhuang(seid, (KBEngine.Avatar)_avatar, buffInfo, flag);
                     }
                     break;
+                case Consts.BuffSeId_ModXingFen:
+                    {
+                        PluginMain.Main.LogInfo("Buff loopRealizeSeid Handle ListRealizeSeid_ModXingFen ");
+                        __instance.ListRealizeSeid_ModXingFen(seid, (KBEngine.Avatar)_avatar, buffInfo, flag);
+                    }
+                    break;
             }
+
 
             return false;
         }
