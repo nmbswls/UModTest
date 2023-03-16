@@ -22,4 +22,29 @@
 		"value2":0,
 		"comment":"检查只有百媚状态下可以使用"
 	},
+	"99765":{
+		"skillid":99765,
+		"target":1,
+		"value1":9972007,
+		"panduan":">",
+		"value2":0,
+		"comment":"检查只有聚乳下可以使用"
+	},
+	"99770":{
+		"skillid":99770,
+		"target":1,
+		"value1":9971236,
+		"panduan":">",
+		"value2":3,
+		"comment":"手引导大于3层"
+	},
+	
+	"99775":{
+		"skillid":99775,
+		"target":1,
+		"value1":9972009,
+		"panduan":">",
+		"value2":0,
+		"comment":"正路大于0"
+	},
 }

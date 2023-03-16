@@ -60,6 +60,38 @@ namespace FirstBepinPlugin
             }
             SecretsSystem.FightManager.Ctx.ModXingFen(targetPart, val);
         }
+
+        public static void ListRealizeSeid_ModTiLi(this KBEngine.Buff buff, int seid, KBEngine.Avatar avatar, List<int> buffInfo, List<int> flag)
+        {
+            var config = buff.getSeidJson(seid);
+            float val = 0;
+            if (config.HasField("value1"))
+            {
+                val = config["value1"].f * buffInfo[1];
+            }
+            if (config.HasField("value2"))
+            {
+                val = config["value2"].f;
+            }
+            SecretsSystem.FightManager.Ctx.ModTiLi(val);
+        }
+
+        public static void ListRealizeSeid_ModKuaiGan(this KBEngine.Buff buff, int seid, KBEngine.Avatar avatar, List<int> buffInfo, List<int> flag)
+        {
+            var config = buff.getSeidJson(seid);
+            float val = 0;
+            if (config.HasField("value1"))
+            {
+                val = config["value1"].f * buffInfo[1];
+            }
+            if (config.HasField("value2"))
+            {
+                val = config["value2"].f;
+            }
+            SecretsSystem.FightManager.Ctx.ModKuaiGan(avatar, val);
+        }
+        
+
         //public void ListRealizeSeid9(int seid, Avatar avatar, List<int> buffInfo, List<int> flag)
         //{
         //    int num = getSeidJson(seid)["value2"].I * buffInfo[1];
@@ -195,6 +227,23 @@ namespace FirstBepinPlugin
         {
             // 使用过就截断
             if(attaker.UsedSkills.Contains(skill.skill_ID))
+            {
+                damage[2] = 1;
+            }
+        }
+        public static void realizeSeid_CheckTargetNotFaQing(this GUIPackage.Skill skill, int seid, List<int> damage, KBEngine.Avatar attaker, KBEngine.Avatar receiver, int type)
+        {
+            // 发情时截断
+            if(SecretsSystem.FightManager.Ctx.IsTargetFaQing(receiver))
+            {
+                damage[2] = 1;
+            }
+        }
+
+        public static void realizeSeid_CheckTargetFaQing(this GUIPackage.Skill skill, int seid, List<int> damage, KBEngine.Avatar attaker, KBEngine.Avatar receiver, int type)
+        {
+            // 未发情时截断
+            if (!SecretsSystem.FightManager.Ctx.IsTargetFaQing(receiver))
             {
                 damage[2] = 1;
             }
@@ -337,11 +386,11 @@ namespace FirstBepinPlugin
         /// <param name="buffId"></param>
         public static void ClearWantBuffs(this KBEngine.Avatar target)
         {
-            target.buffmag.RemoveBuff(Consts.BuffId_FlagWantShou);
-            target.buffmag.RemoveBuff(Consts.BuffId_FlagWantKou);
-            target.buffmag.RemoveBuff(Consts.BuffId_FlagWantRu);
-            target.buffmag.RemoveBuff(Consts.BuffId_FlagWantXue);
-            target.buffmag.RemoveBuff(Consts.BuffId_FlagWantGang);
+            target.buffmag.RemoveBuff(Consts.BuffId_WantShou);
+            target.buffmag.RemoveBuff(Consts.BuffId_WantKou);
+            target.buffmag.RemoveBuff(Consts.BuffId_WantRu);
+            target.buffmag.RemoveBuff(Consts.BuffId_WantXue);
+            target.buffmag.RemoveBuff(Consts.BuffId_WantGang);
         }
 
         /// <summary>
@@ -431,65 +480,65 @@ namespace FirstBepinPlugin
         public static HModeTiWei GetCurrWantingTiwei(this KBEngine.Avatar target)
         {
             // 如果身上带着buff 移除并进入
-            if (!target.buffmag.HasBuff(Consts.BuffId_FlagWantShou)
-                && !target.buffmag.HasBuff(Consts.BuffId_FlagWantKou)
-                && !target.buffmag.HasBuff(Consts.BuffId_FlagWantRu)
-                && !target.buffmag.HasBuff(Consts.BuffId_FlagWantXue)
-                && !target.buffmag.HasBuff(Consts.BuffId_FlagWantGang))
+            if (!target.buffmag.HasBuff(Consts.BuffId_WantShou)
+                && !target.buffmag.HasBuff(Consts.BuffId_WantKou)
+                && !target.buffmag.HasBuff(Consts.BuffId_WantRu)
+                && !target.buffmag.HasBuff(Consts.BuffId_WantXue)
+                && !target.buffmag.HasBuff(Consts.BuffId_WantGang))
             {
                 return HModeTiWei.None;
             }
 
-            if (target.buffmag.HasBuff(Consts.BuffId_FlagWantShou))
+            if (target.buffmag.HasBuff(Consts.BuffId_WantShou))
             {
                 return HModeTiWei.Shou;
             }
-            else if (target.buffmag.HasBuff(Consts.BuffId_FlagWantKou))
+            else if (target.buffmag.HasBuff(Consts.BuffId_WantKou))
             {
                 return HModeTiWei.Kou;
             }
-            else if (target.buffmag.HasBuff(Consts.BuffId_FlagWantRu))
+            else if (target.buffmag.HasBuff(Consts.BuffId_WantRu))
             {
                 return HModeTiWei.Ru;
             }
-            else if (target.buffmag.HasBuff(Consts.BuffId_FlagWantXue))
+            else if (target.buffmag.HasBuff(Consts.BuffId_WantXue))
             {
                 return HModeTiWei.Xue;
             }
-            else if (target.buffmag.HasBuff(Consts.BuffId_FlagWantGang))
+            else if (target.buffmag.HasBuff(Consts.BuffId_WantGang))
             {
                 return HModeTiWei.Gang;
             }
             return HModeTiWei.None;
         }
 
-        public static int GetTiWeiWantBuffId(this KBEngine.Avatar target, HModeTiWei tiwei)
+        public static int AddTiWeiGuideBuff(this KBEngine.Avatar target, HModeTiWei tiwei)
         {
             switch (tiwei)
             {
                 case HModeTiWei.Shou:
                 {
-                    target.SetHasBuff(Consts.BuffId_FlagWantShou);
+                    target.spell.addBuff(Consts.BuffId_GuideShou, 1);
                     break;
                 }
                 case HModeTiWei.Kou:
                 {
-                    target.SetHasBuff(Consts.BuffId_FlagWantKou);
+                    target.spell.addBuff(Consts.BuffId_GuideKou, 1);
                     break;
                 }
                 case HModeTiWei.Ru:
                 {
-                    target.SetHasBuff(Consts.BuffId_FlagWantRu);
+                    target.spell.addBuff(Consts.BuffId_GuideRu, 1);
                     break;
                 }
                 case HModeTiWei.Xue:
                 {
-                    target.SetHasBuff(Consts.BuffId_FlagWantXue);
+                    target.spell.addBuff(Consts.BuffId_GuideXue, 1);
                     break;
                 }
                 case HModeTiWei.Gang:
                 {
-                    target.SetHasBuff(Consts.BuffId_FlagWantGang);
+                    target.spell.addBuff(Consts.BuffId_GuideGang, 1);
                     break;
                 }
             }

@@ -29,6 +29,7 @@ namespace FirstBepinPlugin.Config
         EnemyYuWang,
         TiWei,
         IsJueDing,
+        XingFen,
         Max,
     }
 
@@ -55,8 +56,8 @@ namespace FirstBepinPlugin.Config
     {
         None,
         Shou,
-        Ru,
         Kou,
+        Ru,
         Xue,
         Gang,
         Max,
@@ -72,6 +73,18 @@ namespace FirstBepinPlugin.Config
 
     public static class StaticConfigContainer
     {
+        public static Dictionary<int, List<int>> s_SkillGroupSkills = new Dictionary<int, List<int>>()
+        {
+            { 1, new List<int>(){ 99721, 99722, 99726 , 99761 , 99762, 99763, 99764, 99765, 99766, 99767, 99768, 99770 } }, //普通发情
+            { 100, new List<int>(){ 99771, 99772, 99773, 99774 , 99775 } }, // 体位-体
+            { 101, new List<int>(){ 99771, 99772, 99773, } }, // 体位-口
+            { 103, new List<int>(){ 99771, 99772, 99773, } }, // 体位-乳
+            { 104, new List<int>(){ 99771, 99772, 99773, } }, // 体位-穴
+            { 105, new List<int>(){ 99771, 99772, 99773, } }, // 体位-肛
+            { 3, new List<int>(){ 99798 } }, // 绝顶
+        };
+
+
         public static int[] s_Jingjie2HAtk = new int[] { 5, 8, 14, 28, 50, 50, 50};
 
         public static int GetHAtkByJingjie(int jingjie)
@@ -189,32 +202,35 @@ namespace FirstBepinPlugin.Config
         {
             new ConfigTiWeiSwitchInfo()
             {
-                Id = 0,
-                Conditions = new List<Tuple4>(){ new Tuple4() { P1 = 1, P2 = 3, P3 = 3}},
+                Id = 1,
                 TargetTiWei = (int)HModeTiWei.Shou,
             },
             new ConfigTiWeiSwitchInfo()
             {
-                Id = 1,
-                Conditions = new List<Tuple4>(),
-                TargetTiWei = (int)HModeTiWei.Ru,
-            },
-            new ConfigTiWeiSwitchInfo()
-            {
                 Id = 2,
-                Conditions = new List<Tuple4>(),
+                Conditions = new List<Tuple4>(){ new Tuple4() { P1 = 1, P2 = 3, P3 = 80},
+                    new Tuple4() { P1 = 6, P2 = 1, P3 = 1, P4 = 20}},
                 TargetTiWei = (int)HModeTiWei.Kou,
             },
             new ConfigTiWeiSwitchInfo()
             {
                 Id = 3,
-                Conditions = new List<Tuple4>(),
-                TargetTiWei = (int)HModeTiWei.Gang,
+                Conditions = new List<Tuple4>(){ new Tuple4() { P1 = 1, P2 = 3, P3 = 50},
+                    new Tuple4() { P1 = 6, P2 = 2, P3 = 1, P4 = 20}},
+                TargetTiWei = (int)HModeTiWei.Ru,
             },
             new ConfigTiWeiSwitchInfo()
             {
                 Id = 4,
-                Conditions = new List<Tuple4>(),
+                Conditions = new List<Tuple4>(){ new Tuple4() { P1 = 1, P2 = 3, P3 = 0},
+                    new Tuple4() { P1 = 6, P2 = 3, P3 = 1, P4 = 50}},
+                TargetTiWei = (int)HModeTiWei.Gang,
+            },
+            new ConfigTiWeiSwitchInfo()
+            {
+                Id = 5,
+                Conditions = new List<Tuple4>(){ new Tuple4() { P1 = 1, P2 = 3, P3 = 20},
+                    new Tuple4() { P1 = 6, P2 = 4, P3 = 1, P4 = 20}},
                 TargetTiWei = (int)HModeTiWei.Xue,
             },
         };

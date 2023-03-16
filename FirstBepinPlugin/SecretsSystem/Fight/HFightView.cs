@@ -68,124 +68,52 @@ namespace FirstBepinPlugin
     public class FightUISkillTabController : MonoBehaviour
     {
         public HModeFightManager Owner;
-        public UnityEngine.Transform TabRoot;
-        public UnityEngine.GameObject ToggleTemplate;
 
-        private class ToggleWrapper
-        {
-            public int TabIdx;
-            public int SkillGroupId;
-            public UnityEngine.GameObject Go;
-            public Toggle CompToggle;
-            public Text CompText;
-        }
+        public Button LeftButton;
+        public Button RightButton;
+        public Text TabIndexText;
 
-        private List<ToggleWrapper> m_currToggleList = new List<ToggleWrapper>();
-        private Queue<ToggleWrapper> m_cachedToggles = new Queue<ToggleWrapper>();
+        public int m_currSelectIdx = 0;
+        protected List<int> m_cachedSkillList = new List<int>();
 
-
-        public int m_currSelectIdx = -1;
-
-        public bool m_isWuLi = false;
         public void Init(HModeFightManager owner)
         {
             this.Owner = owner;
-            TabRoot = gameObject.transform.GetChild(0);
-            ToggleTemplate = gameObject.transform.Find("TabTemplate").gameObject;
+
+            LeftButton = transform.Find("LeftButton").GetComponent<Button>();
+            RightButton = transform.Find("RightButton").GetComponent<Button>();
+            TabIndexText = transform.Find("TabIndexText").GetComponent<Text>();
+
+            LeftButton.onClick.AddListener(PrePage);
+            RightButton.onClick.AddListener(NextPage);
+        }
+
+        public void NextPage()
+        {
+            m_currSelectIdx--;
+            RefreshUI();
+        }
+        public void PrePage()
+        {
+            m_currSelectIdx++;
+            RefreshUI();
         }
 
         public void RefreshUI()
         {
+            Owner.SwitchSkill(m_cachedSkillList, m_currSelectIdx);
+        }
 
-            while (m_currToggleList.Count > 0)
-            {
-                var firstWrapper = m_currToggleList[0];
-                firstWrapper.Go.SetActive(false);
-                m_cachedToggles.Enqueue(firstWrapper);
-                m_currToggleList.RemoveAt(0);
-            }
-
-            var skillGroupList = Owner.GetCurrSkillGroupList();
-            for (int i = 0; i < skillGroupList.Count; i++)
-            {
-                ToggleWrapper toggleWrapper;
-                if (m_cachedToggles.Count > 0)
-                {
-                    toggleWrapper = m_cachedToggles.Dequeue();
-                }
-                else
-                {
-                    var newGo = UnityEngine.GameObject.Instantiate(ToggleTemplate, TabRoot);
-                    var toggle = newGo.GetComponent<Toggle>();
-                    var textComp = newGo.GetComponentInChildren<Text>();
-                    textComp.font = PluginMain.Main.font_YaHei;
-                    toggleWrapper = new ToggleWrapper()
-                    {
-                        SkillGroupId = 0,
-                        CompToggle = toggle,
-                        CompText = textComp,
-                        Go = newGo,
-                    };
-                    var listener = newGo.AddComponent<FightUIPointerListener>();
-                    listener.EventOnPointerEnter += delegate ()
-                    {
-                        OnTogglePointerEnter(toggleWrapper);
-                    };
-
-                    listener.EventOnPointerExit += delegate ()
-                    {
-                        OnTogglePointerExit(toggleWrapper);
-                    };
-
-                    toggle.onValueChanged.AddListener(delegate (bool isOn)
-                    {
-                        OnToggleValueChange(toggleWrapper);
-                    });
-                }
-                toggleWrapper.TabIdx = i;
-                toggleWrapper.SkillGroupId = skillGroupList[i];
-                toggleWrapper.CompText.text = skillGroupList[i] + "技能组";
-                toggleWrapper.CompToggle.isOn = false;
-                toggleWrapper.Go.SetActive(true);
-                m_currToggleList.Add(toggleWrapper);
-            }
-
+        /// <summary>
+        /// 切换事件
+        /// </summary>
+        public void OnSkillGroupSwitch()
+        {
             m_currSelectIdx = 0;
+            var skillGroupId = Owner.GetCurrSkillGroupId();
+            m_cachedSkillList = Owner.GetSkillListByGroupId(skillGroupId);
 
-            m_currToggleList[m_currSelectIdx].CompToggle.isOn = true;
-        }
-
-        private void OnToggleValueChange(ToggleWrapper toggleWrapper)
-        {
-            if (!toggleWrapper.CompToggle.isOn)
-            {
-                return;
-            }
-            m_currSelectIdx = toggleWrapper.TabIdx;
-            SwitchSkillGroup(toggleWrapper.SkillGroupId);
-        }
-
-        private void SwitchSkillGroup(int skillGroupId)
-        {
-            if (skillGroupId == -1)
-            {
-                return;
-            }
-            var newSkills = HFightUtils.HSkillListGetByGroup(skillGroupId);
-
-            SecretsSystem.FightManager.SwitchSkill(newSkills);
-        }
-
-        private void OnTogglePointerEnter(ToggleWrapper toggleWrapper)
-        {
-            var hintStr = "";
-            hintStr = $"切换技能组：{toggleWrapper.SkillGroupId}技能";
-            UToolTip.Show(hintStr, 150f);
-        }
-
-        private void OnTogglePointerExit(ToggleWrapper toggleWrapper)
-        {
-            UToolTip.Close();
+            RefreshUI();
         }
     }
 

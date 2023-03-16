@@ -59,17 +59,17 @@ namespace FirstBepinPlugin
         public const int BuffId_FlagJueDing = 9971221; // jueding
         public const int BuffId_FlagWuLi = 9971222; // 无力
 
-        public const int BuffId_FlagWantShou  = 9971231; // flag 准备进入 Shou
-        public const int BuffId_FlagWantKou   = 9971232; // flag 准备进入 Kou
-        public const int BuffId_FlagWantRu    = 9971233; // flag 准备进入 Ru
-        public const int BuffId_FlagWantXue   = 9971234; // flag 准备进入 Xue
-        public const int BuffId_FlagWantGang  = 9971235; // flag 准备进入 Gang
+        public const int BuffId_WantShou  = 9971231; // 敌人准备进入 Shou
+        public const int BuffId_WantKou   = 9971232; // 敌人准备进入 Kou
+        public const int BuffId_WantRu    = 9971233; // 敌人准备进入 Ru
+        public const int BuffId_WantXue   = 9971234; // 敌人准备进入 Xue
+        public const int BuffId_WantGang  = 9971235; // 敌人准备进入 Gang
 
-        public const int BuffId_GuideShou     = 9971236; // flag 准备进入 Shou 2
-        public const int BuffId_GuideKou      = 9971237; // flag 准备进入 Kou 2
-        public const int BuffId_GuideRu       = 9971238; // flag 准备进入 Ru 2
-        public const int BuffId_GuideXue      = 9971239; // flag 准备进入 Xue 2
-        public const int BuffId_GuideGang     = 9971240; // flag 准备进入 Gang 2
+        public const int BuffId_GuideShou     = 9971236; // 自身引导 Shou
+        public const int BuffId_GuideKou      = 9971237; // 自身引导 Kou
+        public const int BuffId_GuideRu       = 9971238; // 自身引导 Ru
+        public const int BuffId_GuideXue      = 9971239; // 自身引导 Xue
+        public const int BuffId_GuideGang     = 9971240; // 自身引导 Gang
 
         public const int BuffId_FlagYiZhuang0 = 9971241; // flag 衣装0
         public const int BuffId_FlagYiZhuang1 = 9971242; // flag 衣装1
@@ -110,9 +110,12 @@ namespace FirstBepinPlugin
         public const int BuffId_StealLingQi = 9971803; // 一次性效果 偷取层数的灵气
         
         public const int BuffId_AddXingFen_Kou = 9971804; // 一次性效果 增加等同于层数的兴奋 口
-        public const int BuffId_AddXingFen_Ru = 9971805; // 一次性效果 增加等同于层数的兴奋 口
-        public const int BuffId_AddXingFen_Xue = 9971806; // 一次性效果 增加等同于层数的兴奋 口
-        public const int BuffId_AddXingFen_Gang = 9971807; // 一次性效果 增加等同于层数的兴奋 口
+        public const int BuffId_AddXingFen_Ru = 9971805; // 一次性效果 增加等同于层数的兴奋 乳
+        public const int BuffId_AddXingFen_Xue = 9971806; // 一次性效果 增加等同于层数的兴奋 穴
+        public const int BuffId_AddXingFen_Gang = 9971807; // 一次性效果 增加等同于层数的兴奋 刚
+
+        public const int BuffId_AddTiLi = 9971808; // 一次性效果 加体力R
+        public const int BuffId_AddKuaiGan = 9971809; // 一次性效果 加快感
         #endregion
 
 
@@ -124,23 +127,19 @@ namespace FirstBepinPlugin
 
         public const int BuffSeId_CheckYiZhuang = 520; // 检查衣装 p1 值 p2 比较方式
 
-        //public const int BuffSeId_CheckIntoHMode = 599; // 特殊检查 判断进入yinzhan
-        //public const int BuffSeId_SwitchIntoHMode = 598; // 特殊效果 进入Hmode
-        //public const int BuffSeId_CheckOutHMode = 597; // 特殊seid 检查退出yinzhan的条件
-        //public const int BuffSeId_SwitchOutHMode = 596; // 特殊效果 进入Hmode
         public const int BuffSeId_ModYiZhuang = 594; // 改变衣装 p1 每层加多少 p2 非0时固定增加 无关层数
         public const int BuffSeId_ModYuWang = 595; // 增加欲望 p1 每层加多少 p2 非0时固定增加 无关层数
-        public const int BuffSeId_ModXingFen = 596; // 增加欲望 part 部位 value1 每层加多少 value2 非0时固定增加 无关层数
-
-        //public const int BuffSeId_CheckIntoYinNormal = 901; // 特殊seid 检查进入yinzhan的条件
-        //public const int BuffSeId_CheckIntoYinShou = 902; // 特殊seid 检查进入yinzhan手的条件
-
+        public const int BuffSeId_ModXingFen = 593; // 增加欲望 part 部位 value1 每层加多少 value2 非0时固定增加 无关层数
+        public const int BuffSeId_ModKuaiGan = 592; // 增加快感 value1 每层加多少 value2 非0时固定增加 无关层数
+        public const int BuffSeId_ModTiLi = 591; // 改变体力 value1 每层加多少 value2 非0时固定增加 无关层数
 
         // bonus
         public const int BuffSeId_ModMaxYizhuang = 540; // 改变衣装最大值
         public const int BuffSeId_ModMeiLi = 541; // 改变魅力 value1 每层加值 value1 固定加值（倒计时类）
         public const int BuffSeId_ModMaxTili = 542; // 改变最大体力
         public const int BuffSeId_ModFaQingThreshold = 543; // 改变发情阈值
+
+        public const int BuffSeId_HResist = 544; // H抵抗 value1 与层数无关的固定值
 
         // 改变衣装
         public const int SkillSeId_ModYiZhuang = 550; // 移除衣装 p1 固定值 p2 最大百分比
@@ -159,6 +158,9 @@ namespace FirstBepinPlugin
         public const int SkillSeId_MultiTriggerByUsedTimee = 598; // 根据本回合使用次数改变后续触发次数 初始触发p1次 每次连续使用效果减少触发p2次 最低触发p3次 最高触发p4次
         public const int SkillSeId_CheckNotWuLi = 597; // 特殊seid 检查退出HMode的条件
         public const int SkillSeId_CheckFirstUse = 596; // 检查 是否第一次使用
+        public const int SkillSeId_CheckTargetNotFaQing = 595; // 检查 目标未发情生效
+        public const int SkillSeId_CheckTargetFaQing = 594; // 检查 目标发情生效
+        public const int SkillSeId_CheckPartXingFen = 593; // 检查 兴奋度 part 部位 panduan 判断符号 value 值
 
         public const int SkillSeId_EnterHMode = 599;
     }

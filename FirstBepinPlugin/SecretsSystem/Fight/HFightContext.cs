@@ -113,6 +113,20 @@ namespace FirstBepinPlugin
 
         #region 取属性
 
+        public bool IsTargetFaQing(KBEngine.Avatar target)
+        {
+            if(target == Owner.Player)
+            {
+                return IsFaQing;
+            }
+            else if(target == Owner.Player.OtherAvatar)
+            {
+                return Enemy.IsFaQing;
+            }
+            return false;
+        }
+
+
         /// <summary>
         /// 衣装变化
         /// </summary>
@@ -284,12 +298,12 @@ namespace FirstBepinPlugin
         {
             if (target == Owner.Player)
             {
-                KuaiGan += (long)(modVal * Consts.Float2Int100);
+                KuaiGan += modVal;
                 if (KuaiGan < 0) KuaiGan = 0;
             }
             else
             {
-                Enemy.KuaiGan += (long)(modVal * Consts.Float2Int100);
+                Enemy.KuaiGan += modVal;
                 if (Enemy.KuaiGan < 0) Enemy.KuaiGan = 0;
             }
 
@@ -303,18 +317,6 @@ namespace FirstBepinPlugin
 
         }
 
-        /// <summary>
-        /// 切换无力状态
-        /// </summary>
-        /// <param name="isWuLi"></param>
-        public void SetIsWuLi(bool isWuLi)
-        {
-            Owner.SwitchSkillGroup();
-            //m_cachedSkillTab.m_isWuLi = isWuLi;
-            //m_cachedSkillTab.RefreshUI();
-        }
-
-        
         /// <summary>
         /// 切换体位
         /// </summary>

@@ -157,7 +157,9 @@ namespace FirstBepinPlugin.Patch
         {
             if (seid != Consts.BuffSeId_ModYuWang
                 && seid != Consts.BuffSeId_ModYiZhuang
-                && seid != Consts.BuffSeId_ModXingFen)
+                && seid != Consts.BuffSeId_ModXingFen
+                && seid != Consts.BuffSeId_ModKuaiGan
+                && seid != Consts.BuffSeId_ModTiLi)
             {
                 return true;
             }
@@ -182,8 +184,14 @@ namespace FirstBepinPlugin.Patch
                         __instance.ListRealizeSeid_ModXingFen(seid, (KBEngine.Avatar)_avatar, buffInfo, flag);
                     }
                     break;
-            }
 
+                case Consts.BuffSeId_ModTiLi:
+                    {
+                        PluginMain.Main.LogInfo("Buff loopRealizeSeid Handle ListRealizeSeid_ModTiLi ");
+                        __instance.ListRealizeSeid_ModTiLi(seid, (KBEngine.Avatar)_avatar, buffInfo, flag);
+                    }
+                    break;
+            }
 
             return false;
         }
@@ -293,7 +301,9 @@ namespace FirstBepinPlugin.Patch
                 && seid != Consts.SkillSeId_YinYi
                 && seid != Consts.SkillSeId_DiscardNonYinQiAddBuff
                 && seid != Consts.SkillSeId_ApplyHAttack
-                && seid != Consts.SkillSeId_CheckFirstUse)
+                && seid != Consts.SkillSeId_CheckFirstUse
+                && seid != Consts.SkillSeId_CheckTargetNotFaQing
+                && seid != Consts.SkillSeId_CheckTargetFaQing)
             {
                 return true;
             }
@@ -377,6 +387,21 @@ namespace FirstBepinPlugin.Patch
 
                     }
                     break;
+                case Consts.SkillSeId_CheckTargetNotFaQing:
+                    {
+                        PluginMain.Main.LogInfo("Skill realizeSeid Handle realizeSeid_CheckTargetNotFaQing ");
+                        __instance.realizeSeid_CheckTargetNotFaQing(seid, damage, (KBEngine.Avatar)_attaker, (KBEngine.Avatar)_receiver, type);
+
+                    }
+                    break;
+                case Consts.SkillSeId_CheckTargetFaQing:
+                    {
+                        PluginMain.Main.LogInfo("Skill realizeSeid Handle realizeSeid_CheckTargetFaQing ");
+                        __instance.realizeSeid_CheckTargetFaQing(seid, damage, (KBEngine.Avatar)_attaker, (KBEngine.Avatar)_receiver, type);
+
+                    }
+                    break;
+
                 #endregion
             }
 

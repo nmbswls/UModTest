@@ -1,4 +1,5 @@
 ﻿using FirstBepinPlugin.Config;
+using KBEngine;
 using SkySwordKill.Next.DialogSystem;
 using System;
 using System.Collections.Generic;
@@ -56,6 +57,7 @@ namespace FirstBepinPlugin
         public HFightContext Ctx = new HFightContext();
         public bool IsInBattle;
 
+        public int TotalJingAmount = 0;
         /// <summary>
         /// 是否正在等待结算h攻击
         /// </summary>
@@ -234,7 +236,7 @@ namespace FirstBepinPlugin
                 return;
 
             // 基础平复效率
-            Ctx.ModKuaiGan(Player, -60);
+            Ctx.ModKuaiGan(Player, -40);
         }
 
         /// <summary>
@@ -567,36 +569,36 @@ namespace FirstBepinPlugin
         /// <param name="skillGroupId"></param>
         public void SwitchSkillGroup()
         {
-            var skillGroupId = GetCurrSkillGroupId();
-
-            // 0 读取缓存id
-            if (skillGroupId == 0)
-            {
-                SwitchSkill(m_skillIdCache);
-                return;
-            }
-            var newSkills = HFightUtils.HSkillListGetByGroup(skillGroupId);
-            SwitchSkill(newSkills);
+            m_fightHud.m_skillTabController.OnSkillGroupSwitch();
         }
 
         /// <summary>
         /// 执行切换技能
         /// </summary>
-        public void SwitchSkill(List<int> newSkillList)
+        public void SwitchSkill(List<int> newSkillList, int tabIndex)
         {
             if(newSkillList == null)
             {
                 return;
             }
 
+            int totalTab = 1;
+            if(totalTab > 0)
+            {
+                totalTab = (newSkillList.Count - 1) / 10 + 1;
+            }
+
+            if(tabIndex < 0 || tabIndex >= totalTab)
+            {
+                PluginMain.Main.LogError($"SwitchSkill tabIndex out. {newSkillList.Count} {tabIndex}");
+                return;
+            }
+
             Player.FightClearSkill(0, 10);
 
-            // 提示并返回错误
-            if (newSkillList.Count > 10)
-            {
-                UIPopTip.Inst.Pop("技能超过10个 仅保留10个");
-            }
-            for(int i=0;i<newSkillList.Count && i<10;i++)
+            int startIdx = tabIndex * 10;
+
+            for (int i= startIdx; i<newSkillList.Count && i< startIdx + 10; i++)
             {
                 int skillId = newSkillList[i];
                 var skillItem = Player.skill.Find(delegate (GUIPackage.Skill s) { return s.skill_ID == skillId; });
@@ -709,11 +711,10 @@ namespace FirstBepinPlugin
             if(Ctx.m_hTiWei != HModeTiWei.None)
             {
                 Ctx.SwitchTiWei((int)HModeTiWei.None);
-
-                Player.OtherAvatar.ClearWantBuffs();
-
                 m_runningProcessList.Enqueue(new FightProcessWaitDialog(this, Consts.HDialogId_EnterTiwei));
             }
+
+            TotalJingAmount += (int)(damage / 5);
         }
 
         protected void OnPlayerJueding()
@@ -747,7 +748,47 @@ namespace FirstBepinPlugin
             }
             //洗牌
             EnemyShuffleSkill(Player.OtherAvatar);
+
+            // 禁用所有被动技能天赋 缓存
+            var buffList = Player.OtherAvatar.buffmag.getAllBuffByType(6);
+            foreach(var buff in buffList)
+            {
+                Player.OtherAvatar.buffmag.RemoveBuff(buff[2]);
+            }
+
+            // 移除护盾
+            Player.OtherAvatar.buffmag.RemoveBuff(5);
+            // 移除被动装备
+            foreach (ITEM_INFO value in Player.OtherAvatar.equipItemList.values)
+            {
+                foreach (JSONObject item2 in jsonData.instance.ItemJsonData[string.Concat(value.itemId)]["seid"].list)
+                {
+                    if (item2.I == 1)
+                    {
+                        int buffid = (int)jsonData.instance.EquipSeidJsonData[1][string.Concat(value.itemId)]["value1"].n;
+                        Player.OtherAvatar.buffmag.RemoveBuff(buffid);
+                    }
+                }
+            }
+            // 移除悟道
+            foreach (SkillItem allWuDaoSkill in Player.OtherAvatar.wuDaoMag.GetAllWuDaoSkills())
+            {
+                foreach (JSONObject item in jsonData.instance.StaticSkillJsonData[string.Concat(allWuDaoSkill.itemId)]["seid"].list)
+                {
+                    if((int)item.n != 1)
+                    {
+                        continue;
+                    }
+                    var seidConfig = jsonData.instance.StaticSkillSeidJsonData[1][allWuDaoSkill.itemId];
+                    for (int i = 0; i < seidConfig["value1"].Count; i++)
+                    {
+                        int buffid = (int)seidConfig["value1"][i].n;
+                        Player.OtherAvatar.buffmag.RemoveBuff(buffid);
+                    }
+                }
+            }
         }
+
 
         protected void OnPlayerFaQing()
         {
@@ -857,7 +898,23 @@ namespace FirstBepinPlugin
                 return;
             }
 
-            var wantingTiWei = Player.OtherAvatar.GetCurrWantingTiwei();
+            int[] wantLayers = new int[(int)HModeTiWei.Max];
+            wantLayers[1] = Player.OtherAvatar.buffmag.GetBuffSum(Consts.BuffId_GuideShou);
+            wantLayers[2] = Player.OtherAvatar.buffmag.GetBuffSum(Consts.BuffId_GuideKou);
+            wantLayers[2] = Player.OtherAvatar.buffmag.GetBuffSum(Consts.BuffId_GuideRu);
+            wantLayers[3] = Player.OtherAvatar.buffmag.GetBuffSum(Consts.BuffId_GuideXue);
+            wantLayers[4] = Player.OtherAvatar.buffmag.GetBuffSum(Consts.BuffId_GuideGang);
+
+
+            var wantingTiWei = HModeTiWei.None;
+
+            for (int i=0;i< wantLayers.Length;i++)
+            {
+                if(wantLayers[1] > 6)
+                {
+                    wantingTiWei = (HModeTiWei)i;
+                }
+            }
 
             if(wantingTiWei == HModeTiWei.None)
             {
@@ -866,7 +923,7 @@ namespace FirstBepinPlugin
 
             Ctx.SwitchTiWei((int)wantingTiWei);
 
-            Player.OtherAvatar.ClearWantBuffs();
+            Player.OtherAvatar.SetBuffLayer((int)(Consts.BuffId_GuideShou + (int)wantingTiWei - 1), 0);
 
             m_runningProcessList.Enqueue(new FightProcessWaitDialog(this, Consts.HDialogId_EnterTiwei));
         }
@@ -888,33 +945,37 @@ namespace FirstBepinPlugin
                 weights.Add(new KeyValuePair<int, int>(switchInfo.Id, 10));
             }
 
+            // todo 增加个体倾向性
+
             int switchId = HFightUtils.RandomValueByWeight(weights);
             if (switchId == -1)
             {
                 return;
             }
-            
-            var processDialog = new FightProcessWaitDialog(this, Consts.HDialogId_WantEnterTiwei);
-            processDialog.SetArg("branch", switchId);
-            processDialog.EventOnEnd += delegate ()
-            {
-                int choice = processDialog.Ret1;
-                switch(choice)
-                {
-                    case 0: // 未抵抗 直接进入
-                        {
-                            int buffId = Player.GetTiWeiWantBuffId((HModeTiWei)switchId);
-                            Player.SetHasBuff(buffId);
-                            break;
-                        }
-                    case 1: // 使用灵气抵抗
-                        {
-                            Player.cardMag.removeCard(5, 4);
-                            break;
-                        }
-                }
-            };
-            m_runningProcessList.Enqueue(processDialog);
+
+            Player.OtherAvatar.AddTiWeiGuideBuff((HModeTiWei)switchId);
+
+            //var processDialog = new FightProcessWaitDialog(this, Consts.HDialogId_WantEnterTiwei);
+            //processDialog.SetArg("branch", switchId);
+            //processDialog.EventOnEnd += delegate ()
+            //{
+            //    int choice = processDialog.Ret1;
+            //    switch (choice)
+            //    {
+            //        case 0: // 未抵抗 直接进入
+            //            {
+            //                int buffId = Player.GetTiWeiWantBuffId((HModeTiWei)switchId);
+            //                Player.SetHasBuff(buffId);
+            //                break;
+            //            }
+            //        case 1: // 使用灵气抵抗
+            //            {
+            //                Player.cardMag.removeCard(5, 4);
+            //                break;
+            //            }
+            //    }
+            //};
+            //m_runningProcessList.Enqueue(processDialog);
         }
         #endregion
 
@@ -922,26 +983,26 @@ namespace FirstBepinPlugin
         #region 工具
 
 
-        /// <summary>
-        /// 获取技能组列表
-        /// </summary>
-        /// <returns></returns>
-        public List<int> GetCurrSkillGroupList()
-        {
-            var retList = new List<int>();
-            var allSkillGroups = PluginMain.Main.ConfigDataLoader.GetAllConfigDataHSkillGroupInfo();
-            foreach(var pair in allSkillGroups)
-            {
-                if(!CheckHConditions(pair.Value.ShowCondition))
-                {
-                    PluginMain.Main.LogInfo("Cond Check Fail " + pair.Value.ID);
-                    continue;
-                }
-                retList.Add(pair.Key);
-            }
-            retList.Sort((a,b)=>a.CompareTo(b));
-            return retList;
-        }
+        ///// <summary>
+        ///// 获取技能组列表
+        ///// </summary>
+        ///// <returns></returns>
+        //public List<int> GetCurrSkillGroupList()
+        //{
+        //    var retList = new List<int>();
+        //    var allSkillGroups = PluginMain.Main.ConfigDataLoader.GetAllConfigDataHSkillGroupInfo();
+        //    foreach(var pair in allSkillGroups)
+        //    {
+        //        if(!CheckHConditions(pair.Value.ShowCondition))
+        //        {
+        //            PluginMain.Main.LogInfo("Cond Check Fail " + pair.Value.ID);
+        //            continue;
+        //        }
+        //        retList.Add(pair.Key);
+        //    }
+        //    retList.Sort((a,b)=>a.CompareTo(b));
+        //    return retList;
+        //}
 
 
         /// <summary>
@@ -964,33 +1025,45 @@ namespace FirstBepinPlugin
                 {
                     case HModeTiWei.Shou:
                         {
-                            return (int)201;
+                            return (int)100;
                         }
                     case HModeTiWei.Kou:
                         {
-                            return (int)202;
+                            return (int)101;
                         }
                     case HModeTiWei.Ru:
                         {
-                            return (int)203;
+                            return (int)102;
                         }
                     case HModeTiWei.Xue:
                         {
-                            return (int)204;
+                            return (int)103;
                         }
                     case HModeTiWei.Gang:
                         {
-                            return (int)205;
+                            return (int)104;
                         }
                 }
             }
 
             if(Ctx.m_hState == HModeState.JueDing)
             {
-                return 301;
+                return 3;
             }
             
             return 0;
+        }
+
+
+        public List<int> GetSkillListByGroupId(int skillGroupId)
+        {
+            // 0 读取缓存id
+            if (skillGroupId == 0)
+            {
+                return m_skillIdCache;
+            }
+            var newSkills = HFightUtils.HSkillListGetByGroup(skillGroupId);
+            return newSkills;
         }
 
         /// <summary>
@@ -1081,6 +1154,12 @@ namespace FirstBepinPlugin
                         }
                     }
                     break;
+                case (int)EConditionType.XingFen:
+                    {
+                        var val = Ctx.Xingfen[condition.P2];
+                        return HFightUtils.CustomCompare(val, condition.P3, condition.P4);
+                    }
+                    break;
                 default:
                     return false;
             }
@@ -1168,6 +1247,27 @@ namespace FirstBepinPlugin
 
             float finalDamage = damage * reduceRae * xingfenRate;
 
+            float buffHResist = 0;
+            var buffs = Player.buffmag.getBuffBySeid(Consts.BuffSeId_HResist);
+            foreach(var buff in buffs)
+            {
+                JSONObject seidConfig = jsonData.instance.BuffSeidJsonData[Consts.BuffSeId_HResist][buff[2]];
+                if(!seidConfig.HasField("value1"))
+                {
+                    continue;
+                }
+                var val = seidConfig["value1"].f;
+                buffHResist += val;
+            }
+
+            // 减伤上限
+            if(buffHResist > 95.0f)
+            {
+                buffHResist = 95.0f;
+            }
+
+            finalDamage = finalDamage * ( 1 - buffHResist * 0.01f);
+
             // 进行结算
             m_runningProcessList.Enqueue(new FightProcessImmediate(this, delegate ()
             {
@@ -1182,7 +1282,7 @@ namespace FirstBepinPlugin
                 Ctx.ModKuaiGan(Player.OtherAvatar, counterKuaiGan + selfKuaiGan);
                 if(Ctx.Tili > 0)
                 {
-                    Ctx.ModTiLi(damage * reduceRae);
+                    Ctx.ModTiLi(finalDamage);
                 }
                 else
                 {

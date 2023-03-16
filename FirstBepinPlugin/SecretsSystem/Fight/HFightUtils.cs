@@ -30,15 +30,21 @@ namespace FirstBepinPlugin
             return false;
         }
 
+        private static List<int> s_emptySkillList = new List<int>();
         /// <summary>
         /// 获取对应组的技能
         /// </summary>
         /// <returns></returns>
         public static List<int> HSkillListGetByGroup(int skillGroup)
         {
-            var groupConf = PluginMain.Main.ConfigDataLoader.GetConfigDataHSkillGroupInfo(skillGroup);
+            //var groupConf = PluginMain.Main.ConfigDataLoader.GetConfigDataHSkillGroupInfo(skillGroup);
+            // 直接从内存里读
+            if(!StaticConfigContainer.s_SkillGroupSkills.TryGetValue(skillGroup, out var skills))
+            {
+                return s_emptySkillList;
+            }
             // 裁剪已装备
-            return groupConf.SkillList;
+            return skills;
         }
 
         /// <summary>
@@ -184,23 +190,23 @@ namespace FirstBepinPlugin
         {
             switch(wantBuffId)
             {
-                case Consts.BuffId_FlagWantShou:
+                case Consts.BuffId_WantShou:
                 {
                     return HModeTiWei.Shou;
                 }
-                case Consts.BuffId_FlagWantKou:
+                case Consts.BuffId_WantKou:
                 {
                     return HModeTiWei.Kou;
                 }
-                case Consts.BuffId_FlagWantRu:
+                case Consts.BuffId_WantRu:
                     {
                         return HModeTiWei.Ru;
                     }
-                case Consts.BuffId_FlagWantXue:
+                case Consts.BuffId_WantXue:
                     {
                         return HModeTiWei.Xue;
                     }
-                case Consts.BuffId_FlagWantGang:
+                case Consts.BuffId_WantGang:
                     {
                         return HModeTiWei.Gang;
                     }

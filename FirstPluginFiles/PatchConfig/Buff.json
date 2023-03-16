@@ -976,7 +976,7 @@
 			
 		],
 		"bufftype":3,
-		"seid":[596],
+		"seid":[593],
 		"descr":"",
 		"trigger":12,
 		"removeTrigger":2,
@@ -991,12 +991,12 @@
 		"buffid":9971805,
 		"BuffIcon":0,
 		"skillEffect":"fx_Summoner_o",
-		"name":"立即增加口兴奋并移除自身",
+		"name":"立即增加乳兴奋并移除自身",
 		"Affix":[
 			
 		],
 		"bufftype":3,
-		"seid":[596],
+		"seid":[593],
 		"descr":"",
 		"trigger":12,
 		"removeTrigger":2,
@@ -1011,12 +1011,12 @@
 		"buffid":9971806,
 		"BuffIcon":0,
 		"skillEffect":"fx_Summoner_o",
-		"name":"立即增加口兴奋并移除自身",
+		"name":"立即增加穴兴奋并移除自身",
 		"Affix":[
 			
 		],
 		"bufftype":3,
-		"seid":[596],
+		"seid":[593],
 		"descr":"",
 		"trigger":12,
 		"removeTrigger":2,
@@ -1031,12 +1031,12 @@
 		"buffid":9971807,
 		"BuffIcon":0,
 		"skillEffect":"fx_Summoner_o",
-		"name":"立即增加口兴奋并移除自身",
+		"name":"立即增加刚兴奋并移除自身",
 		"Affix":[
 			
 		],
 		"bufftype":3,
-		"seid":[596],
+		"seid":[593],
 		"descr":"",
 		"trigger":12,
 		"removeTrigger":2,
@@ -1048,6 +1048,46 @@
 		"ShowOnlyOne":0
 	},
 	
+	"9971808":{
+		"buffid":9971808,
+		"BuffIcon":0,
+		"skillEffect":"fx_Summoner_o",
+		"name":" 加体力",
+		"Affix":[
+			
+		],
+		"bufftype":3,
+		"seid":[591],
+		"descr":"",
+		"trigger":12,
+		"removeTrigger":2,
+		"script":"Buff",
+		"looptime":1,
+		"totaltime":1,
+		"BuffType":0,
+		"isHide":0,
+		"ShowOnlyOne":0
+	},
+	"9971809":{
+		"buffid":9971809,
+		"BuffIcon":0,
+		"skillEffect":"fx_Summoner_o",
+		"name":" 单位加快感",
+		"Affix":[
+			
+		],
+		"bufftype":3,
+		"seid":[592],
+		"descr":"",
+		"trigger":12,
+		"removeTrigger":2,
+		"script":"Buff",
+		"looptime":1,
+		"totaltime":1,
+		"BuffType":0,
+		"isHide":0,
+		"ShowOnlyOne":0
+	},
 	
 	"9972002":{
 		"buffid":9972002,
@@ -1141,6 +1181,66 @@
 		"bufftype":3,
 		"seid":[541],
 		"descr":"增加魅力 40点",
+		"trigger":5,
+		"removeTrigger":7,
+		"script":"Buff",
+		"looptime":1,
+		"totaltime":1,
+		"BuffType":1,
+		"isHide":0,
+		"ShowOnlyOne":0
+	},
+	"9972007":{
+		"buffid":9972007,
+		"BuffIcon":0,
+		"skillEffect":"fx_Summoner_o",
+		"name":"聚乳",
+		"Affix":[
+			
+		],
+		"bufftype":3,
+		"seid":[],
+		"descr":"聚乳 增加魅力3点",
+		"trigger":5,
+		"removeTrigger":7,
+		"script":"Buff",
+		"looptime":1,
+		"totaltime":1,
+		"BuffType":0,
+		"isHide":0,
+		"ShowOnlyOne":0
+	},
+	"9972008":{
+		"buffid":9972008,
+		"BuffIcon":0,
+		"skillEffect":"fx_Summoner_o",
+		"name":"淫御术",
+		"Affix":[
+			
+		],
+		"bufftype":3,
+		"seid":[544],
+		"descr":"淫御术 减伤",
+		"trigger":1,
+		"removeTrigger":1,
+		"script":"Buff",
+		"looptime":1,
+		"totaltime":1,
+		"BuffType":0,
+		"isHide":0,
+		"ShowOnlyOne":1
+	},
+	"9972009":{
+		"buffid":9972009,
+		"BuffIcon":0,
+		"skillEffect":"fx_Summoner_o",
+		"name":"正撸标记",
+		"Affix":[
+			
+		],
+		"bufftype":3,
+		"seid":[],
+		"descr":"正撸标记",
 		"trigger":5,
 		"removeTrigger":7,
 		"script":"Buff",
