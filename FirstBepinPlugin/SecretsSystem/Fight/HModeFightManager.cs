@@ -572,53 +572,7 @@ namespace FirstBepinPlugin
             m_fightHud.m_skillTabController.OnSkillGroupSwitch();
         }
 
-        /// <summary>
-        /// 执行切换技能
-        /// </summary>
-        public void SwitchSkill(List<int> newSkillList, int tabIndex)
-        {
-            if(newSkillList == null)
-            {
-                return;
-            }
-
-            int totalTab = 1;
-            if(totalTab > 0)
-            {
-                totalTab = (newSkillList.Count - 1) / 10 + 1;
-            }
-
-            if(tabIndex < 0 || tabIndex >= totalTab)
-            {
-                PluginMain.Main.LogError($"SwitchSkill tabIndex out. {newSkillList.Count} {tabIndex}");
-                return;
-            }
-
-            Player.FightClearSkill(0, 10);
-
-            int startIdx = tabIndex * 10;
-
-            for (int i= startIdx; i<newSkillList.Count && i< startIdx + 10; i++)
-            {
-                int skillId = newSkillList[i];
-                var skillItem = Player.skill.Find(delegate (GUIPackage.Skill s) { return s.skill_ID == skillId; });
-                if (skillItem == null)
-                {
-                    skillItem = new GUIPackage.Skill(skillId, 0, 10);
-                }
-                Player.skill.Add(skillItem);
-                int num = 0;
-                foreach (UIFightSkillItem fightSkill in UIFightPanel.Inst.FightSkills)
-                {
-                    if (num >= 0 && num < 10 && !fightSkill.HasSkill)
-                    {
-                        fightSkill.SetSkill(skillItem);
-                        break;
-                    }
-                    num++;
-                }
-            }
-        }
+        
 
 
         private List<int> m_skillIdCache = new List<int>();

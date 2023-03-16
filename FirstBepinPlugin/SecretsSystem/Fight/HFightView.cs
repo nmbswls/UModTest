@@ -3,11 +3,10 @@ using SuperScrollView;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using YSGame.Fight;
 
 namespace FirstBepinPlugin
 {
@@ -32,7 +31,7 @@ namespace FirstBepinPlugin
     {
         public HModeFightManager Owner;
 
-        public FightUISkillTabController m_skillTabController;
+        public FightUISkillPageController m_skillTabController;
         public FightUIHRecordController m_recordController;
         public FightUIStatusController m_statusController;
         public FightUISpecialActionController m_specialActionController;
@@ -57,6 +56,10 @@ namespace FirstBepinPlugin
             var fightHShow = transform.Find("FightHShow");
             m_hShowController = fightHShow.gameObject.AddComponent<FightHShowController>();
             m_hShowController.Init(owner);
+
+            var fightSkillPage = transform.Find("FightSkillPage");
+            m_skillTabController = fightSkillPage.gameObject.AddComponent<FightUISkillPageController>();
+            m_skillTabController.Init(owner);
         }
 
         public void OnDestroy()
@@ -65,7 +68,7 @@ namespace FirstBepinPlugin
         }
     }
 
-    public class FightUISkillTabController : MonoBehaviour
+    public class FightUISkillPageController : MonoBehaviour
     {
         public HModeFightManager Owner;
 
@@ -73,7 +76,7 @@ namespace FirstBepinPlugin
         public Button RightButton;
         public Text TabIndexText;
 
-        public int m_currSelectIdx = 0;
+        public int m_currPageIdx = 0;
         protected List<int> m_cachedSkillList = new List<int>();
 
         public void Init(HModeFightManager owner)
@@ -86,22 +89,131 @@ namespace FirstBepinPlugin
 
             LeftButton.onClick.AddListener(PrePage);
             RightButton.onClick.AddListener(NextPage);
+
+            LeftButton.gameObject.SetActive(false);
+            RightButton.gameObject.SetActive(false);
+            TabIndexText.gameObject.SetActive(false);
+
         }
 
         public void NextPage()
         {
-            m_currSelectIdx--;
+            m_currPageIdx++;
             RefreshUI();
         }
         public void PrePage()
         {
-            m_currSelectIdx++;
+            m_currPageIdx--;
             RefreshUI();
         }
 
+        /// <summary>
+        /// 获取技能数量对应page数目
+        /// </summary>
+        /// <param name="skillCount"></param>
+        /// <returns></returns>
+        private int GetSkillPageCount(int skillCount)
+        {
+            if(skillCount == 0)
+            {
+                return 1;
+            }
+            return (skillCount - 1) / 10 + 1;
+        }
+
+
         public void RefreshUI()
         {
-            Owner.SwitchSkill(m_cachedSkillList, m_currSelectIdx);
+            SwitchSkill(m_cachedSkillList, m_currPageIdx);
+
+            int pageCount = GetSkillPageCount(m_cachedSkillList.Count);
+            if (m_currPageIdx < 0 || m_currPageIdx >= pageCount)
+            {
+                PluginMain.Main.LogError($"SwitchSkill tabIndex out. {m_cachedSkillList.Count} {m_currPageIdx}");
+                m_currPageIdx = 0;
+                return; //阐述
+            }
+            SwitchSkill(m_cachedSkillList, m_currPageIdx);
+
+            if(pageCount == 1)
+            {
+                LeftButton.gameObject.SetActive(false);
+                RightButton.gameObject.SetActive(false);
+                TabIndexText.gameObject.SetActive(false);
+            }
+            else
+            {
+                LeftButton.gameObject.SetActive(true);
+                RightButton.gameObject.SetActive(true);
+                TabIndexText.gameObject.SetActive(true);
+            }
+            // 激活按钮 更新数字
+            if(m_currPageIdx == 0)
+            {
+                LeftButton.enabled = false;
+            }
+            else
+            {
+                LeftButton.enabled = true;
+            }
+            // 激活按钮 更新数字
+            if (m_currPageIdx == pageCount-1)
+            {
+                RightButton.enabled = false;
+            }
+            else
+            {
+                RightButton.enabled = true;
+            }
+            TabIndexText.text = (m_currPageIdx + 1) +"";
+        }
+
+        /// <summary>
+        /// 执行切换技能
+        /// </summary>
+        protected void SwitchSkill(List<int> newSkillList, int tabIndex)
+        {
+            if (newSkillList == null)
+            {
+                return;
+            }
+
+            int totalTab = 1;
+            if (totalTab > 0)
+            {
+                totalTab = (newSkillList.Count - 1) / 10 + 1;
+            }
+
+            if (tabIndex < 0 || tabIndex >= totalTab)
+            {
+                PluginMain.Main.LogError($"SwitchSkill tabIndex out. {newSkillList.Count} {tabIndex}");
+                return;
+            }
+
+            Owner.Player.FightClearSkill(0, 10);
+
+            int startIdx = tabIndex * 10;
+
+            for (int i = startIdx; i < newSkillList.Count && i < startIdx + 10; i++)
+            {
+                int skillId = newSkillList[i];
+                var skillItem = Owner.Player.skill.Find(delegate (GUIPackage.Skill s) { return s.skill_ID == skillId; });
+                if (skillItem == null)
+                {
+                    skillItem = new GUIPackage.Skill(skillId, 0, 10);
+                }
+                Owner.Player.skill.Add(skillItem);
+                int num = 0;
+                foreach (UIFightSkillItem fightSkill in UIFightPanel.Inst.FightSkills)
+                {
+                    if (num >= 0 && num < 10 && !fightSkill.HasSkill)
+                    {
+                        fightSkill.SetSkill(skillItem);
+                        break;
+                    }
+                    num++;
+                }
+            }
         }
 
         /// <summary>
@@ -109,7 +221,7 @@ namespace FirstBepinPlugin
         /// </summary>
         public void OnSkillGroupSwitch()
         {
-            m_currSelectIdx = 0;
+            m_currPageIdx = 0;
             var skillGroupId = Owner.GetCurrSkillGroupId();
             m_cachedSkillList = Owner.GetSkillListByGroupId(skillGroupId);
 
