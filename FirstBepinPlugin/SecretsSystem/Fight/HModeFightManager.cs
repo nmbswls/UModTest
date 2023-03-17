@@ -70,6 +70,7 @@ namespace FirstBepinPlugin
         /// </summary>
         public void FightHInit()
         {
+            Ctx.Owner = this;
             Ctx.InitContenxt();
 
             IsInBattle = true;
@@ -120,6 +121,8 @@ namespace FirstBepinPlugin
             // 移除双方魔气debuff
             Player.buffmag.RemoveBuff(10000);
             Player.OtherAvatar.buffmag.RemoveBuff(10000);
+
+            InitHModeUI();
         }
 
         /// <summary>
@@ -472,10 +475,11 @@ namespace FirstBepinPlugin
             
         }
 
+
         /// <summary>
         /// 进入HMode ui
         /// </summary>
-        public void SwitchHModeUI()
+        public void InitHModeUI()
         {
             m_cachedNormalUI = UIFightPanel.Inst.LingQiImageDatas[UIFightPanel.Inst.LingQiImageDatas.Count - 1];
             var newData = new UILingQiImageData();
@@ -512,7 +516,6 @@ namespace FirstBepinPlugin
             moSlot.LingQiCount = tempCount;
 
 
-
             var fightHud = UnityEngine.GameObject.Instantiate(PluginMain.Main.LoadGameObjectFromAB("FightHud"), UIFightPanel.Inst.transform);
             m_fightHud = fightHud.AddComponent<FightHudRootController>();
             m_fightHud.InitUI(this);
@@ -530,9 +533,6 @@ namespace FirstBepinPlugin
             //var HRecordPanel = UnityEngine.GameObject.Instantiate(PluginMain.Main.LoadGameObjectFromAB("FightHRecordPanel"), UIFightPanel.Inst.transform);
             //m_cachedHRecordController = HRecordPanel.AddComponent<FightUIHRecordController>();
             //m_cachedHRecordController.Init();
-
-            ExtendAvatarShowDamageUI(Player);
-            ExtendAvatarShowDamageUI(Player.OtherAvatar);
         }
 
         public void ExtendAvatarShowDamageUI(KBEngine.Avatar avatar)
@@ -768,7 +768,6 @@ namespace FirstBepinPlugin
             // 清空技能
             SwitchSkillGroup();
 
-            SwitchHModeUI();
 
             UpdateAllStateBuff();
         }

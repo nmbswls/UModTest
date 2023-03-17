@@ -565,7 +565,20 @@ namespace FirstBepinPlugin.Patch
             }
         }
     }
+
+    /// <summary>
+    /// 增加自定义的描述字
+    /// </summary>
+    [HarmonyPatch(typeof(KeyCell), "showLianJiHightLight")]
+    public class KeyCellPatcher_showLianJiHightLight
+    {
+        public static void Postfix(KeyCell __instance)
+        {
+            __instance.Icon.transform.LogAll();
+        }
+    }
     
-    
+
+
     #endregion
 }

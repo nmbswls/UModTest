@@ -116,6 +116,9 @@ namespace FirstBepinPlugin
 
         public const int BuffId_AddTiLi = 9971808; // 一次性效果 加体力R
         public const int BuffId_AddKuaiGan = 9971809; // 一次性效果 加快感
+
+        public const int BuffId_AddYiZhuang = 9971810; // 一次性效果 增加等同于层数的衣装
+        public const int BuffId_SubYiZhuang = 9971811; // 一次性效果 削减等同于层数的衣装
         #endregion
 
 
