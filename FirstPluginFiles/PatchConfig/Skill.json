@@ -876,13 +876,13 @@
 		"name":"兰息术",
 		"qingjiaotype":7,
 		"seid":[
-			6,4
+			4
 		],
 		"Affix":[],
 		"Affix2":[
 		],
-		"descr":"使目标吸收1点淫灵气",
-		"TuJiandescr":"使目标吸收1点淫灵气",
+		"descr":"使目标吸收2点淫灵气",
+		"TuJiandescr":"使目标吸收2点淫灵气",
 		"AttackType":[
 			5
 		],
@@ -918,7 +918,7 @@
 		"name":"吻耳",
 		"qingjiaotype":7,
 		"seid":[
-			6,4
+			4
 		],
 		"Affix":[],
 		"Affix2":[
@@ -960,13 +960,13 @@
 		"name":"濡湿耳语",
 		"qingjiaotype":7,
 		"seid":[
-			6,4
+			4
 		],
 		"Affix":[],
 		"Affix2":[
 		],
-		"descr":"欲望上升5点，施加【痒】*2，目标吸收1点淫灵气",
-		"TuJiandescr":"欲望上升5点，施加【痒】*2，目标吸收1点淫灵气",
+		"descr":"欲望上升5点，施加【痒】*2，目标吸收3点淫灵气",
+		"TuJiandescr":"欲望上升5点，施加【痒】*2，目标吸收3点淫灵气",
 		"AttackType":[
 			5
 		],

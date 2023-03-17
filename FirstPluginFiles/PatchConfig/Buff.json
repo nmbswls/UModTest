@@ -1089,6 +1089,47 @@
 		"ShowOnlyOne":0
 	},
 	
+	"9971810":{
+		"buffid":9971810,
+		"BuffIcon":0,
+		"skillEffect":"fx_Summoner_o",
+		"name":" 增加等同于层数的衣装",
+		"Affix":[
+			
+		],
+		"bufftype":3,
+		"seid":[594],
+		"descr":"增加等同于层数的衣装",
+		"trigger":12,
+		"removeTrigger":2,
+		"script":"Buff",
+		"looptime":1,
+		"totaltime":1,
+		"BuffType":0,
+		"isHide":0,
+		"ShowOnlyOne":0
+	},
+	"9971811":{
+		"buffid":9971811,
+		"BuffIcon":0,
+		"skillEffect":"fx_Summoner_o",
+		"name":" 削减等同于层数的衣装",
+		"Affix":[
+			
+		],
+		"bufftype":3,
+		"seid":[594],
+		"descr":"削减等同于层数的衣装",
+		"trigger":12,
+		"removeTrigger":2,
+		"script":"Buff",
+		"looptime":1,
+		"totaltime":1,
+		"BuffType":0,
+		"isHide":0,
+		"ShowOnlyOne":0
+	},
+	
 	"9972002":{
 		"buffid":9972002,
 		"BuffIcon":0,
