@@ -241,10 +241,12 @@ namespace FirstBepinPlugin
         {
             this.Owner = owner;
 
-            TextTemplage = transform.Find("TextTemplate").gameObject;
             var loopListViewGo = transform.Find("ContentScroll").gameObject;
+
+            TextTemplage = loopListViewGo.transform.Find("Viewport/Content/TextTemplate").gameObject;
+
             MLoopListView = loopListViewGo.AddComponent<LoopListView2>();
-            MLoopListView.ItemPrefabDataList.Add(new ItemPrefabConfData() { mItemPrefab = TextTemplage, mInitCreateCount = 6, mStartPosOffset = 10 });
+            MLoopListView.ItemPrefabDataList.Add(new ItemPrefabConfData() { mItemPrefab = TextTemplage, mInitCreateCount = 6, mStartPosOffset = 16 });
             MLoopListView.ArrangeType = ListItemArrangeType.BottomToTop;
             MLoopListView.InitListView(MRecordCount, OnGetItemByIndex);
 
@@ -332,8 +334,7 @@ namespace FirstBepinPlugin
         public void Init(HModeFightManager owner)
         {
             this.Owner = owner;
-            Root = gameObject.transform.GetChild(0);
-            ActionTemplate = gameObject.transform.Find("ActionTemplate").gameObject;
+            //Root = gameObject.transform.GetChild(0);
         }
     }
 

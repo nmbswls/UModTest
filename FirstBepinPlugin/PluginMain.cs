@@ -89,11 +89,12 @@ namespace FirstBepinPlugin
 			GameObject[] array = assetLoadRequestGo;
 			foreach (GameObject gameObject in array)
 			{
-				Logger.LogInfo("------------------------------- name" + gameObject.name);
+				//Logger.LogInfo("------------------------------- name" + gameObject.name);
 				m_GoDict.TryAdd(gameObject.name, gameObject);
 			}
 
-            font_YaHei = Font.CreateDynamicFontFromOSFont("Microsoft YaHei", 6);
+			var names = allNeed.GetAllAssetNames();
+			font_YaHei = Font.CreateDynamicFontFromOSFont("Microsoft YaHei", 6);
         }
 
 		public UnityEngine.GameObject LoadGameObjectFromAB(string assetName)

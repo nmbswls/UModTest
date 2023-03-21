@@ -110,9 +110,18 @@ namespace FirstBepinPlugin
             var player = Tools.instance.getPlayer();
 
             PluginMain.Main.LogInfo("Fake add needed skills");
-            player.addHasSkillList(99711);
+            //player.addHasSkillList(99711);
+            player.addHasSkillList(99720);
+            player.addHasSkillList(99731);
+            player.addHasSkillList(99732);
+            player.addHasSkillList(99733);
+            player.addHasSkillList(99734);
+            player.addHasSkillList(99735);
+            player.addHasSkillList(99736);
+            player.addHasSkillList(99740);
 
-            if(!player.hasItem(99790))
+
+            if (!player.hasItem(99790))
             {
                 int id = 99790;
                 int count = 1;

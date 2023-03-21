@@ -42,4 +42,35 @@ namespace FirstBepinPlugin.Patch
             return true;
         }
     }
+
+    /// <summary>
+    /// 物品扩展
+    /// </summary>
+    [HarmonyPatch(typeof(ActiveSkill), "SetSkill")]
+    public class ActiveSkillPatcher_SetSkill
+    {
+        public static void Postfix(ActiveSkill __instance, int id, int level)
+        {
+            // 未找到 则任意获取一个id相同的技能
+            if(__instance.Id == 0)
+            {
+                foreach (_skillJsonData data in _skillJsonData.DataList)
+                {
+                    if (data.Skill_ID == id)
+                    {
+                        __instance.Id = data.id;
+                        __instance.SkillId = id;
+                        __instance.Level = level;
+                        __instance.Quality = data.Skill_LV;
+                        __instance.Name = data.name.RemoveNumber();
+                        __instance.AttackType = new List<int>(data.AttackType);
+                        __instance.PinJie = data.typePinJie;
+                        break;
+                    }
+                }
+            }
+        }
+     }
+    
+    
 }
